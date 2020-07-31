@@ -1,0 +1,73 @@
+body{ background: #f5f5f5; line-height: 1.5; font-size:8pt;}
+body, div, p, ul{ margin:0; padding: 0;}
+a{ text-decoration: none; background-color: transparent;  -webkit-text-decoration-skip: objects}
+ul{ list-style: none outside none;}
+
+.tabmenu{width:100%; height: 40px; display: block; position: relative; z-index: 99; margin-bottom: 20px;}
+.tabmenu .tab{height: 39px; border-bottom: solid 1px #eee;}
+.tabmenu .tab li{ float: left; margin-right: 3px; padding-left: 20px;}
+.tabmenu .tab li:first-child{padding-left: 0;}
+.tabmenu .tab a, .tabmenu .tab p{font: lighter 16px/39px "microsoft yahei"; display: inline-block; height: 39px; color:#212121; padding: 0 5px;}
+.tabmenu .tab a:hover{text-decoration: none; color:#ff8519}
+.tabmenu .tab .active a, .tabmenu .tab .active p{display: inline-block;cursor: default; color:#ff8519; position: relative;}
+.tabmenu .tab .active a:before, .tabmenu .tab .active p:before{content:''; position: absolute; left: 0; bottom: -1px; width: 100%; height: 2px; background: #ff8519;}
+.tabmenu .tab .active a:hover{text-decoration: none; cursor: default;}
+.tabmenu .tab .normal a{display: inline-block; padding: 0 10px;}
+.tabmenu .tab .normal a:hover{text-decoration: none;}
+.print-layout{ position: relative;  margin:0 auto; max-width: 210mm; background: #fff; padding: 10px 20px 30px;}
+.print-btn{ width: 150px; text-align: center; color:#000; border:1px solid #b4b4b4; border-radius:1em; background: #fff;  font-size: 20px; line-height: 2; margin:30px auto 0;}
+.print-btn:hover{ color: #ff8519; border-color:#ff8519; cursor: pointer;}
+.print-tip{ color:#ff8519; font-size: 14px; margin-bottom: 20px;}
+.print-page{ padding: 5%; box-shadow:0 0 2px rgba(0,0,0,.3); margin:0 auto;}
+
+.orderprint {padding-top: 10px; background: #FFF; color:#000000; word-break: break-all; font-family: SimHei; font-weight: bold;}
+.orderprint .top{ padding:0 2pt;}
+.orderprint .top .shop-name{ font-size:16pt; padding:2pt 0;}
+.buyer-info { font-size: 10pt; margin-top: 5pt; padding: 5pt 2pt;  border-top:dotted 1px #000; border-bottom:dotted 1px #000;}
+.buyer-info p{ padding-bottom:3pt;}
+.buyer-info .time, .buyer-info .dilivery-man{ font-size:8pt;}
+.buyer-info .message{ margin-top: 2pt; padding-top:5pt; border-top:dotted 1px #000;}
+table{ line-height:1.2; width:100%;}
+table th, table td{ font-size:8pt; text-align: left; vertical-align: top; font-weight: normal; font-weight: bold;}
+table td{ padding: 6pt 2pt;}
+table th{ padding: 4pt 2pt;}
+.order-info .title td{ padding-bottom: 0;}
+.order-info .sum td, .order-info .attr-sum td{ padding-top: 0; white-space: nowrap;}
+.order-info .title .name{ font-size:10pt}
+.order-info .thead th { border-bottom: dotted 1px #000; white-space: nowrap;}
+.order-info .intro{ padding-top: 3pt;}
+.order-info .attr td{ padding-bottom:3pt;}
+.order-info .attr-sum td{ padding-bottom:3pt;}
+.order-sum{ margin-top: 3pt; border-top: dotted 1px #000;}
+
+.list-info2{ overflow: hidden;}
+.list-info2 li{ width: 33.2%; float: left; white-space: nowrap;}
+.list-info2 .item2{ text-align: center;}
+.list-info2 .item3{ text-align: right;}
+
+.page-1{ max-width:58mm;}
+.orderprint1 .order-info .col2{ width: 40%;}
+.orderprint1 .order-info .col3{ width: 10%;}
+.orderprint1 .order-info .attr td{ padding-bottom: 0; padding-top: 0;}
+.orderprint1 .order-sum td{ padding-bottom: 0;}
+.orderprint1 .order-sum .col1{ width: 4em;}
+.orderprint1 .order-sum .col2{ white-space: nowrap;}
+
+.orderprint2 .order-info{ table-layout: fixed}
+.orderprint2 .order-info .attr td{ padding-top: 0;}
+.orderprint2 .order-sum{ table-layout: fixed}
+.orderprint2 .order-sum td{ width: 20%;}
+.orderprint2 .time p{ display: inline-block; vertical-align: baseline;}
+
+.page-direct{  font-size:12pt; }
+.page-direct .orderprint .top .shop-name{ font-size:20pt;}
+.page-direct .buyer-info { font-size: 16pt;}
+.page-direct .buyer-info .time, .page-direct .buyer-info .dilivery-man{ font-size:12pt;}
+.page-direct .order-info th, .page-direct  .order-info td, .page-direct  .order-info .title .name, .page-direct .order-sum td{ font-size:12pt;}
+.page-direct .print-page{ box-shadow:none; padding: 0;} 
+.page-direct .print-layout, .page-direct .page-1{ max-width: none;} 
+
+.image{
+    width: 100px;
+    background: url("../../images/seller/style2018/logo-black.jpg") no-repeat;
+}

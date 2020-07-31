@@ -1,0 +1,57 @@
+<div :class="['div-goods-select-box',borderNone ? 'div-goods-select-noborder' : '']">
+        <div id="bundling_add_goods_ajaxContent"><div class="div-goods-select">
+            <div class="ncsc-search-form">
+               <template v-if="showCategory">
+                 <span class="ncsc-form-tit">商品分类</span>
+                 <select @change="changeSecondClass($event)" v-model="gc_id_2">
+                   <option value="0">请选择二级分类</option>close
+                   <option :value="second.gc_id" v-for="(second,sc) in secondClass">{{second.gc_name}}</option>
+                 </select>
+                 <select v-model="gc_id_3" class="w120 mr5" @change="changeThirdClass($event)">
+                   <option value="0">请选择三级分类</option>
+                   <option :value="third.gc_id" v-for="(third,sc) in thirdClass">{{third.gc_name}}</option>
+                 </select>
+               </template>
+              <template v-if="showMultiSearch">
+                <select v-model="searchType">
+                  <option value="1">商品名称</option>
+                  <option value="2">条形码</option>
+                </select>
+              </template>
+              <template v-else>
+                <span class="ncsc-form-tit">商品名称</span>
+              </template>
+                <input type="text" @keyup.enter="search" :placeholder="searchType == 1?'输入商品名称':'输入条形码'" name="b_search_keyword" class="w120 mr5" v-model="goods_name" id="goods_name">
+                <a id="bundling_search_goods" nctype="search_a" class="ncsc-btn ncsc-btn-orange-rim" @click="search();">搜索</a>
+                <a v-if="showAddPage"  class="ncsc-btn ncsc-btn-orange-rim" @click="addPageGoods()">本页全选</a>
+                <a v-if="showAddAllPage && isAllPageShow" class="ncsc-btn ncsc-btn-orange-rim" @click="addSearchAllGoods()">搜索结果全选</a>
+            </div>
+            <div class="search-result" v-if="goodList && goodList.length>0">
+                <ul class="goods-list" nctype="sale_act_add_goods_tbody">
+                    <li nctype="106680" v-for="(good,gl) in goodList">
+                        <div class="goods-item">
+                            <div class="goods-thumb"><div class="goods-thumb-in"><img :src="good.src"></div></div>
+                            <div class="goods-info">
+                                <div class="goods-tit"><a target="_blank" :title="good.goods_name" @click="showDetail(good,gl)">{{good.goods_name}}</a></div>
+                                <p>
+                                    <span>¥{{good.goods_price}}</span>
+                                    <span v-if="showMorePrice" class="c-gray td-lt" :title="good.goods_marketprice">¥{{good.goods_marketprice}}</span>
+                                </p>
+                                <p class="c-gray">{{good.goods_storage ? good.goods_storage: 0}}件</p>
+                            </div>
+                            <div class="tc">
+                                    <a nctype="add_to_sales" class="ncsc-btn-mini add" @click="addOneGoods(good)" v-if="!good.isExist">{{addTxt}}</a>
+                                    <a nctype="add_to_sales" class="ncsc-btn-mini move" @click="removeOneGoods(good,gl)" v-if="good.isExist">{{removeTxt}}</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <qm-pagination :scrollTop="false" :pageParams="pageParams" @changeIndex="changeIndex($event)"></qm-pagination>
+            </div>
+            <div class="search-result noresult" v-else>
+                <div>暂无符合条件的数据记录</div>
+            </div>
+        </div>
+        </div>
+        <a id="bundling_add_goods_delete" class="close" style="right: -10px; display: block;" @click="close()">×</a>
+</div>

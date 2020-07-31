@@ -1,0 +1,117 @@
+.qm-store-class-base{
+    border-top: solid 0.5px rgb(221, 221, 221);
+    font-size: 12px;
+    display: inline-block;
+    vertical-align: top;
+    width: 460px;
+    padding: 10px 20px 20px;
+    border-top: 1px solid #eee;
+    box-sizing: border-box;
+    min-height: 740px;
+    width: 940px;
+}
+
+.content-title{
+    overflow: hidden;
+    line-height: 40px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.content-title span{
+    font-size: 16px;
+    margin: 5px 0px;
+    color: red;
+    font-family: 'Arial Normal', 'Arial';
+    font-weight: 400;
+    font-style: normal;
+}
+
+.content{
+    margin-top:20px;
+}
+.existMore:hover{
+    color:#ff8519;
+}
+.ncsc-btn-orange-rim-extend {
+    width: 24px;
+}
+/* .{
+    margin-top: -3px;
+} */
+.message-box{background: #fff3e7; padding: 10px 20px; font-size: 16px;}
+.message-box .list-msg li{overflow: hidden; font-size: 16px; padding: 5px 0;}
+.message-box .list-msg .tit{padding-right: .5em; float: left;}
+.message-box .list-msg .detail{overflow: hidden;}
+.message-box2 .tit{font-size: 18px; font-weight: bold;}
+.message-box2 .info{margin-top: 10px;}
+.message-box2 .sep{color:#757575; font-size: 12px; margin:0 5px;}
+
+.basic-button{
+    font-size: 12px;
+}
+
+.arrow-move:before, .arrow-move:after{
+    display: inline-block; 
+    vertical-align: middle; 
+    overflow: hidden; 
+    background: url(../../../../../assets/seller/images/seller/ncsc_bg_img.png) no-repeat;}
+    /* ncsc_bg_img */
+.arrow-move{
+    display: inline-block; 
+    vertical-align: middle; 
+    margin-left: 3px; 
+    line-height: 1; 
+    -webkit-animation:arrowRight 1s infinite both; 
+    animation:arrowRight 1s infinite both;
+}
+.arrow-move:before, .arrow-move:after{
+    content:''; 
+    width:7px; 
+    height: 10px; 
+    background-position: -65px -490px; 
+    margin-bottom: 5px;
+}
+.arrow-move:after{
+    margin-left: -1px;
+}
+.ncsc-btn .arrow-move{
+    margin-right: 0;
+}
+
+.ncsc-btn-orange:hover{
+    background-color: #EF7100;
+    color:white;
+    font-size: 14px;
+}
+
+@-webkit-keyframes arrowRight {
+	0% {
+        opacity: 1;
+        -webkit-transform:translateX(-2px);
+        transform:translateX(-2px);
+    }
+    100% {
+        opacity: 0.1;
+        -webkit-transform:translateX(2px);
+        transform:translateX(2px);
+    }
+}
+@keyframes arrowRight {
+	0% {
+        opacity: 1;
+        -webkit-transform:translateX(-2px);
+        transform:translateX(-2px);
+    }
+    100% {
+        opacity: 0.1;
+        -webkit-transform:translateX(2px);
+        transform:translateX(2px);
+    }
+}
+.bfs14{
+    font-size: 14px;
+}
+.ncsc-btn-orange-unfilled{
+    height: 30px;
+}

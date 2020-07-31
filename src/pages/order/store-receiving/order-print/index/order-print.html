@@ -1,0 +1,291 @@
+<div class="order_print">
+    <p class="print-tip">建议使用 谷歌浏览器 / 360浏览器(极速模式) / QQ浏览器(极速模式) 打印订单</p>
+    <div v-if="state_type == 'normal'">
+            <div class="print-page page-1">
+                    <div id="printarea" v-if="order && order.order_info" ref="print">  
+
+                      <div class="orderprint orderprint1" v-if="order.order_info">
+                        <div class="top">
+                          <div>
+                            <img :src="getImage()" alt="" width="100" >
+
+                            <!-- src="./../../assets/logo-white2.png" -->
+                            <!-- <img src="http://testadmin.shenbd.com/mall/templates/default/images/seller/style2018/logo-black.jpg" alt="" width="100" > -->
+                          </div>
+                          <div class="shop-name">{{order.order_info?order.order_info.storeName:''}}</div>
+                          <ul class="list-info list-info1">
+                            <li v-if="order.order_info.shippingCode">订单号：#{{order.order_info.shippingCode}}</li>
+                            <li v-else>订单号：{{order.order_info.orderSn}}</li>
+                            <li class="item2">下单时间：{{order.order_info.addTime | date}}</li>
+                            <li class="item3">支付方式：{{order.order_info.paymentType == 0?'线下支付':order.order_info.paymentType==2?'货到付款':'线上支付'}}              
+                            </li>
+                          </ul>                  
+                        </div>
+                        <div class="buyer-info">
+
+                          <p>{{order.order_info.shippingType == 0?'买家自提：':'送至：'}}
+                             <br>{{order.order_info.extendOrderCommon.reciverName}}&emsp;{{order.order_info.extendOrderCommon.reciverInfo.phone}}
+                          </p>
+                          <p v-if="order.order_info.shippingType != 0">{{order.order_info.extendOrderCommon.reciverInfo.address}} {{order.order_info.extendOrderCommon.reciverInfo.subaddress}}</p>
+                          <p class="delivery-code" v-if="order.order_info.shippingType
+                           == 0">取件码：{{order.order_info.orderSn | substr}}</p>
+                          <p class="time">
+                            <template v-if="order.order_info.shippingType == 0">自提时间：<br>{{order.order_info.deliveryTime | date}} {{order.order_info.deliveryTime | time}}
+                            </template>
+                            <template v-else>送达时间：<br>
+                                <template v-if="order.order_info.deliveryTime > 0">
+                                  {{order.order_info.deliveryTime | date}} {{order.order_info.deliveryTime | time}}-{{order.order_info.deliveryTime+1800 | time}}
+                                </template> 
+                                <template v-else>快递配送</template>
+                            </template>                   
+                          </p>        
+                          <p class="dilivery-man" v-if="order.diliveryman && order.diliveryman.true_name">配送员：{{order.diliveryman.true_name}}</p>
+                          <p class="message" v-if="order.order_info.extendOrderCommon.orderMessage">买家留言：<br>{{order.order_info.extendOrderCommon.orderMessage}}</p>  
+                        </div>        
+                        <div class="order-pn">
+                           
+                          <table class="order-info">
+                            <tbody>
+                              <tr class="thead">
+                                <th class="col1">商品信息</th>
+                                <th class="col2">单价</th>
+                                <th class="col3">数量</th>
+                              </tr>         
+                              <template v-for="(item_v,iv) in order.goods_list">
+                                <template v-for="(v,index) in item_v">
+                                    <tr class="title">
+                                        <td colspan="3">
+                                            <p class="name">{{v.goodsName}}</p>   
+                                            <template v-if="v.goodsCommonId !=0">
+                                              <template v-if="v.goodsSpec">
+                                                <template v-for="(v2,k2) in v.goodsSpec">
+                                                  {{k2}}:{{v2}};
+                                                </template>
+                                              </template>
+                                            </template>
+                                        </td>
+                                      </tr>
+                    
+                                      <tr class="sum" >
+                                        <td></td>
+                                        <td>¥{{v.goodsPrice | f2y}}</td>
+                                        <td>x{{v.goodsNum}}</td>
+                                      </tr> 
+
+                                      <template v-if="v.goodsCommonId == 0">
+                                        <template v-for="(k3,n) in v.goodsGroup">
+                                          <tr class="attr">  
+                                            <td colspan="3" style="padding-left:1em">           
+                                              <p class="name">{{k3.goodsName}}</p>	
+                                              <template v-if="k3.goodsAttr">
+                                                  <p>[
+                                                      <template v-for="(v4,k4) in k3.goodsAttr">
+                                                          {{v4.attrName}}:{{v4.attrValue}};
+                                                      </template>
+                                                    ]</p>
+                                              </template>
+                                            </td> 
+                                          </tr>   
+                                          <tr class="attr-sum">  
+                                            <td></td>
+                                            <td></td> 
+                                            <td>x{{k3.num}}</td>
+                                          </tr>
+
+
+                                        </template>
+                                      </template>
+                                      
+                                </template>
+                              </template>
+                              <!-- 赠品相关 -->
+                              <tr class="thead">
+                                  <th class="col1">赠品</th>
+                                  <th class="col2"> </th>
+                                  <th class="col3"> </th>
+                              </tr>
+                              <template v-for="(item_v,iv) in order.order_info.extendOrderGifts" v-if="order && order.order_info && order.order_info.extendOrderGifts && order.order_info.extendOrderGifts.length > 0">
+                                  <template>
+                                      <tr class="title">
+                                          <td colspan="3">
+                                              <p class="name">{{item_v.goods_name}}</p>
+                                          </td>
+                                      </tr>
+                                      <tr class="sum" >
+                                          <td><div  style="width:100px"></div></td>
+                                          <td></td>
+                                          <td>x{{item_v.goods_num}}</td>
+                                      </tr>
+                                  </template>
+                              </template>
+                            </tbody>
+                          </table>
+                            <table class="order-info" style="margin-top: 10px;" v-if="order && order.order_info && order.order_info.extendOrderGifts && order.order_info.extendOrderGifts.length > 0">
+                                <tbody>
+                                <tr class="thead">
+                                    <th class="col1" style="width:60%">赠品</th>
+                                    <th class="col2" style="width:15%"></th>
+                                    <th class="col4" style="width:15%"></th>
+                                    <th class="col3" style="width:10%">数量</th>
+                                </tr>
+                                <template v-for="(item_v,iv) in order.order_info.extendOrderGifts">
+                                    <template>
+                                        <tr class="title">
+                                            <td>
+                                                <p class="name">{{item_v.goods_name}}</p>
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>x{{item_v.goods_num}}</td>
+                                        </tr>
+                                    </template>
+                                </template>
+                                </tbody>
+                            </table>
+                          <!-- <table class="order-info"> -->
+                              <table class="order-sum">
+                            <tbody>
+
+                            <tr>
+                              <td class="col1">数量</td>
+                              <td class="col2" style="text-align: right">{{order.allNum}}</td>
+                              <td></td>
+                            </tr>
+                            <tr>
+                                <td class="col1">合计</td>
+                                <td class="col2 " style="text-align: right">¥{{order.goods_total_price | f2y}}</td>
+                            </tr>
+                            <tr>
+                                <td class="col1">服务费</td>
+                                <td class="col2" style="text-align: right">¥{{order.order_info.shippingFee | f2y}}</td>
+                            </tr><tr>
+                                <td class="col1">优惠</td>
+                                <td class="col2" style="text-align: right">¥{{order.promotion_amount | f2y}}</td>
+                            </tr>
+                            <tr>
+                                <td class="col1">总额</td>
+                                <td class="col2" style="text-align: right">¥{{order.order_info.orderAmount | f2y}}</td>
+                            </tr>
+                            </tbody>
+                          </table>
+                        </div>              
+                      </div> 
+                      <!-- <link type="text/css" rel="stylesheet" src="../../../../../assets/seller/css/print/print.css?v=1567656006"/> -->
+                    </div>
+              </div>
+    </div>
+    <div v-else>
+            <div class="print-page page-2">
+                    <div id="printarea" ref="print" v-if="order && order.order_info">
+                      <div class="orderprint orderprint2">
+                        <div class="top">
+                          <div><img :src="getImage()" alt="" width="100"></div>
+                          <div class="shop-name">{{order.order_info?order.order_info.storeName:''}}</div>
+                          <ul class="list-info list-info2">
+                              <li v-if="order.order_info.shippingCode">订单号：#{{order.order_info.shippingCode}}</li>
+                              <li v-else>订单号：{{order.order_info.orderSn}}</li>
+                              <li class="item2">下单时间：{{order.order_info.addTime | date}}</li>
+                              <li class="item3">支付方式：{{order.order_info.paymentType == 0?'线下支付':order.order_info.paymentType==2?'货到付款':'线上支付'}}              
+                              </li>
+                          </ul>         
+                        </div>
+                        <div class="buyer-info">
+
+                            <p>{{order.order_info.shippingType == 0?'买家自提：':'送至：'}}
+                                <br>{{order.order_info.extendOrderCommon.reciverName}}&emsp;{{order.order_info.extendOrderCommon.reciverInfo.phone}}
+                             </p>
+                             <p v-if="order.order_info.shippingType != 0">{{order.order_info.extendOrderCommon.reciverInfo.address}} {{order.order_info.extendOrderCommon.reciverInfo.subaddress}}</p>
+                             <p class="delivery-code" v-if="order.order_info.shippingType
+                              == 0">取件码：{{order.order_info.orderSn | substr}}</p>
+                             <p class="time">
+                               <template v-if="order.order_info.shippingType == 0">自提时间：<br>{{order.order_info.deliveryTime | date}} {{order.order_info.deliveryTime | time}}
+                               </template>
+                               <template v-else>送达时间：
+                                   <template v-if="order.order_info.deliveryTime > 0">
+                                     {{order.order_info.deliveryTime | date}} {{order.order_info.deliveryTime | time}}-{{order.order_info.deliveryTime+1800 | time}}
+                                   </template> 
+                                   <template v-else>快递配送</template>
+                               </template>                   
+                             </p>        
+                             <p class="dilivery-man" v-if="order.diliveryman && order.diliveryman.true_name">配送员：{{order.diliveryman.true_name}}</p>
+                             <p class="message" v-if="order.order_info.extendOrderCommon.orderMessage">买家留言：<br>{{order.order_info.extendOrderCommon.orderMessage}}</p>  
+                        </div>
+                        <div class="order-pn">
+                           
+                          <table class="order-info">
+                            <tbody>
+                              <tr class="thead">
+                                <th class="col1" style="width:60%">商品信息</th>
+                                <th class="col2" style="width:15%">单价</th>               
+                                <th class="col4" style="width:15%">小计</th>
+                                <th class="col3" style="width:10%">数量</th>
+                              </tr>                  
+                              <template v-for="(item_v,iv) in order.goods_list">
+                                  <template v-for="(v,index) in item_v">
+                                      <tr class="title">
+                                          <td>
+                                              <p class="name">{{v.goodsName}}</p>   
+                                              <template v-if="v.goodsCommonId !=0">
+                                                <template v-if="v.goodsSpec">
+                                                  <template v-for="(v2,k2) in v.goodsSpec">
+                                                    {{k2}}:{{v2}};
+                                                  </template>
+                                                </template>
+                                              </template>
+                                          </td>
+                                          <td>¥{{v.goodsPrice | f2y}}</td>                    
+                                          <td>¥{{v.goodsPrice*v.goodsNum | f2y}}</td>
+                                          <td>x{{v.goodsNum}}</td>
+                                        </tr>  
+                                        <template v-if="v.goodsCommonId == 0">
+                                          <template v-for="(k3,n) in v.goodsGroup">
+                                            <tr class="attr">  
+                                              <td colspan="3" style="padding-left:1em">           
+                                                <p class="name">{{k3.goodsName}}</p>	
+                                                <template v-if="k3.goodsAttr">
+                                                    <p>[
+                                                        <template v-for="(v4,k4) in k3.goodsAttr">
+                                                            {{v4.attrName}}:{{v4.attrValue}};
+                                                        </template>
+                                                      ]</p>
+                                                </template>
+                                              </td> 
+                                            </tr>   
+                                            <tr class="attr-sum">  
+                                              <td></td>
+                                              <td></td> 
+                                              <td>x{{k3.num}}</td>
+                                            </tr>
+  
+  
+                                          </template>
+                                        </template>
+                                        
+                                  </template>
+                                </template>      
+                               </tbody>
+                          </table>
+                          <table class="order-sum">
+                            <tbody>
+                              <tr>
+                                  <td>数量：{{order.allNum}}</td>
+                                  <td>
+                                    合计：¥{{order.goods_total_price | f2y}}                  </td>
+                                  <td>服务费：¥{{order.order_info.shippingFee | f2y}}</td>
+                                  <td>优惠：¥{{order.promotion_amount | f2y}}</td>
+                                  <td>总额：¥{{order.order_info.orderAmount | f2y}}</td>
+                                </tr>
+                            </tbody>
+                          </table>
+                        </div>        
+                      </div>    
+                      <!-- /orderprint2 -->
+                    </div>
+                    <!--endprint-->
+                      </div>
+    </div>
+    <!-- <div class="print-btn" id="printbtn"  v-print="printObj" >打印</div> -->
+    <div class="print-btn" id="printbtn"  @click="printClick()" >打印</div>
+    <!-- <div class="print-btn" id="printbtn"  v-print="'#printarea'">打印</div> -->
+    <!--  -->
+</div>

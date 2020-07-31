@@ -1,0 +1,282 @@
+@import '@/assets/scss/style.scss';
+
+.ncsc-search-form{
+    color: #757575;
+    font-size: 12px;
+    padding-bottom: 20px;
+}
+.order-total {
+    display: table;
+    width: 100%;
+    padding: 10px 0;
+}
+.order-total li {
+    display: table-cell;
+    text-align: right;
+    width: 50%;
+}
+.order-total .item {
+    padding-top: 5px;
+    padding-right: 20px;
+}
+// 选择配送员
+.plist-man img {
+    width: 26px;
+    height: 26px;
+    border-radius: 100%;
+    margin-right: 6px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.plist-man .name {
+    display: inline-block;
+    vertical-align: middle;
+    max-width: 8em;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.ncsc-form-custom-radio .ncsc-custom-radio-frame {
+    display: inline-block;
+    vertical-align: middle;
+    width: 20px;
+    height: 20px;
+    position: relative;
+    margin: 0 7px 0 0;
+}
+.ncsc-form-custom-radio-group .ncsc-form-custom-radio {
+    margin: 5px;
+    max-width: 180px;
+}
+.plist-man {
+    overflow: hidden;
+}
+.plist-man li {
+    float: left;
+    padding: 5px 0;
+}
+.plist-man li {
+    width: 33.3%;
+    text-align: left;
+}
+.diliveryman-box {
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.dialog-bd {
+    text-align: left;
+    margin-top: -20px;
+}
+.ncsc-dilivery-pay {
+    margin-top: 15px;
+    text-align: left;
+}
+.diliveryman-new-box {
+    padding: 15px 0;
+    margin-top: 15px;
+    border-bottom: 1px solid #eee;
+}
+.ncsc-new-diliveryman {
+    padding: 10px 0 0 25px;
+}
+.ncsc-form-hint {
+    font-size: 12px;
+}
+
+
+.ncsc-form-s input[type="text"],
+.ncsc-form-s input[type="time"],
+.ncsc-form-s input[type="tel"],
+.ncsc-form-s input[type="password"],
+.ncsc-form-s input[type="number"] {
+    line-height: 16px;
+    height: 30px;
+    font-size: 14px;
+}
+.ncsc-new-diliveryman .ncsc-form-control {
+    margin-right: 5px;
+}
+
+.ncsc-form-custom-radio.checked .ncsc-custom-radio-frame::after {
+    left: 5px;
+    top: 5px;
+}
+
+
+.ncsc-form-inline {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 1;
+}
+.ncsc-form-s .ncsc-form-tit {
+    line-height: 30px;
+    font-size: 14px;
+}
+.ncsc-form-s label {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 14px;
+}
+.ncsc-form-s a:hover {
+    text-decoration: underline;
+    color: #ff8519;
+}
+
+.ncsc-form-error {
+    vertical-align: middle;
+    color: red;
+    margin: 0;
+    font-size: 12px;
+}
+.ncsc-form-error {
+    display: block;
+}
+
+.amap-demo {
+    height: 200px;
+  }
+
+.ncsc-btn:hover{
+    color:$orange;
+}
+.eject_con #warning {
+    color: red;
+    text-align: left;
+    font-size: 14px;
+}
+.eject_con.tl_con dl dd {
+    text-align: left;
+}
+
+.eject_con dl dt, .eject_con dl dd {
+    display: table-cell;
+    vertical-align: top;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: left;
+}
+.eject_con dl dt{
+    text-align: right;
+}
+
+.table-order2{
+    text-align: left;
+}
+.table-order2 caption {
+    color: #757575;
+    font-size: 12px;
+    padding-bottom: 10px;
+    text-align: left;
+}
+.table-order2 caption p {
+    margin-right: 20px;
+    display: inline-block;
+}
+.toggle-down{
+  position: relative;
+}
+.toggle-up{
+  max-height: 340px;
+  overflow: hidden;
+  position: relative;
+}
+.toggle-down .mask{
+  text-align: right;
+}
+.toggle-up .mask{
+  position: absolute;
+  z-index: 1998;
+  padding-top: 65px;
+  bottom: -8px;
+  text-align: right;
+  width: 100%;
+  background-image: -webkit-gradient(linear,left top, left bottom,from(rgba(255,255,255,0)),color-stop(70%, #fff));
+  background-image: linear-gradient(-180deg,rgba(255,255,255,0) 0%,#fff 70%);
+  padding-bottom: 26px;
+  margin-bottom: 8px;
+}
+.mask a {
+  color: #2e98f2;
+  text-decoration: none;
+}
+.table-order thead td{
+  padding: 0;
+  line-height: 35px;
+  border: 1px solid #eee;
+}
+.table-order thead td span{
+  margin-left: 30px;
+  font-size: 18px;
+}
+.table-order thead td .span_1{
+  margin-left: 2px;
+  font-size: 18px;
+}
+.price_intro {
+  color: #1c69dd;
+}
+.ncsc-btn:hover{
+  color:#fff;
+}
+a.change_address{
+  color: #027ddb;
+}
+//修改价格
+.text-left{
+  text-align: left;
+}
+.font-color-red{
+  color: red;
+}
+.table-border,.table-border tr td,.table-border tr th{
+  border: 0.5px solid #e8e0e0;
+}
+.table-border tr td,.table-border tr th{
+  text-align: center;
+
+}
+.table-border tr td{
+  padding: 8px 10px;
+  vertical-align: middle;
+}
+.table-border .detail,.table-order .info-box{
+  text-align: center;
+}
+.show-border-1 p{
+  border-top: 0.5px solid #e8e0e0;
+  padding: 8px 10px;
+}
+.show-border-1 p:first-child{
+  border-top: 0px solid #e8e0e0;
+}
+.dashed-1{
+  width: 100%;
+  height: 1px;
+  background-image: linear-gradient(to right, #ccc 0%, #ccc 69%, transparent 69%);
+  background-size: 10px 1px;
+  background-repeat: repeat-x;
+
+}
+.wd33{
+  width: 33% !important;
+}
+.edit-order-error {
+  color: red;
+}
+.edi-price p{
+  text-align: left;
+  font-size: 7px;
+}
+.edi-price-weight{
+  font-weight: bold;
+}
+.edi-price-color-gray{
+  color: grey;
+}
+.edi-price-color-red{
+  color: red;
+}
+.edi-price-indent{
+  text-indent: 2em;
+}

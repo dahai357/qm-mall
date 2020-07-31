@@ -1,0 +1,10 @@
+<div class="qm-store-class-index">
+        <qm-tabs :tabs="tabs" :blod="false" class="store-tabs" :marginRight="20" @routerData="routerData($event)">
+        </qm-tabs>
+        <div class="menu-more fr">
+                <a @click="goHelpCenter" target="_blank" class="btn-txt-orange">自动打印订单引导 »</a>
+        </div>
+        <div class="clear"></div>
+        
+        <router-view />
+</div>

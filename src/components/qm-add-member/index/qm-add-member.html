@@ -1,0 +1,91 @@
+<div class="phone-bind-content">
+  <div class="phone-bind-title">添加会员</div>
+  <div style="padding:10px;">
+  <div class="qm-store-class-record">
+    <select  class="w160 mr5" @change="search()" v-model="pageParams.levelNum">
+      <option value="">全部会员等级</option>
+      <option value="0">未归属等级</option>
+      <option v-for="(litem) in userLevel" v-if="litem.level_num != pageParams.notLevel" :value="litem.level_num">&nbsp;&nbsp;&nbsp;VIP{{litem.level_num}}-{{litem.level_name}}</option>
+    </select>
+    <select class="w130 mr5" @change="search()" v-model="pageParams.favFrom">
+      <option value="">全部用户来源</option>
+      <option value="2">购买关注</option>
+      <option value="1">主动关注</option>
+      <option value="3">扫码关注</option>
+      <option value="4">导入</option>
+    </select>
+    <select  class="w130 mr5" @change="search()" v-model="pageParams.tagId">
+      <option value="">所有会员标签</option>
+      <option value="-1">未分类标签</option>
+      <option v-for="(titem) in favoritesTagList" :value="titem.tag_id">{{titem.tag_name}}</option>
+    </select>
+    <span>会员加入时间</span>
+    <input name="start_time-tip" id="start_time-tip" type="text" class="input-add-on w120" :value="pageParams.beginTime" readonly="readonly">
+    <label class="add-on"><i class="fa fa-calendar" aria-hidden="true"></i></label>
+    <span class="ncsc-sep">-</span>
+    <input name="end_time-tip" id="end_time-tip" type="text" class="input-add-on w120" :value="pageParams.endTime" readonly="readonly">
+    <label class="add-on mr5"><i class="fa fa-calendar icon-calendar"></i></label>
+    <div class="mt10">
+      <select @change="search()" class="w130" v-model="pageParams.searchType">
+        <option value="1">会员绑定手机号</option>
+        <option value="2">会员名称</option>
+      </select>
+      <input type="text" id="search-text"  class="w150 mr5" autocomplete="off" v-model.trim="pageParams.searchText">
+      <input type="submit" class="ncsc-btn" value="搜索" @click="search()">
+      <input v-show="resetBtn" type="submit" class="ncsc-btn" value="重置" @click="restSearch()">
+    </div>
+  </div>
+  <div class="operate-bar" v-if="pageParams.total > 0">
+    <input type="checkbox" id="allchecked"  class="checkall" v-model="checkAllState"  @click="checkall">
+    <label for="allchecked" class="mr10">全部全选</label>
+  </div>
+  <!--统计数据展示-结束-->
+  <qm-table :pageParams="pageParams">
+    <template slot="table">
+      <table class="ncsc-table table-transaction-online">
+        <thead>
+        <tr nc_type="table_header">
+          <th class="w15"></th>
+          <th class="w300">会员名称</th>
+          <th class="w120">会员等级</th>
+          <th class="w120">会员标签</th>
+          <th class="120">会员加入时间</th>
+          <th class="w120">用户来源</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="(item) in list">
+          <td><input type="checkbox" class="checkitem" :value="item.favid" v-model="checkState"></td>
+          <td>
+            <div class="info-box">
+              <div class="detail">
+                <input v-if="item.member_name" class="c-gray" :value="item.member_name" style="border:none;border-radius:0px;" readonly>
+                <p class="c-gray fs12">
+                  <span v-if="item.member_mobile && item.member_mobile.length == 11">{{item.member_mobile}}</span>
+                  <span v-else>{{item.import_mobile}}</span>
+                </p>
+              </div>
+            </div>
+          </td>
+          <td>
+            <span v-if="item.level_num > 0">VIP{{item.level_num}}-{{levelArr[item.level_num]}}</span>
+            <span v-else>-</span>
+          </td>
+          <td>
+            <p v-if="item.store_tag_ids !== undefined && item.store_tag_ids.length > 0" class="c-gray fs12">
+              <span v-for="(titem) in item.store_tag_ids">{{favoritesTag[titem]}}&nbsp;</span>
+            </p>
+            <p v-else>-</p>
+          </td>
+          <td class="c-gray">{{item.add_time}}</td>
+          <td class="fs12">{{item.fav_from}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </template>
+  </qm-table>
+  <qm-pagination :pageParams="pageParams" @changeIndex="changeIndex($event)"></qm-pagination>
+    <div @click="doChangeLevel" class="menu-more mr10 mb10"><a class="ncsc-btn ncsc-btn-orange">确定</a></div>
+    <div class="clear"></div>
+  </div>
+</div>

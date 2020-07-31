@@ -1,0 +1,44 @@
+<div>
+  <div class="ncsc-form-default">
+    <form id="post_form" method="post">
+        <dl style="border-top:1px solid #d7dde4">
+          <dt><i colspan="2" class="required">*</i>标签名称：</dt>
+          <dd>
+            <input id="label_name" name="label_name" type="text" maxlength="25" class="text w400"
+                   :value="list.label_name"/>
+            <p class="error-p"><label class="error" style="font-size:14px;">请输入标签名称</label></p>
+          </dd>
+        </dl>
+
+        <dl>
+          <dt><i colspan="2" class="required">*</i>是否展示：</dt>
+          <dd>
+            <select name="is_show" id="is-show" @change="changeBlur()">
+              <option value="1">展示</option>
+              <option value="0">不展示</option>
+            </select>
+            <span></span>
+            <td class="vatop tips"></td>
+          </dd>
+        </dl>
+        <div class="bottom">
+          <input readonly id="submit_button" value="提交" class="submit" @click="doAddDiliveryLabel()">
+        </div>
+    </form>
+  </div>
+  <qm-dialog :dialogVisible="tipMessage" :width="'500px'" @close="tipMessage == false">
+    <template slot="title">提示信息</template>
+    <template slot="content" >
+      <div class="dialog-bd eject_con">
+        <div class="dialog_message_contents comfirm"><i class="alert_info"></i><span>{{errorMsg}}</span></div>
+        <dl class="bottom rightBtn">
+          <dt></dt>
+          <dd>
+            2秒后页面跳转
+          </dd>
+        </dl>
+      </div>
+    </template>
+  </qm-dialog>
+</div>
+

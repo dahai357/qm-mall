@@ -1,0 +1,267 @@
+<div class="store-store-setting-base">
+
+    <div class="ncsc-form-shop">
+        <div class="ncsc-form-shop-c1" id="ncsc-upload-thumb">
+            <div class="ncsc-upload-img-item">
+                <div class="ncsc-upload-img-box" v-if="storeLabel">
+                    <div class="ncsc-upload-avatar" id="imagesname">
+                        <img :src="storeLabel">
+                    </div>
+                    <input type="hidden" id="store_label" name="store_label" value="store_label_1050000.jpg">
+                    <div class="image-delete" @click="deleteLogo">×</div>
+                </div>
+                <div class="ncsc-upload-btn" v-if="!storeLabel">
+                    <a href="javascript:void(0);">
+                        <input type="file" class="input-file" data-id="imagesname" id="filename" name="store_label1" @change="logoLoad($event)">
+                        <p><i class="ico-upload"></i>图片上传</p>
+                    </a>
+                </div>
+            </div>
+            <p class="hint tc">图片规格建议200*200</p>
+            <p class="ncsc-form-error block"></p>
+        </div>
+        <div class="ncsc-form-shop-c2">
+            <div class="ncsc-form-item">
+                <input id="store_name" type="text" maxlength="16" v-model.trim="basicStore.storeName" name="store_name" placeholder="店铺名称 (简称)" class="ncsc-form-control w400">
+                <p class="ncsc-form-error error-store" v-if="validData.storeName">店铺名称不能为空</p>
+            </div>
+            <div class="ncsc-form-item paddingLR15">
+                <textarea name="store_notice" rows="3" class="textarea ncsc-form-control w400" id="store_notice" v-model="basicStore.storeNotice" placeholder="店铺号外" maxlength="255"></textarea>
+                <p class="ncsc-form-error"></p>
+                <div class="hint"><span class="fl">最多可输入255个字</span>
+                    <el-tooltip placement="right-start" effect="light" popper-class="atooltip" >
+                        <div slot="content" class="toolTipCont">
+                            <!-- <div class="tip-doubt-con"> -->
+                                <img src="@/assets/seller/images/seller/example/banner-dphw-new.png" alt="">
+                            <!-- </div>    -->
+                        </div>
+
+                        <p class="lightBlue">
+                        <i class="fa fa-question-circle" aria-hidden="true"></i>示例
+                        </p>
+                    </el-tooltip>
+                </div>
+            </div>
+        </div>
+
+        <div class="clear"></div>
+
+    </div>
+
+
+    <div class="base-item" id="storeOpenDisDayIs">
+        <div class="base-label">
+            <label >
+                <i class="require">*</i>
+                营业时间:
+            </label>
+        </div>
+        <qm-checkbox-frame v-model="storeOpenDisDayIs" :text="'全天营业'" ></qm-checkbox-frame>
+
+        <div v-if="!storeOpenDisDayIs" class="bussiness-time">
+            <qm-timepickers :name="'storeTimeStart'" v-model="basicStore.storeStartTime" @on-change="timeChange($event)" :max="setMaxStart"></qm-timepickers>
+            <span class="tild">~</span>
+            <qm-checkbox-frame v-model="storeOpenDisNextDay" :text="'次日'" @valueChage="isNextDay($event)"></qm-checkbox-frame>
+            <qm-timepickers :name="'storeTimeEnd'" v-model="basicStore.storeCloseTime" :min="setMin" :max="setMax"></qm-timepickers>
+        </div>
+        <p class="ncsc-form-error" v-if="validData.storeTime">营业时间不能为空</p>
+    </div>
+
+    <div class="base-item" id="telzone">
+        <div class="base-label">
+            <label >
+                联系电话:
+            </label>
+        </div>
+        <div class="mb5">
+            <input value="2" v-model="telType" type="radio" id="cell-tel" class="ml5"><label for="cell-tel">手机电话</label>
+            <input type="radio" id="fixed-tel" value="1" v-model="telType"><label for="fixed-tel">固定电话</label>
+        </div>
+        <div class="base-content" v-if="telType == 1">
+                <input type="text" placeholder="区号" class="w140" v-model.trim="zone">
+                <span>-</span>
+                <input type="text" placeholder="固定电话号码" class="w200" v-model.trim="tel">
+                <p class="ncsc-form-error" v-if="validData.zoneTel" v-model="tel">{{zoneTelTips}}</p>
+            </div>
+        <div class="base-content" v-else>
+            <input type="text" placeholder="请输入手机号码" class="w300" v-model.trim="cellTel">
+            <p class="ncsc-form-error" >{{cellTelTips}}</p>
+        </div>
+        <p class="ncsc-form-hint mt5">联系电话为对外用户可见的联系方式，固定电话、手机号二选一填写，如不填写则默认用户联系店主手机号</p>
+    </div>
+
+    <div class="base-item">
+        <div class="base-label">
+            <label >
+                    <i class="require">*</i>
+                    店主手机号码:
+            </label>
+        </div>
+        <div class="base-content">
+                {{basicStore.storePhone}}<i class="btn-txt-orange base-i" @click="showModifyDialog()">修改手机绑定</i>
+        </div>
+    </div>
+
+    <div class="base-item">
+        <div class="base-label">
+            <label >
+                    商家简介：
+            </label>
+            <el-tooltip placement="right-start" effect="light" popper-class="atooltip" >
+                    <div slot="content" class="toolTipCont">
+                        <!-- <div class="tip-doubt-con"> -->
+                            <img src="@/assets/seller/images/seller/example/banner-sjjj.jpg" alt="">
+                        <!-- </div>    -->
+                    </div>
+
+                    <p class="lightBlue">
+                    <i class="fa fa-question-circle" aria-hidden="true"></i>示例
+                    </p>
+                </el-tooltip>
+        </div>
+        <div class="base-content">
+                <textarea name="store_intro" rows="3" class="textarea ncsc-form-control w500 valid" id="store_intro" placeholder="商家简介最多可输入100字" maxlength="100" v-model="basicStore.storeIntro"></textarea>
+                <p class="hint">最多可以输入100字</p>
+        </div>
+    </div>
+
+    <div class="base-item">
+        <div class="base-label">
+            <label >
+                    <p class="ncsc-form-hint p0">为了提高您店铺首页的美观度，设置完毕后请查看前台展示效果。</p>
+                    店铺首页顶部设计图：
+                    <el-tooltip placement="right-start" effect="light" popper-class="atooltip" >
+                            <div slot="content" class="toolTipCont">
+                                    <img src="@/assets/seller/images/seller/example/banner-dpsydbsjt-new.png" alt="">
+                            </div>
+
+                            <p class="lightBlue">
+                            <i class="fa fa-question-circle" aria-hidden="true"></i>示例
+                            </p>
+                        </el-tooltip>
+            </label>
+        </div>
+        <div class="base-content">
+            <div v-if="imagePath">
+                <div class="home-logo">
+                        <img :src="imagePath">
+                        <div class="image-delete" @click="deleteHomeLogo">×</div>
+                </div>
+            </div>
+            <div v-else>
+                <div class="ncsc-upload-btn">
+                    <a href="javascript:void(0);">
+                        <input type="file" class="input-file" data-id="imagesname" id="home-logo-upload" name="home-logo-upload" @change="localImgLoad($event)" ref="input">
+                        <p><i class="ico-upload"></i>图片上传</p>
+                    </a>
+                </div>
+            </div>
+            <br />
+            <p class="hint">建议图片尺寸750*378</p>
+            <p class="ncsc-form-error block"></p>
+        </div>
+    </div>
+
+    <div class="bottom">
+        <label class="submit-border"><input id="store_submit" type="button" class="submit" value="提交" @click="submitData()" ></label>
+    </div>
+  <qm-dialog :dialogVisible="dialogVisible" :width="'500px'" @close="dialogVisible =false">
+    <template slot="title">手机绑定</template>
+    <template slot="content" >
+        <div class="phone-bind-content">
+
+            <div class="item">
+                <div class="fl item-left">
+                        修改类型
+                </div>
+
+                <div class="fl item-right">
+                    <p class="bold radioP"><input type="radio"  value="0" v-model='change_type'>切换其他用户为店主<span>（切换后原手机账号变为普通用户）</span></p>
+                    <p class="bold radioP"><input type="radio" value="1" v-model='change_type'>店主手机号更换<span>（变更后原手机账号将不保留）</span></p>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="item">
+                <div class="fl item-left middle">
+                        登录密码
+                </div>
+
+                <div class="fl item-right">
+                    <p ><input type="text" v-model="password"></p>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="item">
+                <div class="fl item-left middle">
+                        旧手机号
+                </div>
+
+                <div class="fl item-right">
+                    <p class="codeP">
+                        <input type="text" class="input-disabled" disabled :value="basicStore.storePhone">
+                        <label class="submit-border get-code" @click="getChangeOldCode()"><input type="button" id="_getCode" class="btn" :value="getOldCodeSecond"></label>
+                    </p>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="item">
+                <div class="fl item-left middle">
+                        验证码
+                </div>
+
+                <div class="fl item-right">
+                    <p ><input type="text" v-model="change__code"></p>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="item">
+                <div class="fl item-left middle">
+                        新手机号
+                </div>
+
+                <div class="fl item-right">
+                    <p class="codeP">
+                        <input type="text" v-model="change_tel">
+                        <label class="submit-border get-code" @click="getChangeCode()"><input type="button" id="_getCode" class="btn" :value="getNewCodeSecond"></label>
+                    </p>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="item">
+                <div class="fl item-left middle">
+                        验证码
+                </div>
+
+                <div class="fl item-right">
+                    <p ><input type="text" v-model="change_code"></p>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+
+        <div slot="footer" class="dialog-footer" style="text-align: right;">
+                <label class="submit-border"><input id="store_submit" type="button" class="submit" value="确定" @click="submitChangePhone()" :disabled="btnClick.submitChangePhoneBtn"></label>
+        </div>
+    </template>
+  </qm-dialog>
+  <qm-dialog :dialogVisible="tipMessage" :width="'500px'" @close="tipMessage == false">
+    <template slot="title">提示信息</template>
+    <template slot="content" >
+      <div class="dialog-bd eject_con">
+        <div class="dialog_message_contents comfirm"><i class="alert_info"></i><span>{{errorMsg}}</span></div>
+        <dl class="bottom rightBtn">
+          <dt></dt>
+          <dd>
+            2秒后页面跳转
+          </dd>
+        </dl>
+      </div>
+    </template>
+  </qm-dialog>
+
+</div>

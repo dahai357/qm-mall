@@ -1,0 +1,15 @@
+<div class="qm-tabs">
+    <div class="tabs-header">
+            <div v-for="(menu,m,i) in tabs" :class="menu.select?'tab-menu-select':'tab-menu'" class="fs18 bold" @click="changeTabs(menu,m,i)">
+                <h3 v-if="blod">{{menu.name}}</h3>
+                <span v-else>{{menu.name}}</span>
+            </div>
+    </div>
+        
+
+    <div class="tabs-content">
+            <slot v-for="(menu,m,i) in tabs" :name="menu.act" v-if="menu.select"></slot>
+        </div>
+</div>
+
+

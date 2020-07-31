@@ -1,0 +1,61 @@
+<div class="qm-store-class-base">
+    <div class="qm-store-class-record">
+            <span class="ncsc-form-tit">时间：</span>
+            <input name="start_time" id="start_time" type="text" class="input-add-on w100" :value="pageParams.start_time" readonly="readonly">
+            <label class="add-on"><i class="fa fa-calendar" aria-hidden="true"></i></label>
+            <span class="ncsc-sep">-</span>
+            <input name="end_time" id="end_time" type="text" class="input-add-on w100" :value="pageParams.end_time" readonly="readonly" >
+            <label class="add-on mr5"><i class="fa fa-calendar"></i></label>
+            <span class="ncsc-form-tit">最近：</span>
+            <div class="quick-time js-quick-time">
+                <a href="javascript:;" @click="setTime('week')" class="mr5" id="weekBtn" :class="timeType == 'week'?'active':''">一周</a>
+                <a href="javascript:;" @click="setTime('month')" class="mr5" id="monthBtn" :class="timeType == 'month'?'active':''">一个月</a>
+                <a href="javascript:;" @click="setTime('year')" class="mr5" id="yearBtn" :class="timeType == 'year'?'active':''">一年</a>
+            </div>
+            <input type="submit" class="ncsc-btn" value="搜索" @click="search()">
+    </div>
+
+    <qm-table :pageParams="pageParams">
+        <template slot="table">
+                <table class="ncsc-table">
+                        <thead>
+                            <tr>
+                                <th class="w200">订单号</th>
+                                <th>支付时间</th>
+                                <th>金额 (元)</th>
+                                <th class="w500">支付内容</th>
+                            </tr>
+                        </thead>
+                        <tbody>    
+                            <tr v-for="(item,i) in list">
+                                <td class="c-gray fs12">{{item.pay_sn}}</td>
+                                <td class="c-gray fs12">{{item.pay_time}}</td>
+                                <td>¥ {{item.pay_amount}}</td>
+                                <td>
+                                    <table class="ncsc-table-spec">
+                                        <thead>
+                                        <tr>
+                                            <th class="col1">分类</th>
+                                            <th class="w170">原到期时间</th>
+                                            <th class="w140">技术服务费<span class="fs12 fn"> (元/月)</span></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(subItem,subI) in item.pay_content">
+                                                <td class="col1">{{gc_list[subItem.gc_id]}}</td>
+                                                <td class="c-gray fs12">{{subItem.old_end_time}}</td>
+                                                <td>¥ {{subItem.pre_month_fee}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <p class="mt10">统一续费至： {{item.pay_content[0].new_end_time}}</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+        </template>
+    </qm-table>
+
+    
+    <qm-pagination :pageParams="pageParams" @changeIndex="changeIndex($event)"></qm-pagination>
+</div>

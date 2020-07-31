@@ -1,0 +1,283 @@
+<div>
+  <div v-show="firstList.status ==1" class="menu-more"><a @click="showDada()" class="ncsc-btn ncsc-btn-orange-rim" id="btn_dialog_notice">达达发单需知</a></div>
+  <div v-show="firstList.status ==1" class="clear"></div>
+<div class="qm-store-class-base">
+  <!--未申请页面开始-->
+  <div v-show="firstList.status == 0" id="before_apply" class="norecord" style="font-size:14px;">
+  <img src="~@/assets/images/dada_noapply.png"  width="200" />
+    <div v-if="subData.city_name">
+      <p class="norecord-txt">还未申请接入达达配送哦~</p>
+      <div class="c-orange mt10">提交信息，由平台代您进行前期申请。后期由您自行决定是否使用！~</div>
+      <div class="bottom mt20"><button @click="showDialog()" class="submit" name="btnApply" id="btnApply">立即申请</button></div>
+    </div>
+  <p v-else class="c-gray mt30">抱歉，该地区暂不支持达达配送~</p>
+</div>
+ <!-- 未申请页面结束-->
+  <!-- 提交申请数据页面开始-->
+<div id="apply" v-show="firstList.status == 2">
+<div class="item-publish">
+  <div class="ncsc-form-default ncsc-form-delivery">
+    <div class="ncsc-mod-section">
+      <div class="ncsc-mod-bd">
+        <p class="ncsc-form-hint p0" style="text-align: center;width: 50%;font-size: 16px;font-weight:bold;margin-top:10px;">达达商户接入引导说明</p>
+        <p class="ncsc-form-hint p0" style="margin-top: 10px;">1：打开达达平台：<a href="http://newopen.imdada.cn/#/?_k=49uv7q" style="color: dodgerblue" target="_Blank">http://newopen.imdada.cn/#/?_k=49uv7q</a></p>
+        <p class="ncsc-form-hint p0" style="margin-top: 10px;">2：未注册达达商户版的用户，点击右上角登录进行注册
+        <p class="ncsc-form-hint p0" >&nbsp&nbsp&nbsp&nbsp&nbsp已注册达达商户版的用户，点击右上角登录，输入您的达达商户账号密码进行登录</p></p>
+        <p class="ncsc-form-hint p0" style="margin-top: 10px;margin-bottom: 20px;">3：登录后点击管理中心-点击账户中心；对应页面的商户编号</p>
+        <form name="frmBind" id="frmBind">
+          <dl>
+            <dt for="enterprise_name"><i class="required">*</i>达达企业名称：</dt>
+            <dd>
+              <input @input="changeName()" type="text" id="enterprise_name" class="w300" name="enterprise_name" value="" autocomplete="off" placeholder="请输入达达企业名称" v-model="subData.enterprise_name"/>
+              <span class="ncsc-form-error error-name" v-show="validData.enterprise_name">请输入企业名称</span>
+              <p class="hint">该企业名称需要为注册达达商户的企业名称一致</p>
+            </dd>
+          </dl>
+          <dl>
+            <dt for="source_id"><i class="required">*</i>达达商户编号：</dt>
+            <dd>
+              <input onkeyup = "value=value.replace(/[^\d]/g,'')" @input="changeId()" type="text" name="source_id" id="source_id" class="w300" value="" autocomplete="off" placeholder="请输入达达平台商户编号"  v-model="subData.source_id"/>
+              <span class="ncsc-form-error error-id" v-show="validData.source_id">请输入商户编号</span>
+            </dd>
+          </dl>
+          <dl>
+            <dt for="contact_phone"><i class="required">*</i>联系人电话：</dt>
+            <dd>
+              <input @input="changeTel()" type="tel" name="contact_phone" id="contact_phone" class="w300" value="" autocomplete="off" placeholder="请输入店铺联系人电话" v-model="subData.contact_phone"/>
+              <span class="ncsc-form-error error-phone" v-show="validData.contact_phone">请输入联系人电话</span>
+            </dd>
+          </dl>
+          <dl>
+            <dt for="email"><i class="required">*</i>邮箱地址：</dt>
+            <dd>
+              <input @input="changeEmail()" type="text" name="email" id="email" class="w300" value="" placeholder="请输入常用邮箱地址" v-model="subData.email"/>
+              <span class="ncsc-form-error error-email" v-show="validData.email">请输入邮箱</span>
+            </dd>
+          </dl>
+          <dl>
+            <dt for="business"><i class="required">*</i>业务类型：</dt>
+            <dd>
+              <div class="ncsc-form-group2 industry-choose">
+                <div class="choice-item ncsc-form-s ncsc-form-inline">
+                  <select @change="changeBusiness()" class="chief-select w200" name="business" id="business">
+                    <option value=""> -- 请选择 -- </option>
+                    <option  v-for="(item,key) in firstList.business_datas" :value="key">{{item}}</option>
+                  </select>
+                </div>
+              </div>
+              <span class="ncsc-form-error error-business" v-show="validData.business">请选择业务类型</span>
+            </dd>
+          </dl>
+          <div class="bottom">
+            <label class="submit-border">
+              <div class="submit" id="btnBind" @click="formData()">提交申请</div>
+            </label>
+          </div>
+        </form>
+       <!-- <form name="frmNew" id="frmNew" style="display: none;">
+          <dl class="image-text">
+            <dt>注册手机号：</dt>
+            <dd>
+              <input type="hidden" name="mobile" :value="firstList.contact_phone" />
+              <span>{{firstList.contact_phone}}</span>
+            </dd>
+          </dl>
+          <dl>
+            <dt><i class="required">*</i>验证码</dt>
+            <dd>
+              <div class="mobile-code">
+                <input type="text" id="valid_code" class="w300" name="valid_code" value="" autocomplete="off" placeholder="请输入验证码" />
+                <label @click="getValidCode()" class="submit-border get-code"><input type="button" id="getCode" class="btn" value="获取验证码" ></label>
+                <input type="hidden" id="second" value="1">
+              </div>
+              <span class="ncsc-form-error"></span>
+            </dd>
+          </dl>
+          <dl class="image-text">
+            <dt>门店名称：</dt>
+            <dd>
+              <span>{{firstList.enterprise_name}}</span>
+              <input type="hidden" name="enterprise_name" :value="firstList.enterprise_name" />
+            </dd>
+          </dl>
+          <dl class="image-text">
+            <dt>门店地址：</dt>
+            <dd>
+              <span>{{firstList.store_area}}{{firstList.enterprise_address}}</span>
+            </dd>
+          </dl>
+          <dl class="image-text">
+            <dt>联系人姓名：</dt>
+            <dd>{{firstList.contacts_name}}</dd>
+          </dl>
+          <dl>
+            <dt for="contact_phone"><i class="required">*</i>联系人电话：</dt>
+            <dd>
+              <input type="tel" name="contact_phone" id="contact_phone1" class="w300" :value="firstList.contacts_phone" autocomplete="off" placeholder="请输入店铺联系人电话" />
+              <span class="ncsc-form-error"></span>
+            </dd>
+          </dl>
+          <dl>
+            <dt for="email"><i class="required">*</i>邮箱地址：</dt>
+            <dd>
+              <input type="text" name="email" id="email1" class="w300" :value="firstList.email" placeholder="请输入常用邮箱地址" />
+              <span class="ncsc-form-error"></span>
+            </dd>
+          </dl>
+          <dl>
+            <dt for="business"><i class="required">*</i>业务类型：</dt>
+            <dd>
+              <div class="ncsc-form-group2 industry-choose">
+                <div class="choice-item ncsc-form-s ncsc-form-inline">
+                  <select class="chief-select w200" name="business" id="business1">
+                    <option value=""> &#45;&#45; 请选择 &#45;&#45; </option>
+                    <option v-for="(item,key) in firstList.business_datas" :value="key">{{item}}</option>
+                  </select>
+                </div>
+              </div>
+              <span class="ncsc-form-error"></span>
+            </dd>
+          </dl>
+          <div class="bottom">
+            <label class="submit-border">
+              <div class="submit" id="btnNew" @click="formData()">提交申请</div>
+            </label>
+          </div>
+        </form>-->
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+  <!-- 提交申请数据页面结束-->
+  <!-- 等待审核界面开始-->
+  <div class="alert-hint" v-show="firstList.status == 3" style="text-align: center;margin-top: 120px;font-size:14px;">
+    <img src="~@/assets/images/dada_apply_wait.png"  width="200" />
+    <p class="c-gray mt30">已提交商户编号！待运营沟通联系绑定后即可使用~</p>
+    <div class="msg mt20 lh2">
+      <p class="ncsc-form-hint p0 mb10">达达企业名称：{{firstList.enterprise_name}}</p>
+      <p class="ncsc-form-hint p0">达达商户编号：{{firstList.source_id}}</p>
+    </div>
+    <div class="mt15">
+      <a @click="showData(1)" class="go_modify c-orange">修改提交的商户信息	&raquo;</a>
+    </div>
+  </div>
+  <!-- 等待审核界面结束-->
+  <!-- 达达申请通过列表页面开始-->
+  <div v-show="firstList.status ==1" style="width:936px;margin-left: -14px;">
+    <div class="summary-box" style="margin-top:20px;text-align: left;">
+      <ul class="list-summary">
+        <li>
+          <div class="name">达达账户余额（元）</div>
+          <p class="num c-orange">{{firstList.balance}}<span v-show="firstList.balance  <= 100" class="c-red fs12" style="margin-left: 10px;">账户余额不足，为避免影响发单请及时充值</span>
+          </p>
+        </li>
+      </ul>
+      <a class="ncsc-btn ncsc-btn-orange dada-recharge" id="goRecharge" @click="doRouter('/store/store_delivery/recharge')">充值</a>
+    </div>
+    <p class="c-gray mb30 mt30" style="font-size: 15px;">以下记录，仅为【我的身边店】平台的达达订单交易记录，完整的商户交易情况，请登录达达商户后台查看 <a href="http://newopen.imdada.cn/#/?_k=49uv7q" target="_blank" class="c-orange dada-qa">达达平台 &raquo;</a></p>
+    <div class="ncsc-search-form" style="margin-bottom: 20px;">
+      <input type="hidden" name="c" value="store_delivery" />
+      <input type="hidden" name="a" value="dada" />
+      <span class="ncsc-form-tit">订单号：</span>
+      <input type="text" class="w200 mr5" name="order_sn" value="" placeholder="请输入订单号" v-model="pageParams.order_sn"/>
+      <span class="ncsc-form-tit">记录时间：</span>
+      <input name="start_time" id="start_time" type="text" class="input-add-on w100" :value="pageParams.start_date" readonly="readonly">
+      <label class="add-on"><i class="fa fa-calendar" aria-hidden="true"></i></label>
+      <span class="ncsc-sep">-</span>
+      <input name="end_time" id="end_time" type="text" class="input-add-on w100" :value="pageParams.end_date" readonly="readonly">
+      <label class="add-on mr5"><i class="fa fa-calendar icon-calendar"></i></label>
+      <span class="ncsc-form-tit">消费类型：</span>
+      <select name="type" class="w150 mr5" id="type" @change="search()">
+        <option>全部</option>
+        <option v-for="(typeItem,typeKey) in type_datas" :value="typeKey">{{typeItem}}</option>
+      </select>
+      <input type="submit" class="ncsc-btn" value="搜索" @click="search()">
+    </div>
+    <qm-table :pageParams="pageParams">
+      <template slot="table">
+        <table class="ncsc-table table-transaction-online">
+          <thead>
+          <tr>
+            <th>订单号</th>
+            <th class="w100">消费类型</th>
+            <th>记录时间</th>
+            <th class="w120">支出 <span class="c-gray fs12">(元)</span></th>
+            <th class="w120">收入 <span class="c-gray fs12">(元)</span></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="(item) in list">
+            <td class="c-gray"><a @click="openOrder(item.order_sn)">{{item.order_sn}}</a></td>
+            <td>
+              <span v-if="item.type == -1">订单运费</span>
+              <span v-if="item.type == -2">取消赔偿</span>
+              <span v-if="item.type == -3">订单小费</span>
+              <span v-if="item.type == 1">运费退款</span>
+              <span v-if="item.type == 2">小费退款</span>
+            </td>
+            <td class="c-gray">{{item.addtime}}</td>
+            <td><span class="red" v-if="item.status == 0">{{item.amount}}</span><span class="c-gray" v-else>-</span></td>
+            <td><span class="green" v-if="item.status == 1">+{{item.amount}}</span><span class="c-gray" v-else>-</span></td>
+          </tr>
+          </tbody>
+        </table>
+      </template>
+    </qm-table>
+    <qm-pagination :pageParams="pageParams" @changeIndex="changeIndex($event)"></qm-pagination>
+  </div>
+
+  <div class="dialog-agreement dialog-dada-notice">
+    <div class="dialog-in">
+      <div class="dialog-con">
+        <div class="dialog-hd">
+          <div class="dialog-tit">达达接入需知</div>
+          <div class="dialog-close">&times;</div>
+        </div>
+        <div class="dialog-bd">
+          <div class="info">
+            <p><b>- 达达目前支持的城市 -</b></p>
+            <p>达达目前仅支持以下城市接入：</p>
+            <p><img src="~@/assets/images/dada-range.jpg"></p>
+            <div class="mt20"><b>- 达达下单需知说明 -</b></div>
+            <p> 1：达达订单仅支持<b class="c-orange">同城交易订单配送</b>，需要与商户地址同一城市方可下单<br></p>
+            <p>2：下发达达订单的时候就需要扣除对应的运费进行发单，所以需要保证账户余额充足，避免影响发单</p>
+            <p>3：紧急订单可以通过增加小费来提高骑手接单速度；小费也是由账户余额中扣除</p>
+            <p>4：订单在骑手未接单状态下可无条件取消订单，取消订单后运费退回</p>
+            <p>5：骑手接单后的15分钟内，支持取消订单，运费退回， <b class="c-orange">但需要扣除2元作为给配送员的违约金，违约金由商家自行承担</b></p>
+            <p>6：发单后30分钟没有骑手接单时，系统会自动将订单过期终结，届时需要重新发货</p>
+            <p>7：骑手可发起订单取消的申请，请结合线下货物情况做意见处理，同意则订单将变为取消的状态，可重新发货，拒绝将仍为当前状态</p>
+            <p>8：如果骑手送货存在用户联系不上等情况无法送达，将进行妥投异常的流程，商家确认收货后，订单将变为待发货状态，可进行重新发货</p>
+            <p><b class="c-orange">9：订单存在10分钟犹豫期允许用户无条件取消，可能存在已派发达达订单后用户取消订单，中间产生的费用需要由商家自行承担</b></p>
+            <p>10：充值为直接调用达达平台充值，官方平台不参任何交易过程。</p>
+          </div>
+          <p><a @click="changeStatus(2)" class="btn-agree disabled">同意协议<span class="hint">（<span class="second"></span>秒后可点击）</span></a></p>
+        </div>
+      </div>
+    </div>
+    <b class="dialog-mask"></b>
+  </div>
+</div>
+  <!-- 达达申请通过列表页面结束-->
+  <qm-dialog :dialogVisible="dialogVisible" :width="'700px'" @close="dialogVisible = false">
+      <template slot="title">达达发单需知</template>
+      <template slot="content">
+        <div class="eject_con dialog-bd">
+          <dl>
+            <dd>
+              <div class="dialog-bd">
+                <p>1：下发达达订单的时候就需要扣除对应的运费进行发单，所以需要保证账户余额充足，避免影响发单</p>
+                <p>2：紧急订单可以通过增加小费来提高骑手接单速度；小费也是由账户余额中扣除</p>
+                <p>3：订单在骑手未接单状态下可无条件取消订单，取消订单后运费退回</p>
+                <p>4：骑手接单后的15分钟内，支持取消订单，运费退回，<span class="c-orange">但需要扣除2元作为给配送员的违约金</span></p>
+                <p>5：发单后30分钟没有骑手接单时，系统会自动将订单过期终结，届时需要重新发货</p>
+                <p>6：骑手可发起订单取消的申请，请结合线下货物情况做意见处理，同意则订单将变为取消的状态，可重新发货，拒绝将仍为当前状态</p>
+                <p>7：如果骑手送货存在用户联系不上等情况无法送达，将进行妥投异常的流程，商家确认收货后，订单将变为待发货状态，可进行重新发货</p>
+                <p>8：充值为直接调用达达平台充值，官方平台不参与任何交易过程。</p>
+              </div>
+            </dd>
+          </dl>
+        </div>
+      </template>
+    </qm-dialog>
+</div>

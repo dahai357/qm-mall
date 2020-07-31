@@ -1,0 +1,55 @@
+.qm-tabs{
+    /* border-bottom: solid 0.5px rgb(221, 221, 221); */
+    /* overflow: hidden; */
+}
+
+.store-tabs{
+  padding: 0 20px 0 0;
+  float: left;
+}
+.tabs-header{
+    overflow: hidden;
+}
+.tab-menu{
+    cursor: pointer;
+    float: left;
+    margin-right: 3px;
+    font: lighter 16px/39px "microsoft yahei";
+    padding: 0 5px 0 5px;
+}
+
+.tab-menu-select{
+    cursor: pointer;
+    float: left;
+    margin-right: 3px;
+    font: lighter 16px/39px "microsoft yahei";
+    padding: 0 5px 0 5px;
+    color:#ff8519;
+    border-bottom: solid 2px #ff8519
+}
+
+.tab-menu:hover{
+    color:#ff8519
+}
+
+h3{
+    font-size: 18px;
+    font-weight: bold;
+}
+.bold{
+  position:relative;
+}
+.tabs-header .red-dot {
+   position: absolute;
+   right: 0;
+   top: 2px;
+   width: 6px;
+   height: 6px;
+   background: #ff8518;
+   border-radius: 100%;
+ }
+.tabs-header .sub-menu-item .red-dot {
+  right: -5px;
+  width: 4px;
+  height: 4px;
+}

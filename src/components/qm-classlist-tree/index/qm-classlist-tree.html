@@ -1,0 +1,13 @@
+<div>
+        <el-tree
+            :data="list"
+            show-checkbox
+            node-key="gc_id"
+            ref="tree"
+            accordion
+            @check-change="checkChage($event)"
+            :default-expanded-keys="defaultExpandedKeys"
+            :default-checked-keys="defaultCheckedKeys"
+            :props="defaultProps">
+        </el-tree>
+</div>

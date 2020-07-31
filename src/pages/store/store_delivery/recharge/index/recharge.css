@@ -1,0 +1,19 @@
+.mb20 {
+  margin-bottom: 20px;
+  margin-top: 40px;
+}
+.ncsc-form-error{
+  color:red;
+  font-size:12px;
+  margin-left: 5px;
+}
+.my-skin .layui-layer-btn .layui-layer-btn0 {
+  background-color: #ff8518!important;
+  border: 1px solid #ff8518!important;
+  color: #FFF;
+}
+.my-skin .layui-layer-btn a{
+  background-color: #ff8518!important;
+  border: 1px solid #ff8518!important;
+  color: #FFF;
+}

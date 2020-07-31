@@ -1,0 +1,15 @@
+<div class="qm-tabs">
+    <div class="tabs-header">
+            <div v-if="((!menu.hidden || menu.select) && menu.name != '')" v-for="(menu,m,i) in tabs" :style="{marginRight:marginRight+'px'}" :class="menu.select?'tab-menu-select':'tab-menu'" :id="m" class="bold" @click="changeTabs(menu,m,i)">
+                <h3 v-if="blod">{{menu.name}}</h3>
+                <span v-else>{{menu.name}}<i class="red-dot" v-if="menu.hasOwnProperty('reddot') && menu.reddot"></i></span>
+            </div>
+    </div>
+
+
+    <div class="tabs-content">
+            <slot v-for="(menu,m,i) in tabs" :name="menu.act" v-if="menu.select"></slot>
+        </div>
+</div>
+
+

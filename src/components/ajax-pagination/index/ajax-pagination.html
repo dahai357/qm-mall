@@ -1,0 +1,20 @@
+<div class="pagination" v-show="pageParams.total > 0">
+    <ul>
+        <li @click="goFirst()">
+            <a :disabled="pageParams.pageIndex == 0"><span>首页</span></a>
+        </li>
+        <li @click="goPrex()">
+            <a :disabled="pageParams.pageIndex == 0"><span>上一页</span></a>
+        </li>
+        <li v-for="(page,p) in pageList"><a><span :class="page == pageParams.pageIndex + 1 ?'currentpage':''"
+                    @click="changeIndex(page-1)">{{page}}</span></a></li>
+
+        <li @click="goNext()"><a :disabled="pageParams.pageIndex+1 == pageNum"><span>下一页</span></a></li>
+        <li @click="goLast()"><a :disabled="pageParams.pageIndex+1 == pageNum"><span>末页</span></a></li>
+
+    </ul>
+    <!-- 添加部分 -->
+    <div class="pagination-jump" v-show="pageNum > 20">
+        共{{pageNum}}页，第 <input type="text"  v-model="jumpNum" id="jumpPage" > 页 <span @click="changeIndex((jumpNum-1)>pageNum-1?pageNum-1:jumpNum-1)">跳转</span>
+    </div>
+</div>

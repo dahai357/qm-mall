@@ -1,0 +1,32 @@
+.qm-tabs{
+    /* border-bottom: solid 0.5px rgb(221, 221, 221); */
+    /* overflow: hidden; */
+}
+
+.tabs-header{
+    overflow: hidden;
+}
+.tab-menu{
+    float: left;
+    margin-right: 3px;
+    font: lighter 16px/39px "microsoft yahei";
+    padding: 0 5px 0 5px;
+}
+
+.tab-menu-select{
+    float: left;
+    margin-right: 3px;
+    font: lighter 16px/39px "microsoft yahei";
+    padding: 0 5px 0 5px;
+    color:#ff8519;
+    border-bottom: solid 2px #ff8519
+}
+
+.tab-menu:hover{
+    color:#ff8519
+}
+
+h3{
+    font-size: 18px;
+    font-weight: bold;
+}

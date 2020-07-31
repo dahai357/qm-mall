@@ -1,0 +1,61 @@
+<div v-cloak>
+<div class="menu-more"><a @click="doRouter('/data_center/diliveryman/label_add')" class="ncsc-btn ncsc-btn-orange">添加标签</a></div>
+  <div class="clear"></div>
+  <div class="tab-style qm-store-class-base">
+  <qm-table :pageParams="pageParams">
+    <template slot="table">
+        <table class="ncsc-table" style="margin-top: 25px;">
+            <thead>
+                <tr>
+                  <th class="w200">标签id</th>
+                  <th>标签名字</th>
+                  <th class="w200">标签状态</th>
+                  <th class="w200">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(item,key) in list">
+              <td>{{key+1}}</td>
+              <td class="t2l">{{item.label_name}}</td>
+              <td class="t2l">{{item.is_show}}</td>
+              <td class="handle">
+                <p><a @click="goEdit(item.label_id)" class="ncsc-btn">编辑</a></p>
+                <p @click="confirmDel(item.label_id)"><a class="ncsc-btn">删除</a></p>
+              </td>
+            </tr>
+            </tbody>
+        </table>
+    </template>
+  </qm-table>
+  <qm-pagination :pageParams="pageParams" @changeIndex="changeIndex($event)"></qm-pagination>
+    <qm-dialog :dialogVisible="tipMessage" :width="'500px'" @close="tipMessage == false">
+      <template slot="title">提示信息</template>
+      <template slot="content" >
+        <div class="dialog-bd eject_con">
+          <div class="dialog_message_contents comfirm"><i class="alert_info"></i><span>{{errorMsg}}</span></div>
+          <dl class="bottom rightBtn">
+            <dt></dt>
+            <dd>
+              2秒后页面跳转
+            </dd>
+          </dl>
+        </div>
+      </template>
+    </qm-dialog>
+    <qm-dialog :dialogVisible="deleteDialogVisible" :width="'500px'" @close="deleteDialogVisible = false">
+      <template slot="title">提示信息</template>
+      <template slot="content" >
+        <div class="dialog-bd eject_con">
+          <div class="dialog_message_contents comfirm"><i class="alert_info"></i>确定删除该标签么?</div>
+          <dl class="bottom rightBtn">
+            <dt></dt>
+            <dd>
+              <label @click="doDelDiliveryLabel()" class="submit-border"><input type="submit" class="ncsc-btn ncsc-btn-orange" value="确定"></label>
+              <label @click="deleteDialogVisible = false" class="submit-border"><input type="submit" class="cancle btn-gray" value="取消"></label>
+            </dd>
+          </dl>
+        </div>
+      </template>
+    </qm-dialog>
+    </div>
+</div>

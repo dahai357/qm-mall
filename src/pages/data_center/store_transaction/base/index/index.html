@@ -1,0 +1,479 @@
+<div v-cloak>
+  <div class="menu-more"><input UNSELECTABLE='on' class="ncsc-btn ncsc-btn-orange-rim" @click="exportTrancactionData(pageParams)" value="导出Excel表格" readonly/></div>
+  <div class="clear"></div>
+  <div class="qm-store-class-base">
+  <div class="tab-style">
+  <form class="qm-store-class-record" @submit.prevent="search()">
+    <select name="payment_type" id="payment_type" class="mr5" @change="search()">
+      <option value="">所有支付方式</option>
+      <option value="3">支付宝支付</option>
+      <option value="1">微信支付</option>
+      <option value="5">微信小程序</option>
+    </select>
+    <select name="order_state" id="order_state" class="mr5" @change="search()">
+      <option value="">所有订单状态</option>
+      <option value="cancle">已取消</option>
+      <option value="close">已关闭</option>
+      <option value="pay">待接单</option>
+      <option value="wait">待配送</option>
+      <option value="self">待到店自提</option>
+      <option value="deliverying">配送中</option>
+      <option value="served">已送达</option>
+      <option value="wait_cancle">取消待确认</option>
+      <option value="success">已完成</option>
+    </select>
+    <span class="ncsc-form-tit">时间：</span>
+    <input name="start_time" id="start_time" type="text" class="input-add-on w100" :value="pageParams.beginTime" readonly="readonly">
+    <label class="add-on"><i class="fa fa-calendar" aria-hidden="true"></i></label>
+    <span class="ncsc-sep">-</span>
+    <input name="end_time" id="end_time" type="text" class="input-add-on w100" :value="pageParams.endTime" readonly="readonly">
+    <label class="add-on mr5"><i class="fa fa-calendar icon-calendar"></i></label>
+    <span class="ncsc-form-tit">最近：</span>
+    <div class="quick-time js-quick-time">
+      <a href="javascript:;" @click="setTime(0)" class="mr5" :class="timeType == 0?'active':''">今天</a>
+      <a href="javascript:;" @click="setTime(1)" class="mr5" :class="timeType == 1?'active':''">昨天</a>
+      <a href="javascript:;" @click="setTime(6)" class="mr5" :class="timeType == 6?'active':''">最近7天</a>
+      <a href="javascript:;" @click="setTime(29)" class="mr5" :class="timeType == 29?'active':''">最近30天</a>
+    </div>
+    <input type="submit" class="ncsc-btn" value="搜索" @click="search()">
+  </form>
+  <!--统计数据展示-开始-->
+  <div class="summary-box mb20">
+    <ul class="list-summary">
+      <li>
+        <div class="name">商家实收金额<span class="fs14">(元)</span>
+          <div class="tip-doubt tip-doubt-word tip-l tip-notit">
+            <p class="tip-tit"><i class="ico-doubt"></i></p>
+            <div class="tip-doubt-con">
+              <div class="tip-txt c-gray fs12">
+                <p>商家实际收到的金额汇总<br>订单金额-当天退款金额-服务费</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="num c-orange"><span v-if="totalList.realAmount == 0">0.00</span><span
+          v-else>{{totalList.realAmount}}</span></p>
+      </li>
+      <li>
+        <div class="name">
+          成交订单实收总额<span class="fs14">(元)</span>
+          <div class="tip-doubt tip-doubt-word tip-l tip-notit">
+            <p class="tip-tit"><i class="ico-doubt"></i></p>
+            <div class="tip-doubt-con">
+              <div class="tip-txt c-gray fs12">
+                <p>已付款完成的订单金额汇总</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="num"><span v-if="totalList.orderAmount == 0">0.00</span><span v-else>{{totalList.orderAmount}}</span>
+        </p>
+        <p class="count">{{totalList.orderCount}}笔</p>
+      </li>
+      <li>
+        <div class="name">交易当日退款总额<span class="fs14">(元)</span>
+          <div class="tip-doubt tip-doubt-word tip-l tip-notit">
+            <p class="tip-tit"><i class="ico-doubt"></i></p>
+            <div class="tip-doubt-con">
+              <div class="tip-txt c-gray fs12">
+                <p>当日退款的通过原路返回<br>非交易当日的退款由店家通过线下方式转给买家</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="num c-red"><span v-if="totalList.originRefundAmount == 0">0.00</span><span v-else>{{totalList.originRefundAmount}}</span>
+        </p>
+        <p class="count">{{totalList.refundCount}}笔</p>
+      </li>
+      <li>
+        <div class="name">服务费<span class="fs14">(元)</span>
+          <div class="tip-doubt tip-doubt-word tip-l tip-notit">
+            <p class="tip-tit"><i class="ico-doubt"></i></p>
+            <div class="tip-doubt-con">
+              <div class="tip-txt c-gray fs12">
+                <p>交易扣除的服务费净额汇总<br>服务费净额为服务费金额-退服务费金额</p>
+                <p>支付宝 0.6%，微信0.3%，小程序 0.3%</p>
+                <p>(从{{newWxpayRateBeginDate}}起微信支付服务费汇率从0.63%调整为0.3%)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="num c-blue"><span v-if="totalList.commission == 0">0.00</span><span
+          v-else>{{totalList.commission}}</span></p>
+      </li>
+    </ul>
+  </div>
+  <!--统计数据展示-结束-->
+  <qm-table :pageParams="pageParams">
+    <template slot="table">
+  <table class="ncsc-table table-transaction-online">
+    <thead>
+    <tr>
+      <th>时间</th>
+      <th>名称 / 订单号</th>
+      <th>买家信息</th>
+      <th>订单实收<span class="c-gray">(元)</span></th>
+      <th>交易当日退款<span class="c-gray">(元)</span></th>
+      <th>支付方式 / 费率</th>
+      <th>服务费<span class="c-gray">(元)</span></th>
+      <th>实收<span class="c-gray">(元)</span></th>
+      <th>订单状态</th>
+      <th class="w80">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr v-for="(item) in list">
+      <td class="c-gray"><p class="ws-nw">{{item.p_d}}</p>
+        <p class="ws-nw">{{item.p_t}}</p></td>
+      <td>
+        <p v-for="(eitem,ei) in item.extend_order_goods" v-if="ei==0" class="w100 txt-hide-nowrap"><a  @click="openGoods(eitem.goods_commonid)">{{eitem.goods_name}}</a></p>
+        <p class="c-gray ws-nw"><a @click="openOrder(item.order_sn)">{{item.order_sn}}</a></p>
+      </td>
+      <td>
+        <p class="w100 txt-hide-nowrap">{{item.buyer_name}}</p>
+        <p class="c-gray ws-nw">{{item.buyer_email}}</p>
+      </td>
+      <td><span v-if="item.order_amount == 0">0.00</span><span v-else>{{item.order_amount}}</span></td>
+      <td><span v-if="item.origin_refund_amount == 0">0.00</span><span v-else>{{item.origin_refund_amount}}</span></td>
+      <td>{{item.payment_name}}<p class="c-gray">{{item.payment_rate}}%</p></td>
+      <td><span v-if="item.commission == 0">0.00</span><span v-else>{{item.commission}}</span></td>
+      <td><span v-if="item.real_amount == 0">0.00</span><span v-else>{{item.real_amount}}</span></td>
+      <td>{{item.order_state_name}}</td>
+      <td class="handle"><p><a id="detail" class="ncsc-btn-mini" @click="detailGetPageData(item.order_id)">详情</a></p>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+    </template>
+  </qm-table>
+    <qm-pagination :pageParams="pageParams" @changeIndex="changeIndex($event)"></qm-pagination>
+  <div class="c-gray mt20 fs12">
+    <p>说明：</p>
+    <p>1）交易明细只统计线上支付类型的订单</p>
+    <p>2）成交订单总额：已付款完成的订单金额汇总</p>
+    <p>3）交易当日退款总额：当日退款的通过原路返回；非交易当日的退款由店家通过线下方式转给买家。</p>
+    <p>4）服务费：交易扣除的服务费净额汇总，服务费净额为服务费金额-退服务费金额;<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c-black">支付宝 0.6%，微信 0.3%（从{{newWxpayRateBeginDate}}起微信支付服务费费率从0.63%调整为0.3%），小程序 0.3%</span></p>
+    <p>5）实收金额：商家实际收到的金额汇总，订单金额-当天退款金额-服务费</p>
+  </div>
+  </div>
+  <!--订单详情按钮的弹框-->
+    <qm-dialog :dialogVisible="showDetailDialog" :width="'960px'" @close="showDetailDialog = false" @confirm="showDetailDialog = false">
+    <template slot="title">详情</template>
+    <template slot="content">
+      <div class="eject_con" style="text-align: left">
+      <table class="table-order">
+      <tr>
+        <td class="w280">
+        <div class="address" v-if="detailList.shipping_type == 1">
+          <p>
+            <span class="address-ts"> 送达时间：</span><br v-if="detailList.delivery_time > 0">
+            <span>{{detailList.delivery_text}}</span>
+          </p>
+          <p v-if="detailList.receiveList">{{detailList.receiveList.address}}</p>
+          <p v-if="detailList.receiveList">{{detailList.receiveList.reciver_name}} {{detailList.receiveList.phone}}</p>
+        </div>
+        <div class="delivery-msg" v-if="detailList.diliveryman_id > 0 && detailList.delivery_type!= 1">
+          <ul class="list-msg list-pay">
+            <li>
+              <div class="tit">配&ensp;送&ensp;员：</div>
+              <div class="detail">{{detailList['diliverymans'][detailList.diliveryman_id]}}</div>
+            </li>
+            <li>
+              <div class="tit">配&ensp;送&ensp;费：</div>
+              <div class="detail">¥ <span v-if="detailList.receiveList.distribution_fee == 0">0.00</span><span v-else>{{detailList.receiveList.distribution_fee}}</span></div>
+            </li>
+          </ul>
+        </div>
+        <div class="delivery-msg" v-if="detailList.shipping_type == 0">
+          <p>买家自提(自提时间：{{detailList.ziti_text}})</p>
+          <p v-if="detailList.isshow_take_code == 1" class="delivery-code">取件码：{{detailList.take_code}}</p>
+          <p v-if="detailList.receiveList">{{detailList.receiveList.reciver_name}}{{detailList.receiveList.phone}}</p>
+        </div>
+        <div class="pay-msg">
+          <p class="pay-type" :class="[detailList.payment_type == 0 && detailList.is_receive_payment == 0  ? 'c-orange':'']">{{detailList.pay_text}}</p>
+          <ul class="list-msg list-pay">
+            <li>
+              <div class="tit">商品总额：</div>
+              <div class="detail">¥ <span v-if="detailList.goods_amount ==0">0.00</span><span v-else>{{detailList.goods_amount}}</span></div>
+            </li>
+            <li>
+              <div class="tit">配&ensp;送&ensp;费：</div>
+              <div class="detail">¥ <span v-if="detailList.shipping_fee ==0">0.00</span><span v-else>{{detailList.shipping_fee}}</span></div>
+            </li>
+            <li>
+              <div class="tit">优惠金额：</div>
+              <div class="detail">¥ <span v-if="detailList.discount_fee ==0">0.00</span><span v-else>{{detailList.discount_fee}}</span></div>
+            </li>
+            <li :class="[((detailList.payment_type == 0 || detailList.payment_type == 2) && detailList.is_receive_payment == 0) || (detailList.payment_type != 0 && detailList.payment_type != 2 && detailList.payment_time == 0) ? 'c-orange':'']">
+              <div class="tit">{{detailList.money_text}}：</div>
+              <div class="detail">¥ <span v-if="detailList.order_amount ==0">0.00</span><span v-else>{{detailList.order_amount}}</span></div>
+            </li>
+          </ul>
+        </div>
+        <div class="info">
+          <p>订&ensp;单&ensp;号：{{detailList.order_sn}}</p>
+          <div class="info-tip-box">
+            <p class="info-btn-more"><i class="ico-more"></i></p>
+            <div class="info-tip">
+              <p>买&emsp;&emsp;家：{{detailList.buyer_name}}</p>
+              <p v-if="detailList.add_time > 0">下单时间：{{detailList.format_add_time}}</p>
+              <p v-if="detailList.send_time >0">发货时间：{{detailList.format_send_time}}</p>
+            </div>
+          </div>
+        </div>
+        </td>
+        <td class="action-wrap">
+          <ul class="plist-goods">
+            <li class="item" v-for="(goods) in detailList.goods_list">
+              <div v-if="goods.goods_commonid ==0">
+                <div class="goods-detail">
+                  <div class="pic">
+                    <img :src="goods.image_60_url">
+                  </div>
+                  <div class="detail">
+                    <div class="detail-c1">
+                      <p class="count">×{{goods.goods_num}}</p>
+                    </div>
+                    <div class="detail-c2">
+                      <div class="tit">{{goods.goods_name}}</div>
+                      <p class="total-price">
+                        <span class="c-orange fs16">￥<span v-if="goods.goods_price ==0">0.00</span><span v-else>{{goods.goods_price}}</span></span>
+                        <span class="origin-price ml20">¥<span v-if="goods.totalGoodsPrice ==0">0.00</span><span v-else>{{goods.totalGoodsPrice}}</span></span>
+                      </p>
+                    </div>
+                    <div v-if="goods.refund_state_name" class="status c-orange">{{goods.refund_state_name}}</div>
+                  </div>
+                </div>
+                <div class="goods-joint">
+                  <div class="joint-tit">搭配商品</div>
+                  <ul class="plist-goods-joint" v-if="goods.goods_group !=''">
+                    <li class="joint-item" v-for="(item) in goods.unser_goods_group">
+                      <div class="goods-detail">
+                        <div class="pic">
+                          <img :src="item.goodsImagePath">
+                        </div>
+                        <div class="detail">
+                          <div class="detail-c1">
+                            <p class="count"> x {{item.num}}</p>
+                          </div>
+                          <div class="detail-c2">
+                            <a class="tit"  @click="openGoods(item.goodsCommonId)">{{item.goodsName}}</a>
+                            <div class="intro">{{item.goodsAttrStr}}</div>
+                            <p class="joint-total-price">
+                              <span class="fs16">￥<span v-if="item.discountPrice ==0">0.00</span><span v-else>{{item.discountPrice}}</span></span>
+                              <span class="origin-price ml20">￥<span v-if="item.goodsPrice ==0">0.00</span><span v-else>{{item.goodsPrice}}</span></span>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="goods-detail" v-else>
+                <div class="pic">
+                  <img :src="goods.image_60_url">
+                </div>
+                <div class="detail">
+                  <div class="detail-c1">
+                    <p class="count">×{{goods.goods_num}}</p>
+                    <p class="price">￥<span v-if="goods.goods_price ==0">0.00</span><span v-else>{{goods.goods_price}}</span></p>
+                  </div>
+                  <div class="detail-c2">
+                    <a class="tit"  @click="openGoods(goods.goods_commonid)">{{goods.goods_name}}</a>
+                    <p v-if="goods.goods_spec" class="intro">{{goods.goods_spec}}</p>
+                  </div>
+                </div>
+                <div v-if="goods.refund_state_name" class="status c-orange">{{goods.refund_state_name}}</div>
+              </div>
+            </li>
+            <div class="goods-gift" v-if="detailList.extend_order_gifts">
+              <div class="gift-obj" v-for="(goodsGift,gg) in detailList.extend_order_gifts">
+                <p v-if="gg == 0"><span>使用{{goodsGift.coupon_title?goodsGift.coupon_title:'-'}}，赠品如下</span></p>
+                <div class="goods-detail" v-if="goodsGift">
+                  <div class="pic">
+                    <img :src="goodsGift.goods_image" >
+                  </div>
+                  <div class="detail" style="padding-bottom: 5px">
+                    <div class="detail-c1">
+                      <p class="count">×{{goodsGift.goods_num}}</p>
+                    </div>
+                    <div class="detail-c1">
+                      <p class="count">
+                      </p>
+                    </div>
+                    <div class="detail-c2">
+                      <div class="tit">{{goodsGift.goods_name}}</div>
+                    </div>
+                  </div>
+                  <div class="detail">
+                    <div class="detail-c2 c-gray" style="text-align: left;font-size: 12px;">
+                      <template>
+                        <template v-for="(val,key) in goodsGift.goods_spec">
+                          {{key}}:{{val}}&nbsp;
+                        </template>
+                      </template>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ul>
+          <ul class="list-msg list-return" v-if="detailList.receiveList">
+          <li v-if="detailList.receiveList.order_message != ''">
+            <div class="tit">买家留言：</div>
+            <div class="detail">{{detailList.receiveList.order_message}}</div>
+          </li>
+            <template v-if="detailList.order_state == 20 && detailList.shipping_type !=0">
+              <li>
+                <div class="tit">订单配送费：</div>
+                <div class="detail">{{detailList.shipping_fee}}</div>
+              </li>
+              <li >
+                <div class="tit">达达预计配送费：</div>
+                <div class="detail">
+                  <span v-if="detailList.delivery_fee > 0">{{detailList.delivery_fee}}</span>
+                  <span v-else>暂无</span>
+                  <span class="c-gray fs12 ml5">预计运费仅供参考，实际运费以达达最终产生的费用为准</span>
+                </div>
+              </li>
+            </template>
+            <template v-if="detailList.delivery_type == 1">
+              <li>
+                <div class="tit">达达运费：</div>
+                <div class="detail">
+                  <span v-if="detailList.delivery_fee > 0">{{detailList.delivery_fee}}</span>
+                  <span v-else>暂无</span>
+                </div>
+              </li>
+              <li>
+                <div class="tit">达达小费：</div>
+                <div class="detail">&yen;{{detailList.tips}}</div>
+              </li>
+              <template v-if="detailList.delivery_status == 1">
+                <li class="c-orange">
+                  <div class="tit">达达状态：</div>
+                  <div class="detail">待骑手接单</div>
+                </li>
+              </template>
+              <template v-else-if="detailList.delivery_status == 2">
+                <template v-if="detailList.cancel_confirm == 1">
+                  <li class="c-orange">
+                    <div class="tit">达达状态：</div>
+                    <div class="detail">骑手发起取消订单</div>
+                  </li>
+                  <li class="c-orange">
+                    <div class="tit">取消原因：</div>
+                    <div class="detail">{{detailList.cancel_reason}}</div>
+                  </li>
+                </template>
+                <template v-else>
+                  <li class="c-orange">
+                    <div class="tit">达达状态：</div>
+                    <div class="detail">待骑手取货</div>
+                  </li>
+                </template>
+                <li>
+                  <div class="tit">配 送 员：</div>
+                  <div class="detail">{{detailList.dm_name}}&ensp;{{detailList.dm_mobile}}</div>
+                </li>
+              </template>
+              <template v-else-if="detailList.delivery_status == 3">
+                <template v-if="detailList.cancel_confirm == 1">
+                  <li class="c-orange">
+                    <div class="tit">达达状态：</div>
+                    <div class="detail">骑手发起取消订单</div>
+                  </li>
+                  <li class="c-orange">
+                    <div class="tit">取消原因：</div>
+                    <div class="detail">{{detailList.cancel_reason}}</div>
+                  </li>
+                </template>
+                <template v-else>
+                  <li class="c-orange">
+                    <div class="tit">达达状态：</div>
+                    <div class="detail">配送中</div>
+                  </li>
+                </template>
+                <li>
+                  <div class="tit">配 送 员：</div>
+                  <div class="detail">{{detailList.dm_name}}&ensp;{{detailList.dm_mobile}}</div>
+                </li>
+              </template>
+              <template v-else-if="detailList.delivery_status == 4">
+                <li class="c-orange">
+                  <div class="tit">达达状态：</div>
+                  <div class="detail">已送达</div>
+                </li>
+                <li>
+                  <div class="tit">配 送 员：</div>
+                  <div class="detail">{{detailList.dm_name}}&ensp;{{detailList.dm_mobile}}</div>
+                </li>
+                <li class="c-orange">
+                  <div class="tit">完成配送时间：</div>
+                  <div class="detail">{{detailList.finnshed_time}}</div>
+                </li>
+              </template>
+              <template v-else-if="detailList.delivery_status == 5">
+                <li class="c-orange">
+                  <div class="tit">达达状态：</div>
+                  <div class="detail">已取消</div>
+                </li>
+                <li>
+                  <div class="tit">取消类型：</div>
+                  <div class="detail">
+                    <span v-if="detailList.cancel_from == 0">其他</span>
+                    <span v-if="detailList.cancel_from == 1">达达配送员取消</span>
+                    <span v-if="detailList.cancel_from == 2">商家主动取消</span>
+                    <span v-if="detailList.cancel_from == 3">系统或客服取消</span>
+                  </div>
+                </li>
+                <li>
+                  <div class="tit">取消原因：</div>
+                  <div class="detail">{{detailList.cancel_reason}}</div>
+                </li>
+              </template>
+              <template v-else-if="detailList.delivery_status == 7">
+                <li class="c-orange">
+                  <div class="tit">达达状态：</div>
+                  <div class="detail">已过期</div>
+                </li>
+                <li class="c-orange">
+                  <div class="tit">过期原因：</div>
+                  <div class="detail">订单30分钟未被骑士接单，系统自动将订单过期终结</div>
+                </li>
+              </template>
+              <template v-else-if="detailList.delivery_status == 9">
+                <li class="c-orange">
+                  <div class="tit">达达状态：</div>
+                  <div class="detail">妥投异常</div>
+                </li>
+                <li>
+                  <div class="tit">配 送 员：</div>
+                  <div class="detail">{{detailList.dm_name}}&ensp;{{detailList.dm_mobile}}</div>
+                </li>
+                <li>
+                  <div class="tit">异常原因：</div>
+                  <div class="detail">{{detailList.cancel_reason}}</div>
+                </li>
+              </template>
+            </template>
+        </ul>
+          <div class="action-bar" v-if="detailList.select_deliveryman">
+            <a v-if="detailList['diliverymans'] &&detailList['diliverymans'][detailList.diliveryman_id] !='' && detailList['diliverymans'][detailList.diliveryman_id] != null && detailList['diliverymans'][detailList.diliveryman_id] != undefined" href="javascript:void(0)" :data-orderid="detailList.order_id" class="ncsc-btn-mini select_deliveryman" :data-fee="detailList['receiveList']['distribution_fee']"  :data-id="detailList['diliveryman_id']">配送员:{{detailList['diliverymans'][detailList.diliveryman_id]}}</a>
+            <a v-else href="javascript:void(0)" :data-orderid="detailList.order_id" class="ncsc-btn-mini select_deliveryman">选择配送员</a>
+          </div>
+          <div class="order-status" :class="detailList.order_state != 20 ? 'c-gray':''">
+            {{detailList.state_desc}}
+            <p v-if="detailList.order_state == 20" class="count-down" :id="countDownId" @click="countDown(detailList.cunt_down_second,countDownId)"></p>
+            <p></p>
+          </div>
+        </td>
+      </tr>
+      </table>
+      </div>
+    </template>
+    </qm-dialog>
+  </div>
+</div>

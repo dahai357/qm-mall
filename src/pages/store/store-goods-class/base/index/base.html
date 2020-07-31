@@ -1,0 +1,155 @@
+<div class="qm-store-class-base">
+
+
+        <div class="operate-bar" v-if="classList && classList.length > 0">
+            <label for="all" class="mr10"><input type="checkbox" id="all" @change="selectAll($event)" :checked="isAll">全选</label>
+            <a @click="betchDelete" class="ncsc-btn-orange-unfilled">删除</a>
+            <span class="c-gray mr10 fs14_1.5">可自行拖动分类排序，对应列表排序即为前端用户显示的顺序,最多可设置10个分类。</span>
+            <el-tooltip placement="right-start" effect="light" popper-class="atooltip" class="mt3">
+                <div slot="content" class="toolTipCont">
+                    <img src="@/assets/seller/images/seller/example/banner-dpsytjfl-new.png" alt="">
+                </div>
+
+                <p class="lightBlue">
+                    <i class="fa fa-question-circle" aria-hidden="true"></i>示例
+                </p>
+            </el-tooltip>
+        </div>
+
+      <qm-table :pageParams="pageParams">
+            <template slot="table">
+
+                <table class="ncsc-default-table" id="my_category" >
+                    <thead>
+                        <tr nc_type="table_header">
+                        <th class="w40"></th>
+                        <th class="w370">分类名称</th>
+                        <th class="w120">显示</th>
+                        <th class="w120">效果</th>
+                        <th class="w270">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="treet1" class="ui-sortable">
+                    </tbody>
+                </table>
+
+                <template v-if="classList">
+                        <draggable v-model="classList" v-bind="dragOptions" draggable=".item" ghost-class="ghost" @change="itemDraggable($event)">
+                            <tr v-for="(list,l) in classList" :key="l" class="item fs14">
+                                <td class="w40"><input type="checkbox" v-model="list.checked" @change="selectChange($event,list,l)" :id="'check'+list.stc_id"/>
+                                <td class="w370"><span nc_type="editobj">{{list.stc_name}}</span></td>
+                                <td class="w120">{{list.stc_state == 1 ? '是':'否'}}</td>
+                                <td class="w120">{{list.show_type == 0? '全部展示':'收起展示'}}</td>
+                                <td class="handle w270">
+                                    <p>
+                                    <a class="ncsc-btn" @click="detailItem(list,l)">编辑</a>
+                                    <a class="ncsc-btn" @click="deleteItem(list,l)">删除</a>
+                                    </p>
+                                </td>
+                            </tr>
+                        </draggable>
+                </template>
+
+            </template>
+    </qm-table>
+    <!-- <qm-pagination :pageParams="pageParams" @changeIndex="changeIndex($event)"></qm-pagination> -->
+
+    <qm-dialog :dialogVisible="dialog1" :width="'480px'" @close="dialog1 = false,getPageData(pageParams);">
+            <template slot="title">{{dialogTitle}}</template>
+            <template slot="content" >
+                <div class="eject_con">
+                    <form id="category_form">
+                    <input type="hidden" name="stc_level" value="1">
+                    <input type="hidden" name="stc_level2" value="">
+                    <dl>
+                        <dt><i class="required">*</i>分类名称：</dt>
+                        <dd>
+                        <input class="text w200" type="text" name="stc_name" id="stc_name" autocomplete="off" v-model.trim="curClass.stc_name">
+                        <span class="error" v-if="curClass.stc_name == '' && error.stc_name_error"><i class="fa fa-exclamation-circle mr5"></i>分类名称不能为空</span>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>分类副标题：</dt>
+                        <dd>
+                            <textarea name="stc_sub_title" id="stc_sub_title" cols="30" rows="10" v-model.trim="curClass.stc_sub_title"></textarea>
+                            <span class="error" v-if="curClass.stc_name != '' && error.stc_sub_title_error"><i class="fa fa-exclamation-circle mr5"></i>分类副标题不能超过20个字符</span>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt><i class="required">*</i>显示状态：</dt>
+                        <dd>
+                        <label>
+                            <input type="radio" name="stc_state" value="1" v-model="curClass.stc_state">
+                            是</label>
+                        <label class="ml20">
+                            <input type="radio" name="stc_state" value="0" v-model="curClass.stc_state">
+                            否</label>
+                            <span class="error" v-if="(curClass.stc_state == null || curClass.stc_state <0) && error.stc_state_error"><i class="fa fa-exclamation-circle mr5"></i>请选择显示状态</span>
+                        </dd>
+                    </dl>
+                        <dl>
+                            <dt><i class="required">*</i>显示效果：</dt>
+                            <dd>
+                                <label>
+                                    <input type="radio" name="show_type" value="0" v-model="curClass.show_type">
+                                    全部展示</label>
+                                <label class="ml20">
+                                    <input type="radio" name="show_type" value="1" v-model="curClass.show_type">
+                                    收起展示</label>
+                                <span class="error" v-if="(curClass.show_type == null || curClass.show_type <0) && error.show_type_error"><i class="fa fa-exclamation-circle mr5"></i>请选择显示效果</span>
+                            </dd>
+                        </dl>
+                    <div class="c-gray fs12 mt10">
+                        <p>1、显示效果：设置前台分类展示效果。</p>
+                        <p>2、全部展示：该分类下的所有商品均展示。</p>
+                        <p>3、收起展示：该分类下的商品小于等于4个，全部展示；<br>该分类下的商品大于4个，只展示2个商品，显示“查看更多”按钮，点击可查看该分类下的全部商品。</p>
+                    </div>
+                    <div id="warning"></div>
+                    <div class="bottom">
+                        <label class="submit-border"><input type="button" class="ncsc-btn ncsc-btn-orange" value="提交" @click="submitClass"></label>
+                    </div>
+                    </form>
+                </div>
+            </template>
+        </qm-dialog>
+
+
+        <qm-dialog :dialogVisible="successDialog" :width="'500px'" @close="successDialog = false">
+            <template slot="title">提示信息</template>
+            <template slot="content" >
+                <div class="dialog-bd eject_con">
+                    <div class="dialog_message_contents comfirm"><i class="alert_info"></i>{{successMessage}}</div>
+                    <dl class="bottom rightBtn" v-if="successTimeout">
+                        <dt></dt>
+                        <dd>
+                            2秒后页面跳转
+                        </dd>
+                    </dl>
+                    <dl class="bottom rightBtn" v-if="successBtn">
+                            <dt></dt>
+                            <dd>
+                                <label @click="successDialog = false" class="submit-border"><input type="submit" class="ncsc-btn ncsc-btn-orange" value="确定"></label>
+                            </dd>
+                        </dl>
+                </div>
+            </template>
+        </qm-dialog>
+
+
+        <qm-dialog :dialogVisible="comfirmDialog" :width="'500px'" @close="comfirmDialog = false">
+            <template slot="title">提示信息</template>
+            <template slot="content" >
+                <div class="dialog-bd eject_con">
+                    <div class="dialog_message_contents comfirm"><i class="alert_info"></i>您确实要删除该分类吗?</div>
+                    <dl class="bottom rightBtn">
+                        <dt></dt>
+                        <dd>
+                            <label @click="deleteSure()" class="submit-border"><input type="submit" class="ncsc-btn ncsc-btn-orange" value="确定"></label>
+                            <label @click="deleteCancle()" class="submit-border"><input type="submit" class="cancle" value="取消"></label>
+                        </dd>
+                    </dl>
+                </div>
+            </template>
+        </qm-dialog>
+
+</div>

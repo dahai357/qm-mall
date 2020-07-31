@@ -1,0 +1,139 @@
+$font-nor:"Helvetica Neue", Tahoma, "Microsoft Yahei", "PingFang SC", "ST Heiti", SimHei, sans-serif;
+$font-sp:"Helvetica Neue", Tahoma, SimSun, "PingFang SC", "ST Heiti", sans-serif;
+
+$content-width:1000px;
+
+$sprite: url('../images/seller/style2018/sprite.png');
+
+$dominant-color:#ff8519;
+$highlight-color:#ef7101;
+
+$blue:#0093fa;
+
+$gray:#757575;
+$gray-lighter:#adadad;
+
+%clearfix{	
+	&:before{
+		display:table;
+		content:"";
+	}
+	&:after{
+		display:table;
+		content:"";
+		clear:both;
+	}
+}
+
+%txt-overflow-ellipsis{ 
+	white-space: nowrap; 
+	overflow:hidden; 
+	text-overflow:ellipsis;
+}
+
+%content-center{ 
+	width:$content-width;
+	margin:0 auto;
+}
+
+
+%transition{ transition: 0.3s ease;}    
+
+%scale-img{	
+	.avatar{ display:block; overflow:hidden;
+		img{ transition: transform .5s;}
+	}
+	a:hover{		
+		.avatar{
+			img{ transform:scale(1.1);}
+		}
+	}	
+}
+
+
+@mixin height($height){
+	height:$height;
+	line-height:$height;
+}
+
+@mixin opacity($opacity) {
+	opacity: $opacity / 100;
+	filter: alpha(opacity=$opacity);
+}
+
+@mixin icon($width,$height,$bg-position){		
+	width:$width;
+	height:$height;
+	background-position:$bg-position;	
+}
+
+@mixin background-line-gradient($direction,$color1,$color2,$filter:null){ 
+	@if $filter{
+		filter: progid:DXImageTransform.Microsoft.gradient(enabled='true',startColorstr='#{ie-hex-str($color1)}', endColorstr='#{ie-hex-str($color2)}');
+	}@else{
+		background:#{$color2}#{\0};
+	}	
+	background:linear-gradient($direction,$color1,$color2);	
+}
+
+@mixin triangle ($size, $color, $direction) { 
+	height: 0; 
+	width: 0; 
+	overflow:hidden;
+	line-height:0;
+	display:inline-block;
+	font-size:0;
+	vertical-align:middle;
+
+	
+	@if ($direction == top) or ($direction == bottom) or ($direction == right) or ($direction == left) { 
+		border-color: transparent; 
+		border-style: solid; 
+		border-width: $size / 2; 
+		
+		@if $direction == top { 
+			border-bottom-color: $color;
+		}
+
+		@else if $direction == bottom { 
+			border-top-color: $color;
+		}
+
+		@else if $direction == left { 
+			border-right-color: $color; 
+		} 
+		  
+		@else if $direction == right { 
+			border-left-color: $color;
+		}				
+	} 
+
+	 
+	@else if ($direction == top-right) or ($direction == top-left) { 
+	 	border-top: $size solid $color;
+
+		@if $direction == top-left { 
+		 	border-right: $size solid transparent;
+		} 
+
+		@else if $direction == top-right { 
+			border-left: $size solid transparent; 
+		}
+	} 
+
+	 
+	@else if ($direction == bottom-right) or ($direction == bottom-left) { 
+	 	border-bottom: $size solid $color;
+		 
+		@if $direction == bottom-left { 
+			border-right: $size solid transparent; 
+		} 
+		 
+		@else if $direction == bottom-right { 
+			border-left: $size solid transparent;
+		}
+	} 
+}
+
+
+

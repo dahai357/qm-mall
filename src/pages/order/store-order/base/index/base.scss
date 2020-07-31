@@ -1,0 +1,509 @@
+@import '@/assets/scss/style.scss';
+.w282{
+  width: 282px;
+}
+.w267{
+  width: 267px;
+}
+.ncsc-search-form .inline{
+  display: inline;
+}
+.ncsc-form-category-search{display: inline-block; vertical-align: middle; position: relative; font-size: 12px;}
+.ncsc-form-category-search .search-category{position: absolute; left: 0; top: 7px; width: 100px; text-align: left; box-sizing: border-box; padding: 0 20px 0 10px;}
+.ncsc-form-category-search .search-category-name{line-height: 29px; position: relative;}
+.ncsc-form-category-search .search-category-name .fa-angle-down{position: absolute; right: -10px; top: 50%; margin-top: -7px;}
+.ncsc-form-category-search .search-category-drop{position: absolute; left: 0; width: 100%; top: 29px; padding: 0 10px 3px; box-sizing: border-box; background: #fff; border:1px solid #ddd; border-top:none; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; display: none; z-index: 300;}
+.ncsc-form-category-search .list-search-category li{line-height: 1.5; padding: 2px 0;}
+.ncsc-form-category-search input[type="text"]{padding-left: 100px;}
+.ncsc-form-category-search:hover{cursor: pointer;}
+.ncsc-form-category-search.active .search-category-drop{display: block;}
+.ncsc-form-category-search.active .fa-angle-down{margin-top: -8px;}
+.ncsc-form-category-search.active .fa-angle-down:before{content: "\f106";}
+.ncsc-form-category-search.active input{border-bottom-left-radius: 0;}
+.add-on{
+  vertical-align: middle;
+}
+.ncsc-search-form .search-item{
+  display: inline-block;
+  height: 40px;
+  line-height: 40px;
+}
+.qm-store-class-base {
+    padding: 10px 20px 20px 0;
+}
+
+.ncsc-search-form {
+    color: #757575;
+    font-size: 12px;
+    padding-bottom: 20px;
+}
+.table-order .delivery-msg .delivery-code, .table-order .delivery-msg .delivery-type{color:#0093fa; font-size: 20px;}
+
+.eject_con dl dt, .eject_con dl dd {
+    display: table-cell;
+    vertical-align: top;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: left;
+}
+.eject_con dl dt{
+    text-align: right;
+}
+
+.eject_con #warning {
+    color: red;
+    text-align: left;
+    font-size: 14px;
+}
+
+.ncsc-default-table {
+    width: 100%;
+    border-collapse: collapse;
+    line-height: 1.5;
+}
+.table-order2{
+    text-align: left;
+}
+.table-order2 caption {
+    color: #757575;
+    font-size: 12px;
+    padding-bottom: 10px;
+    text-align: left;
+}
+.table-order2 caption p {
+    margin-right: 20px;
+    display: inline-block;
+}
+
+.order-total {
+    display: table;
+    width: 100%;
+    padding: 10px 0;
+}
+.order-total li {
+    display: table-cell;
+    text-align: right;
+    width: 50%;
+}
+.order-total .item {
+    padding-top: 5px;
+    padding-right: 20px;
+}
+
+// 选择配送员
+.plist-man img {
+    width: 26px;
+    height: 26px;
+    border-radius: 100%;
+    margin-right: 6px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.plist-man .name {
+    display: inline-block;
+    vertical-align: middle;
+    max-width: 8em;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.ncsc-form-custom-radio .ncsc-custom-radio-frame {
+    display: inline-block;
+    vertical-align: middle;
+    width: 20px;
+    height: 20px;
+    position: relative;
+    margin: 0 7px 0 0;
+}
+.ncsc-form-custom-radio-group .ncsc-form-custom-radio {
+    margin: 5px;
+    min-width: 180px;
+}
+.plist-man {
+    overflow: hidden;
+}
+.plist-man li {
+    float: left;
+    padding: 5px 0;
+}
+.plist-man li {
+    width: 33.3%;
+    text-align: left;
+}
+.diliveryman-box {
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.dialog-bd {
+    text-align: left;
+    margin-top: -20px;
+}
+.ncsc-dilivery-pay {
+    margin-top: 15px;
+    text-align: left;
+}
+.diliveryman-new-box {
+    padding: 15px 0;
+    margin-top: 15px;
+    border-bottom: 1px solid #eee;
+}
+.ncsc-new-diliveryman {
+    padding: 10px 0 0 25px;
+}
+.ncsc-form-hint {
+    font-size: 12px;
+}
+
+
+.ncsc-form-s input[type="text"],
+.ncsc-form-s input[type="time"],
+.ncsc-form-s input[type="tel"],
+.ncsc-form-s input[type="password"],
+.ncsc-form-s input[type="number"] {
+    line-height: 16px;
+    height: 30px;
+    font-size: 14px;
+}
+.ncsc-new-diliveryman .ncsc-form-control {
+    margin-right: 5px;
+}
+
+.ncsc-form-custom-radio.checked .ncsc-custom-radio-frame::after {
+    left: 5px;
+    top: 5px;
+}
+
+
+.ncsc-form-inline {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 1;
+}
+.ncsc-form-s .ncsc-form-tit {
+    line-height: 30px;
+    font-size: 14px;
+}
+.ncsc-form-s label {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 14px;
+}
+.ncsc-form-s a:hover {
+    text-decoration: underline;
+    color: #ff8519;
+}
+
+.ncsc-form-error {
+    vertical-align: middle;
+    color: red;
+    margin: 0;
+    font-size: 12px;
+}
+.ncsc-form-error {
+    display: block;
+}
+
+.amap-demo {
+    height: 200px;
+  }
+.ncsc-btn:hover{
+    color:$orange;
+}
+.table-order thead td{
+    padding: 0;
+    line-height: 35px;
+    border: 1px solid #eee;
+}
+.table-order thead td span{
+    margin-left: 30px;
+    font-size: 18px;
+}
+.table-order thead td .span_1{
+    margin-left: 2px;
+    font-size: 18px;
+}
+.price_intro {
+  color: #1c69dd;
+}
+.ncsc-btn-orange:hover{
+  color:#eee;
+}
+.comm-tab .active a{
+  color: #ff8519;
+}
+textarea::-webkit-input-placeholder { color: #bbb; }
+textarea:-ms-input-placeholder { color: #bbb; }
+textarea::-ms-input-placeholder { color: #bbb; }
+textarea::placeholder { color: #bbb; }
+.comm-tab li{
+  position:relative;
+}
+.comm-tab li:hover a{
+  color: #ff8518;
+}
+.comm-tab li .red-dot {
+  position: absolute;
+  right: 0;
+  top: 2px;
+  width: 6px;
+  height: 6px;
+  background: #ff8518;
+  border-radius: 100%;
+}
+.comm-tab li .red-dot {
+  right: 4px;
+  width: 4px;
+  height: 4px;
+}
+.w235{
+  width: 235px;
+}
+.category-used{ display: inline-block; vertical-align: middle; position: relative;}
+.category-used .category-tit{ border:1px solid #ddd; color:#868686; line-height: 26px; box-sizing: border-box; border-radius:5px;
+  font-size: 14px;    padding: 0 10px; position: relative;}
+.category-used .category-tit i{ color:#757575; position: absolute; right: 10px; top: 6px;}
+.pop-category-used{ position: absolute; left: 0; width: 100%; box-sizing: border-box; top: 30px; border:1px solid #ddd; z-index:
+  500; background: #fff; border-radius:5px; max-height: 302px; overflow-y: auto;}
+.category-used:hover{ cursor: pointer;}
+.category-used.active .category-tit{ color:#333}
+.category-used.active .category-tit i{ color:#333}
+.more-tit{
+  margin-left: 90px;
+  margin-top: 5px;
+  display: block;
+}
+.more-tit ul{
+  display: inline-block;
+  vertical-align: middle;
+}
+.more-tit ul li{
+  display: inline-block;
+  cursor: pointer;
+  color: #000;
+  float: left;
+  padding: 1px 5px;
+  border: 1px dashed #b1b1b1;
+  margin-right: 8px;
+  font-size: 13px;
+}
+.express-content{
+  width: 100%;
+  max-height: 500px;
+  overflow-y: auto;
+  text-align: left;
+  font-size: 15px;
+  padding-top: 20px;
+}
+.express-content .need{
+  height: 70px;
+  padding: 10px;
+}
+.express-content .need p{
+  display: inline-block;
+  cursor: pointer;
+  color: #ff8518;
+  font-size: 14px;
+}
+.express-search{
+  padding:0px 40px 0px 5px;
+}
+.express-search .buttons{
+  display: inline-block;
+  vertical-align: middle;
+}
+.express-search input{
+  font-size: 14px;
+}
+.express-search input.search{
+  width: 220px;
+}
+.express-list{
+  padding: 5px;
+}
+.express-list p.tit{
+  padding-left: 10px;
+}
+.express-list p.item{
+  padding:5px 20px;
+}
+.express-list p.item span{
+  display: inline-block;
+  margin-right: 15px;
+  font-size: 14px;
+}
+.express-list p.item span:hover{
+  cursor: pointer;
+  color: #ff8518;
+}
+.express-list p:nth-child(odd) {
+  background: #f2f2f2;
+}
+.express-list p:nth-child(even) {
+  background: #fff;
+}
+.toggle-down{
+  position: relative;
+}
+.toggle-up{
+  max-height: 340px;
+  overflow: hidden;
+  position: relative;
+}
+.toggle-down .mask{
+  text-align: right;
+}
+.toggle-up .mask{
+  position: absolute;
+  z-index: 1998;
+  padding-top: 65px;
+  bottom: -8px;
+  text-align: right;
+  width: 100%;
+  background-image: -webkit-gradient(linear,left top, left bottom,from(rgba(255,255,255,0)),color-stop(70%, #fff));
+  background-image: linear-gradient(-180deg,rgba(255,255,255,0) 0%,#fff 70%);
+  padding-bottom: 26px;
+  margin-bottom: 8px;
+}
+.mask a{
+  color: #2e98f2;
+  text-decoration: none;
+}
+a.change_address{
+  color: #027ddb;
+}
+.ncsc-btn:hover{
+  color:#fff;
+}
+//修改价格
+.text-left{
+  text-align: left;
+}
+.font-color-red{
+  color: red;
+}
+.table-border,.table-border tr td,.table-border tr th{
+  border: 0.5px solid #e8e0e0;
+}
+.table-border tr td,.table-border tr th{
+  text-align: center;
+
+}
+.table-border tr td{
+  padding: 8px 10px;
+  vertical-align: middle;
+}
+.table-border .detail,.table-order .info-box{
+  text-align: center;
+}
+.show-border-1 p{
+  border-top: 0.5px solid #e8e0e0;
+  padding: 8px 10px;
+}
+.show-border-1 p:first-child{
+  border-top: 0px solid #e8e0e0;
+}
+.dashed-1{
+  width: 100%;
+  height: 1px;
+  background-image: linear-gradient(to right, #ccc 0%, #ccc 69%, transparent 69%);
+  background-size: 10px 1px;
+  background-repeat: repeat-x;
+
+}
+.wd33{
+  width: 33% !important;
+}
+.edit-order-error {
+  color: red;
+}
+  .print-all-address {
+    display: block;
+    width: 150px;
+    color: #ff8519;
+    margin-top: 9px;
+    cursor: pointer;
+  }
+
+  .print-all-address-table, .print-all-address-table tr td, .print-all-address-table tr th {
+    border: 0.5px solid #e8e0e0;
+  }
+
+  .print-all-address-table tr td, .print-all-address-table tr th {
+    text-align: center;
+
+  }
+
+  .print-all-address-table tr td {
+    padding: 10px 10px;
+    vertical-align: middle;
+    -moz-user-select: text; /* Firefox私有属性 */
+    -webkit-user-select: text; /* WebKit内核私有属性 */
+    -ms-user-select: text; /* IE私有属性(IE10及以后) */
+    -khtml-user-select: text; /* KHTML内核私有属性 */
+    -o-user-select: text; /* Opera私有属性 */
+    user-select: text; /* CSS3属性 */
+  }
+
+  .print-all-address-table .detail, .print-all-address-table .info-box {
+    text-align: center;
+  }
+
+  .page-size {
+    float: right;
+    text-align: right;
+    height: 35px;
+    line-height: 35px;
+  }
+
+  .print-count {
+    text-align: left;
+    line-height: 35px;
+    height: 35px;
+    width: 30%;
+    float: left;
+    font-size: 13px;
+  }
+
+  .print-count span {
+    color: red;
+  }
+
+  .print-all-address-table-overflow {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 336px;
+
+  }
+
+  .print-all-address-table-overflow::-webkit-scrollbar {
+    width: 5px;
+    background-color: rgba(75, 75, 75, 0.2);
+  }
+
+  .no-data {
+    display: inline-block;
+    width: 300px;
+    height: 234px;
+    vertical-align: middle;
+    background: url(../../../../../assets/no-result.png) center top no-repeat;
+    background-size: 50% 50%;
+  }
+  .edi-price p{
+    text-align: left;
+    font-size: 7px;
+  }
+  .edi-price-weight{
+    font-weight: bold;
+  }
+  .edi-price-color-gray{
+    color: grey;
+  }
+  .edi-price-color-red{
+    color: red;
+  }
+  .edi-price-indent{
+    text-indent: 2em;
+  }
+
+

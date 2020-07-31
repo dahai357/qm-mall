@@ -1,0 +1,68 @@
+.ncsc-account-container {
+    line-height: 20px;
+    display: block;
+    min-height: 20px;
+    padding: 15px 0 10px 0;
+}
+.ncsc-account-all .checkbox, .ncsc-account-container .checkbox {
+    vertical-align: middle;
+    margin-right: 0px;
+}
+label {
+   
+    vertical-align: middle;
+}
+.ncsc-account-container-list {
+    font-size: 14px;
+    vertical-align: top;
+    display: inline-block;
+    width: 83%;
+}
+.ncsc-account-container-lista {
+    font-size: 14px;
+    vertical-align: top;
+    display: inline-block;
+    width: 100%;
+}
+ul{
+    width: 83%;
+
+}
+.ncsc-account-container h4 {
+    font-size: 14px;
+    font-weight: bold;
+    vertical-align: top;
+    display: inline-block;
+    width: 14%;
+    margin: 0 1%;
+}
+.ncsc-account-container-list li {
+    font-size: 14px;
+    line-height: 20px;
+    vertical-align:middle;
+    letter-spacing: normal;
+    word-spacing: normal;
+    display: inline-block;
+    width: 25%;
+    height: 20px;
+    margin-bottom: 10px;
+}
+.ncsc-account-container-lista li {
+    font-size: 14px;
+    line-height: 20px;
+    vertical-align:middle;
+    letter-spacing: normal;
+    word-spacing: normal;
+    display: inline-block;
+    width: 25%;
+    height: 20px;
+    margin-bottom: 10px;
+}
+.ncsc-account-container:nth-child(even) {
+    background: #f9f9f9;
+}
+.ncsc-btn:hover {
+    text-decoration: none;
+    border-color: #ff8519;
+    color:#ff8519;
+  }

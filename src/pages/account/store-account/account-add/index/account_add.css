@@ -1,0 +1,45 @@
+.account-add-form {
+    margin-top: 60px;
+    width: 100%;
+  }
+  .account-add .bottom {
+    margin-left: 20%;
+  }
+  .boxtext {
+    width: 250px;
+  }
+  .mobile-code .get-code {
+    position: relative;
+  }
+  .mobile-code .get-code input {
+    background: none;
+    border: none;
+    line-height: 20px;
+    height: 20px;
+    font-size: 12px;
+    display: block;
+    padding: 0 5px;
+    background-color: #ddd;
+    position: absolute;
+    right: 10px;
+    top: 6px;
+    cursor: pointer;
+  }
+  .mobile-code .get-code input:hover {
+    color: white;
+  }
+  .accountSelect {
+    width: 88px;
+  }
+  .icon-exclamation-sign::before{
+    content: "\f06a";
+    text-decoration: inherit;
+    display: inline-block;
+    
+  }
+  form .error i {
+    margin: 0 5px 3px;
+  }
+  label.error {
+    font-size: 12px;
+}

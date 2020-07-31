@@ -1,0 +1,103 @@
+<div class="qm-store-class-base">
+    <div class="content">
+      <p class="fs16">保证金： 应缴 
+        <span class="c-orange">¥{{storeInfo.total_deposit | nativef2y}}</span>
+        （已缴 ¥{{storeInfo.cashed_deposit | nativef2y}}<span v-if="deposit_flag">，</span><a v-if="deposit_flag" @click="doRouter('/store/qm_store_class/deposit_list')" class="existMore">存在待审核保证金</a>)
+        <!--  -->
+        <!-- <button class="ncsc-btn-orange-rim basic-button " v-if="!deposit_flag && isTotalMoreThan" @click="payDialogOpen" style="height:24px">缴纳保证金</button>   -->
+        <a class="ncsc-btn ncsc-btn-orange ml10 bfs14" @click="payDialogOpen" v-if="!deposit_flag && isTotalMoreThan" >缴纳保证金<i class="arrow-move"></i></a>
+        <button class="ncsc-btn-orange-rim basic-button" v-if="!deposit_flag && isCashedMoreThan" @click="returnCash" style="height:30px">退回保证金</button>                                                    
+        <a class="ncsc-btn-orange-unfilled" @click="doRouter('/store/qm_store_class/deposit_list')" style="margin-top: 2px;line-height: 30px">缴费明细</a>
+      </p>
+
+      <div class="content-title"><span>*友情提示：保证金和技术服务费缴纳方式不一样，请注意区分</span></div>
+  
+      <p class="fs16 mb20">技术服务费（按月缴纳）：</p>
+
+      <qm-store-table :is_portal="is_portal"></qm-store-table>
+    </div>
+
+
+    <qm-dialog :dialogVisible="returnDialog" :width="'500px'" @close="returnDialog = false">
+        <template slot="title">退回保证金</template>
+        <template slot="content" >                
+                <div class="eject_con">
+                    <input type="hidden" name="form_submit" value="ok">
+                    <p class="c-orange mb10">保证金将原路退回到最近一次操作的对公账号。</p>
+                    <dl class="word">
+                      <dt>当前实缴：</dt>
+                      <dd>¥ {{storeInfo.cashed_deposit}}</dd>
+                    </dl>
+                    <dl class="word">
+                      <dt>可退保证金：</dt>
+                      <dd>¥ {{getReturnMoney}}</dd>
+                    </dl>
+                    <div id="warning"></div>
+                    <div class="bottom">
+                        <input type="button" id="submitBtn" value="确定" class="ncsc-btn ncsc-btn-orange" @click="sureReturn">
+                    </div>
+                  </div>
+        </template>
+    </qm-dialog>
+
+    <qm-dialog :dialogVisible="payDialog" :width="'600px'" @close="payDialog = false">
+        <template slot="title">缴纳保证金</template>
+        <template slot="content" >                
+            <div class="eject_con">
+                <input type="hidden" name="form_submit" value="ok" />
+                  <p style="color: red;"> <strong> *友情提示：保证金和技术服务费缴纳方式不一样，清注意区分</strong></p>
+                <p>请将保证金通过对公账号,打入以下账号,并提供转账凭证：</p>
+                <div class="message-box mt15">
+                  <ul class="list-msg">
+                    <li>
+                      <div class="tit">银行账号：</div>
+                      <div class="detail">{{curPayInfo.platform_account}}</div>
+                    </li>
+                      <li>
+                          <div class="tit">收款人&emsp;：</div>
+                          <div class="detail">{{curPayInfo.platform_account_user}}</div>
+                      </li>
+                    <li>
+                      <div class="tit">银&emsp;&emsp;行：</div>
+                      <div class="detail">{{curPayInfo.platform_account_name}}</div>
+                    </li>
+                    <li>
+                      <div class="tit">转账金额：</div>
+                      <div class="detail c-orange">{{curPayInfo.leftAmount}}</div>
+                    </li>
+                    <li>
+                      <div class="detail c-orange">转账时请备注 "{{basicStore.storeName}}保证金"</div>
+                    </li>
+                  </ul>
+                </div>
+                <div class="ncsc-form-table">
+                  <div class="ncsc-form-item">
+                    <div class="item-c1">上传凭证</div>
+                    <div class="item-c2">
+                        <div class="upload-file-item">
+                            <div class="btn-upload-file" v-if="!curPayInfo.path">
+                                <input type="file" name="deposit_store_image_file" id="deposit_store_image_file" class="file-upload" accept="image/gif, image/jpeg, image/png, image/bmp"  @change="localImgLoad($event)">
+                                <p class="upload-txt">上传文件</p>
+                            </div>
+                            <a  class="upload-link" data-type="deposit_store_image" v-else>
+                              {{curPayInfo.path}}
+                              <p class="btn-del-file" id="delFile" @click="curPayInfo.path = ''">×</p>
+                            </a>
+                            <input type="hidden" name="deposit_store_image" value="">
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="warning"></div>
+                <div class="bottom">
+                    <input type="button" id="submitBtn" value="确定" class="ncsc-btn ncsc-btn-orange" @click="depositSaveSure">
+                </div>  
+              </div>
+        </template>
+    </qm-dialog>
+
+    <qm-tips :tipsVisible="dialog1" :showCancel="false" :width="'420px'" @close="dialog1 = false"  @confirm="dialog1 = false">
+        <template slot="title">{{dialogTitle1}}</template>
+        <template slot="content">{{dialogMessage1}}</template>
+    </qm-tips>
+</div>

@@ -1,0 +1,676 @@
+<div>
+    <div class="menu-more"><input UNSELECTABLE='on' class="ncsc-btn ncsc-btn-orange-rim" @click="exportTrancactionData(pageParams)" value="导出Excel表格" readonly/></div>
+  <div class="clear"></div>
+  <div class="tab-style">
+    <div class="qm-store-class-base">
+  <div class="qm-store-class-record">
+    <span class="ncsc-form-tit">时间：</span>
+    <input name="start_time" id="start_time" type="text" class="input-add-on w100" :value="pageParams.beginTime"
+           readonly="readonly">
+    <label class="add-on"><i class="fa fa-calendar" aria-hidden="true"></i></label>
+    <span class="ncsc-sep">-</span>
+    <input name="end_time" id="end_time" type="text" class="input-add-on w100" :value="pageParams.endTime"
+           readonly="readonly">
+    <label class="add-on mr5"><i class="fa fa-calendar icon-calendar"></i></label>
+    <span class="ncsc-form-tit">类型：</span>
+    <select name="order_type" id="order-type" class="mr5" @change="search()">
+      <option value="0">全部</option>
+      <option value="1">新增订单</option>
+      <option value="2">取消订单</option>
+      <option value="3">退款订单</option>
+    </select>
+    <span class="ncsc-form-tit">最近：</span>
+    <div class="quick-time js-quick-time">
+      <a href="javascript:;" @click="setTime(0)" class="mr5" :class="timeType == 0?'active':''">今天</a>
+      <a href="javascript:;" @click="setTime(1)" class="mr5" :class="timeType == 1?'active':''">昨天</a>
+      <a href="javascript:;" @click="setTime(6)" class="mr5" :class="timeType == 6?'active':''">最近7天</a>
+      <a href="javascript:;" @click="setTime(29)" class="mr5" :class="timeType == 29?'active':''">最近30天</a>
+    </div>
+    <input type="submit" class="ncsc-btn" value="搜索" @click="search()">
+  </div>
+  <p class="c-gray mb20">应收金额以商家线下收到的款项为准，以下数据为平台统计数据，仅供参考</p>
+  <!--统计数据展示-开始-->
+  <div class="summary-box mb20">
+    <ul class="list-summary">
+      <li>
+        <div class="name">
+          线下订单总额<span class="fs14">(元)</span>
+        </div>
+        <p class="num"><span v-if="totalList.orderAllAmount == 0">0.00</span><span v-else>{{totalList.orderAllAmount}}</span></p>
+        <p class="count">{{totalList.orderAllCount}}笔</p>
+      </li>
+      <li>
+        <div class="name">
+          取消订单总额<span class="fs14">(元)</span>
+        </div>
+        <p class="num"><span v-if="totalList.cancelOrderAmount == 0">0.00</span><span v-else>{{totalList.cancelOrderAmount}}</span></p>
+        <p class="count">{{totalList.cancelOrderCount}}笔</p>
+      </li>
+      <li>
+        <div class="name">退款总额<span class="fs14">(元)</span>
+        </div>
+        <p class="num c-red"><span v-if="totalList.returnOrderAmount == 0">0.00</span><span v-else>{{totalList.returnOrderAmount}}</span>
+        </p>
+        <p class="count">{{totalList.returnOrderCount}}笔</p>
+      </li>
+      <li>
+        <div class="name">
+          商家应收金额<span class="fs14">(元)</span>
+        </div>
+        <p class="num"><span v-if="totalList.actualIncomeAmount == 0">0.00</span><span v-else>{{totalList.actualIncomeAmount}}</span></p>
+      </li>
+    </ul>
+  </div>
+  <!--统计数据展示-结束-->
+  <qm-table :pageParams="pageParams">
+    <template slot="table">
+  <table class="ncsc-table table-transaction-online">
+    <thead>
+    <tr>
+      <th>时间</th>
+      <th>订单号</th>
+      <th>买家信息</th>
+      <th>类型</th>
+      <th>金额</th>
+      <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr v-for="(item) in list">
+      <td class="c-gray"><p class="ws-nw">{{item.p_d}}</p><p class="ws-nw">{{item.p_t}}</p></td>
+      <td>
+        <p class="w100 txt-hide-nowrap">{{item.goods_name}}</p>
+        <p class="c-gray ws-nw"><a @click="openOrder(item.order_sn)">{{item.order_sn}}</a></p>
+        <p class="c-gray ws-nw" v-if="item.order_type == 3">售后编号：{{item.refund_sn}}</p>
+      </td>
+      <td>
+        <p class="w100 txt-hide-nowrap">{{item.buyer_name}}</p>
+        <p class="c-gray ws-nw">{{item.buyer_tel}}</p>
+      </td>
+      <td>
+        <span v-if="item.order_type == 1">新增订单</span>
+        <span v-if="item.order_type == 2">取消订单</span>
+        <span v-if="item.order_type == 3">退款订单</span>
+      </td>
+      <td><span v-if="item.amount == 0">0.00</span><span v-else>{{item.amount}}</span></td>
+      <td class="handle">
+        <p><a id="detail" class="ncsc-btn-mini" @click="detailGetPageData(item.order_id,item.refund_id,item.order_type)">详情</a>
+        </p>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+    </template>
+  </qm-table>
+    <qm-pagination :pageParams="pageParams" @changeIndex="changeIndex($event)"></qm-pagination>
+  <div class="c-gray mt20 fs12">
+    <p>说明：</p>
+    <p>1）线下支付账单只统计线下支付及货到付款类型的订单</p>
+    <p>2）线下交易总额：已创建的原始订单客户需付金额汇总</p>
+    <p>3）取消订单总额：统计搜索日期内发生的取消订单行为的订单及对应的订单金额汇总</p>
+    <p>4）退款总额：统计搜索日期内发生的有效退款订单及对应的退款金额汇总</p>
+    <p>5）应收金额：商家实际收到的金额汇总，订单金额-退款金额-取消订单金额</p>
+  </div>
+  </div>
+  <!--订单详情按钮的弹框-开始-->
+    <qm-dialog :dialogVisible="showDetailDialog" :width="'960px'" @close="showDetailDialog = false">
+    <template slot="title">详情</template>
+    <template slot="content">
+      <div class="eject_con" style="text-align: left">
+        <table class="table-order">
+          <tr>
+            <td class="w280">
+              <div class="address" v-if="detailList.shipping_type == 1">
+                <p>
+                  <span class="address-ts"> 送达时间：</span><br v-if="detailList.delivery_time > 0">
+                  <span>{{detailList.delivery_text}}</span>
+                </p>
+                <p v-if="detailList.receiveList">{{detailList.receiveList.address}}</p>
+                <p v-if="detailList.receiveList">{{detailList.receiveList.reciver_name}} {{detailList.receiveList.phone}}</p>
+              </div>
+              <div class="delivery-msg" v-if="detailList.diliveryman_id > 0 && detailList.delivery_type!= 1">
+                <ul class="list-msg list-pay">
+                  <li>
+                    <div class="tit">配&ensp;送&ensp;员：</div>
+                    <div class="detail">{{detailList['diliverymans'][detailList.diliveryman_id]}}</div>
+                  </li>
+                  <li>
+                    <div class="tit">配&ensp;送&ensp;费：</div>
+                    <div class="detail">¥ <span v-if="detailList.receiveList.distribution_fee == 0">0.00</span><span v-else>{{detailList.receiveList.distribution_fee}}</span></div>
+                  </li>
+                </ul>
+              </div>
+              <div class="delivery-msg" v-if="detailList.shipping_type == 0">
+                <p>买家自提(自提时间：{{detailList.ziti_text}})</p>
+                <p v-if="detailList.isshow_take_code == 1" class="delivery-code">取件码：{{detailList.take_code}}</p>
+                <p v-if="detailList.receiveList">{{detailList.receiveList.reciver_name}}{{detailList.receiveList.phone}}</p>
+              </div>
+              <div class="pay-msg">
+                <p class="pay-type" :class="[detailList.payment_type == 0 && detailList.is_receive_payment == 0  ? 'c-orange':'']">{{detailList.pay_text}}</p>
+                <ul class="list-msg list-pay">
+                  <li>
+                    <div class="tit">商品总额：</div>
+                    <div class="detail">¥ <span v-if="detailList.goods_amount ==0">0.00</span><span v-else>{{detailList.goods_amount}}</span></div>
+                  </li>
+                  <li>
+                    <div class="tit">配&ensp;送&ensp;费：</div>
+                    <div class="detail">¥ <span v-if="detailList.shipping_fee ==0">0.00</span><span v-else>{{detailList.shipping_fee}}</span></div>
+                  </li>
+                  <li>
+                    <div class="tit">优惠金额：</div>
+                    <div class="detail">¥ <span v-if="detailList.discount_fee ==0">0.00</span><span v-else>{{detailList.discount_fee}}</span></div>
+                  </li>
+                  <li :class="[((detailList.payment_type == 0 || detailList.payment_type == 2) && detailList.is_receive_payment == 0) || (detailList.payment_type != 0 && detailList.payment_type != 2 && detailList.payment_time == 0) ? 'c-orange':'']">
+                    <div class="tit">{{detailList.money_text}}：</div>
+                    <div class="detail">¥ <span v-if="detailList.order_amount ==0">0.00</span><span v-else>{{detailList.order_amount}}</span></div>
+                  </li>
+                </ul>
+              </div>
+              <div class="info">
+                <p>订&ensp;单&ensp;号：{{detailList.order_sn}}</p>
+                <div class="info-tip-box">
+                  <p class="info-btn-more"><i class="ico-more"></i></p>
+                  <div class="info-tip">
+                    <p>买&emsp;&emsp;家：{{detailList.buyer_name}}</p>
+                    <p v-if="detailList.add_time > 0">下单时间：{{detailList.format_add_time}}</p>
+                    <p v-if="detailList.send_time >0">发货时间：{{detailList.format_send_time}}</p>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td class="action-wrap">
+              <ul class="plist-goods">
+                <li class="item" v-for="(goods) in detailList.goods_list">
+                  <div v-if="goods.goods_commonid ==0">
+                    <div class="goods-detail">
+                      <div class="pic">
+                        <img :src="goods.image_60_url">
+                      </div>
+                      <div class="detail">
+                        <div class="detail-c1">
+                          <p class="count">×{{goods.goods_num}}</p>
+                        </div>
+                        <div class="detail-c2">
+                          <div class="tit">{{goods.goods_name}}</div>
+                          <p class="total-price">
+                            <span class="c-orange fs16">￥<span v-if="goods.goods_price ==0">0.00</span><span v-else>{{goods.goods_price}}</span></span>
+                            <span class="origin-price ml20">¥<span v-if="goods.totalGoodsPrice ==0">0.00</span><span v-else>{{goods.totalGoodsPrice}}</span></span>
+                          </p>
+                        </div>
+                        <div v-if="goods.refund_state_name" class="status c-orange">{{goods.refund_state_name}}</div>
+                      </div>
+                    </div>
+                    <div class="goods-joint">
+                      <div class="joint-tit">搭配商品</div>
+                      <ul class="plist-goods-joint" v-if="goods.goods_group !=''">
+                        <li class="joint-item" v-for="(item) in goods.unser_goods_group">
+                          <div class="goods-detail">
+                            <div class="pic">
+                              <img :src="item.goodsImagePath">
+                            </div>
+                            <div class="detail">
+                              <div class="detail-c1">
+                                <p class="count"> x {{item.num}}</p>
+                              </div>
+                              <div class="detail-c2">
+                                <a class="tit" @click="openGoods(item.goodsCommonId)">{{item.goodsName}}</a>
+                                <div class="intro">{{item.goodsAttrStr}}</div>
+                                <p class="joint-total-price">
+                                  <span class="fs16">￥<span v-if="item.discountPrice ==0">0.00</span><span v-else>{{item.discountPrice}}</span></span>
+                                  <span class="origin-price ml20">￥<span v-if="item.goodsPrice ==0">0.00</span><span v-else>{{item.goodsPrice}}</span></span>
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="goods-detail" v-else>
+                    <div class="pic">
+                      <img :src="goods.image_60_url">
+                    </div>
+                    <div class="detail">
+                      <div class="detail-c1">
+                        <p class="count">×{{goods.goods_num}}</p>
+                        <p class="price">￥<span v-if="goods.goods_price ==0">0.00</span><span v-else>{{goods.goods_price}}</span></p>
+                      </div>
+                      <div class="detail-c2">
+                        <a class="tit"  @click="openGoods(goods.goods_commonid)">{{goods.goods_name}}</a>
+                        <p v-if="goods.goods_spec" class="intro">{{goods.goods_spec}}</p>
+                      </div>
+                    </div>
+                    <div v-if="goods.refund_state_name" class="status c-orange">{{goods.refund_state_name}}</div>
+                  </div>
+                </li>
+                <div class="goods-gift" v-if="list.extend_order_gifts">
+                  <div class="gift-obj" v-for="(goodsGift,gg) in list.extend_order_gifts">
+                    <p v-if="gg == 0"><span>使用{{goodsGift.coupon_title?goodsGift.coupon_title:'-'}}，赠品如下</span></p>
+                    <div class="goods-detail" v-if="goodsGift">
+                      <div class="pic">
+                        <!-- <img :src="goods.image_60_url" width="30px" alt=""> -->
+                        <img :src="goodsGift.goods_image" >
+                      </div>
+                      <div class="detail" style="padding-bottom: 5px">
+                        <div class="detail-c1">
+                          <p class="count">×{{goodsGift.goods_num}}</p>
+                        </div>
+                        <div class="detail-c1">
+                          <p class="count">
+                            <!-- <template v-for="(val,key) in goodsGift.goods_spec">
+                                {{val}}&nbsp;
+                            </template> -->
+                          </p>
+                        </div>
+                        <div class="detail-c2">
+                          <div class="tit">{{goodsGift.goods_name}}</div>
+                        </div>
+                      </div>
+                      <div class="detail">
+                        <div class="detail-c2 c-gray" style="text-align: left;font-size: 12px;">
+                          <template>
+                            <template v-for="(val,key) in goodsGift.goods_spec">
+                              {{key}}:{{val}}&nbsp;
+                            </template>
+                          </template>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="goods-gift" v-if="detailList.extend_order_gifts">
+                  <div class="gift-obj" v-for="(goodsGift,gg) in detailList.extend_order_gifts">
+                    <p v-if="gg == 0"><span>使用{{goodsGift.coupon_title?goodsGift.coupon_title:'-'}}，赠品如下</span></p>
+                    <div class="goods-detail" v-if="goodsGift">
+                      <div class="pic">
+                        <img :src="goodsGift.goods_image" >
+                      </div>
+                      <div class="detail" style="padding-bottom: 5px">
+                        <div class="detail-c1">
+                          <p class="count">×{{goodsGift.goods_num}}</p>
+                        </div>
+                        <div class="detail-c1">
+                          <p class="count">
+                          </p>
+                        </div>
+                        <div class="detail-c2">
+                          <div class="tit">{{goodsGift.goods_name}}</div>
+                        </div>
+                      </div>
+                      <div class="detail">
+                        <div class="detail-c2 c-gray" style="text-align: left;font-size: 12px;">
+                          <template>
+                            <template v-for="(val,key) in goodsGift.goods_spec">
+                              {{key}}:{{val}}&nbsp;
+                            </template>
+                          </template>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ul>
+              <ul class="list-msg list-return" v-if="detailList.receiveList">
+                <li v-if="detailList.receiveList.order_message != ''">
+                  <div class="tit">买家留言：</div>
+                  <div class="detail">{{detailList.receiveList.order_message}}</div>
+                </li>
+                <template v-if="detailList.order_state == 20 && detailList.shipping_type !=0">
+                  <li>
+                    <div class="tit">订单配送费：</div>
+                    <div class="detail">{{detailList.shipping_fee}}</div>
+                  </li>
+                  <li >
+                    <div class="tit">达达预计配送费：</div>
+                    <div class="detail">
+                      <span v-if="detailList.delivery_fee > 0">{{detailList.delivery_fee}}</span>
+                      <span v-else>暂无</span>
+                      <span class="c-gray fs12 ml5">预计运费仅供参考，实际运费以达达最终产生的费用为准</span>
+                    </div>
+                  </li>
+                </template>
+                <template v-if="detailList.delivery_type == 1">
+                  <li>
+                    <div class="tit">达达运费：</div>
+                    <div class="detail">
+                      <span v-if="detailList.delivery_fee > 0">{{detailList.delivery_fee}}</span>
+                      <span v-else>暂无</span>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="tit">达达小费：</div>
+                    <div class="detail">&yen;{{detailList.tips}}</div>
+                  </li>
+                  <template v-if="detailList.delivery_status == 1">
+                    <li class="c-orange">
+                      <div class="tit">达达状态：</div>
+                      <div class="detail">待骑手接单</div>
+                    </li>
+                  </template>
+                  <template v-else-if="detailList.delivery_status == 2">
+                    <template v-if="detailList.cancel_confirm == 1">
+                      <li class="c-orange">
+                        <div class="tit">达达状态：</div>
+                        <div class="detail">骑手发起取消订单</div>
+                      </li>
+                      <li class="c-orange">
+                        <div class="tit">取消原因：</div>
+                        <div class="detail">{{detailList.cancel_reason}}</div>
+                      </li>
+                    </template>
+                    <template v-else>
+                      <li class="c-orange">
+                        <div class="tit">达达状态：</div>
+                        <div class="detail">待骑手取货</div>
+                      </li>
+                    </template>
+                    <li>
+                      <div class="tit">配 送 员：</div>
+                      <div class="detail">{{detailList.dm_name}}&ensp;{{detailList.dm_mobile}}</div>
+                    </li>
+                  </template>
+                  <template v-else-if="detailList.delivery_status == 3">
+                    <template v-if="detailList.cancel_confirm == 1">
+                      <li class="c-orange">
+                        <div class="tit">达达状态：</div>
+                        <div class="detail">骑手发起取消订单</div>
+                      </li>
+                      <li class="c-orange">
+                        <div class="tit">取消原因：</div>
+                        <div class="detail">{{detailList.cancel_reason}}</div>
+                      </li>
+                    </template>
+                    <template v-else>
+                      <li class="c-orange">
+                        <div class="tit">达达状态：</div>
+                        <div class="detail">配送中</div>
+                      </li>
+                    </template>
+                    <li>
+                      <div class="tit">配 送 员：</div>
+                      <div class="detail">{{detailList.dm_name}}&ensp;{{detailList.dm_mobile}}</div>
+                    </li>
+                  </template>
+                  <template v-else-if="detailList.delivery_status == 4">
+                    <li class="c-orange">
+                      <div class="tit">达达状态：</div>
+                      <div class="detail">已送达</div>
+                    </li>
+                    <li>
+                      <div class="tit">配 送 员：</div>
+                      <div class="detail">{{detailList.dm_name}}&ensp;{{detailList.dm_mobile}}</div>
+                    </li>
+                    <li class="c-orange">
+                      <div class="tit">完成配送时间：</div>
+                      <div class="detail">{{detailList.finnshed_time}}</div>
+                    </li>
+                  </template>
+                  <template v-else-if="detailList.delivery_status == 5">
+                    <li class="c-orange">
+                      <div class="tit">达达状态：</div>
+                      <div class="detail">已取消</div>
+                    </li>
+                    <li>
+                      <div class="tit">取消类型：</div>
+                      <div class="detail">
+                        <span v-if="detailList.cancel_from == 0">其他</span>
+                        <span v-if="detailList.cancel_from == 1">达达配送员取消</span>
+                        <span v-if="detailList.cancel_from == 2">商家主动取消</span>
+                        <span v-if="detailList.cancel_from == 3">系统或客服取消</span>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="tit">取消原因：</div>
+                      <div class="detail">{{detailList.cancel_reason}}</div>
+                    </li>
+                  </template>
+                  <template v-else-if="detailList.delivery_status == 7">
+                    <li class="c-orange">
+                      <div class="tit">达达状态：</div>
+                      <div class="detail">已过期</div>
+                    </li>
+                    <li class="c-orange">
+                      <div class="tit">过期原因：</div>
+                      <div class="detail">订单30分钟未被骑士接单，系统自动将订单过期终结</div>
+                    </li>
+                  </template>
+                  <template v-else-if="detailList.delivery_status == 9">
+                    <li class="c-orange">
+                      <div class="tit">达达状态：</div>
+                      <div class="detail">妥投异常</div>
+                    </li>
+                    <li>
+                      <div class="tit">配 送 员：</div>
+                      <div class="detail">{{detailList.dm_name}}&ensp;{{detailList.dm_mobile}}</div>
+                    </li>
+                    <li>
+                      <div class="tit">异常原因：</div>
+                      <div class="detail">{{detailList.cancel_reason}}</div>
+                    </li>
+                  </template>
+
+                </template>
+              </ul>
+              <div class="action-bar" v-if="detailList.select_deliveryman">
+                <a v-if="detailList['diliverymans'] &&detailList['diliverymans'][detailList.diliveryman_id] !='' && detailList['diliverymans'][detailList.diliveryman_id] != null && detailList['diliverymans'][detailList.diliveryman_id] != undefined" href="javascript:void(0)" :data-orderid="detailList.order_id" class="ncsc-btn-mini select_deliveryman" :data-fee="detailList['receiveList']['distribution_fee']"  :data-id="detailList['diliveryman_id']">配送员:{{detailList['diliverymans'][detailList.diliveryman_id]}}</a>
+                <a v-else href="javascript:void(0)" :data-orderid="detailList.order_id" class="ncsc-btn-mini select_deliveryman">选择配送员</a>
+              </div>
+              <div class="order-status" :class="detailList.order_state != 20 ? 'c-gray':''">
+                {{detailList.state_desc}}
+                <p v-if="detailList.order_state == 20" class="count-down" :id="countDownId" @click="countDown(detailList.cunt_down_second,countDownId)"></p>
+                <p></p>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </template>
+    </qm-dialog>
+  <!--订单详情按钮的弹框-结束-->
+  <!--退款订单详情按钮的弹框-开始-->
+    <qm-dialog :dialogVisible="showRefundDetailDialog" :width="'960px'" @close="showRefundDetailDialog = false">
+    <template slot="title">详情</template>
+    <template slot="content">
+      <div class="eject_con" style="text-align: left">
+        <table class="table-order">
+          <tr>
+            <td class="w280">
+              <template v-if="refundDetail.list.refund_type == 2">
+                <div class="delivery-msg" v-if="refundDetail.list.refund_shipping_type == 0">
+                  <p class="delivery-type">买家到店退货</p>
+                </div>
+                <template v-if="refundDetail.list.refund_shipping_type == 1">
+                  <div class="address">
+                    <p v-if="refundDetail.list.change_time">请跟买家协商时间</p>
+                    <p v-if="refundDetail.list.receive_time > 0" :class="[refundDetail.list.format_receive_time ? 'c-orange':'']">收货时间：{{refundDetail.list.receive_time}}</p>
+                    <p>{{refundDetail.list.extend_order_common.reciver_info.area}}{{refundDetail.list.extend_order_common.reciver_info.address}}</p>
+                    <p>{{refundDetail.list.extend_order_common.reciver_name}}{{refundDetail.list.extend_order_common.reciver_info.phone}}</p>
+                  </div>
+                  <div class="delivery-msg" v-if="refundDetail.list.diliveryman_id > 0 && refundDetail.list.delivery_type!= 1">
+                    <ul class="list-msg list-pay">
+                      <li>
+                        <div class="tit">配送员：</div>
+                        <div class="detail">{{refundDetail.deliverymanList[item.diliveryman_id].true_name}}</div>
+                      </li>
+                      <li>
+                        <div class="tit">配送费：</div>
+                        <div class="detail">¥  {{refundDetail.deliverymanLog[item.refund_id]}}</div>
+                      </li>
+                    </ul>
+                  </div>
+                </template>
+              </template>
+              <template v-else>
+                <div class="delivery-msg">
+                  <p class="delivery-type">买家申请退款</p>
+                </div>
+              </template>
+              <div class="pay-msg">
+                <p v-if="refundDetail.list.extend_order" :class="['pay-type',(refundDetail.list.extend_order.payment_type == 0 && refundDetail.list.extend_order.is_receive_payment == 0)?'c-orange':'']">
+                  {{refundDetail.list.extend_order.pay_type_text}}
+                </p>
+                <ul class="list-msg list-pay">
+                  <li v-if="refundDetail.list.extend_order">
+                    <div class="tit">订单金额：</div>
+                    <div class="detail">¥ <span v-if="refundDetail.list.extend_order.goods_amount ==0">0.00</span><span v-else>{{refundDetail.list.extend_order.goods_amount}}</span></div>
+                  </li>
+                  <li v-if="refundDetail.list.extend_order">
+                    <div class="tit">配送费：</div>
+                    <div class="detail">¥ <span v-if="refundDetail.list.extend_order.shipping_fee ==0">0.00</span><span v-else>{{refundDetail.list.extend_order.shipping_fee}}</span></div>
+                  </li>
+                  <li v-if="refundDetail.list.extend_order">
+                    <div class="tit">优惠金额：</div>
+                    <div class="detail">¥ <span v-if="refundDetail.list.extend_order.disconut_money ==0">0.00</span><span v-else>{{refundDetail.list.extend_order.disconut_money}}</span></div>
+                  </li>
+                  <li v-if="refundDetail.list.extend_order" :class="[(((refundDetail.list.extend_order.payment_type == 0 || refundDetail.list.extend_order.payment_type == 2) && refundDetail.list.extend_order.is_receive_payment == 0) || (refundDetail.list.extend_order.payment_type != 0 && refundDetail.list.extend_order.payment_type != 2 && refundDetail.list.extend_order.payment_time == 0))?'c-orange':'']">
+                    <div class="tit">
+                      {{refundDetail.list.extend_order.money_type}}
+                    </div>
+                    <div class="detail">¥ <span v-if="refundDetail.list.extend_order.order_amount ==0">0.00</span><span v-else>{{refundDetail.list.extend_order.order_amount}}</span></div>
+                  </li>
+                  <li v-if="refundDetail.list.extend_order && refundDetail.list.extend_order.refund_amount > 0">
+                    <div class="tit">已退金额：</div>
+                    <div class="detail">¥ <span v-if="refundDetail.list.extend_order.refund_amount ==0">0.00</span><span v-else>{{refundDetail.list.extend_order.refund_amount}}</span></div>
+                  </li>
+                </ul>
+              </div>
+              <div class="info">
+                <p>售后编号：{{refundDetail.list.refund_sn}}</p>
+                <div class="info-tip-box">
+                  <p class="info-btn-more"><i class="ico-more"></i></p>
+                  <div class="info-tip">
+                    <p>订&ensp;单&ensp;号：{{refundDetail.list.order_sn}}</p>
+                    <p>买&emsp;&emsp;家：<span v-if="refundDetail.list.extend_order">{{refundDetail.list.extend_order.buyer_name}}</span></p>
+                    <p v-if="refundDetail.list.extend_order && refundDetail.list.extend_order.add_time > 0">下单时间：{{dateFormat(refundDetail.list.extend_order.add_time,'yyyy-MM-dd HH:mm:ss')}}</p>
+                    <p v-if="refundDetail.list.extend_order && refundDetail.list.extend_order.finnshed_time > 0">完成时间：{{dateFormat(refundDetail.list.extend_order.finnshed_time,'yyyy-MM-dd HH:mm:ss')}}</p>
+                    <p v-if="refundDetail.list.add_time > 0">申请时间：{{dateFormat(refundDetail.list.add_time,'yyyy-MM-dd HH:mm:ss')}}</p>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td class="action-wrap">
+              <ul class="plist-goods">
+                <li class="item" v-if="typeof(refundDetail.list.goods_group) == 'object' && refundDetail.list.goods_group.length > 0">
+                  <div class="goods-detail">
+                    <div class="pic">
+                      <img :src="refundDetail.list.goods_image" alt="">
+                    </div>
+                    <div class="detail">
+                      <div class="detail-c1">
+                        <p class="count">×{{refundDetail.list.goods_num}}</p>
+                      </div>
+                      <div class="detail-c2">
+                        <div class="tit">{{refundDetail.list.goods_name}}</div>
+                        <p class="total-price">
+                          <span class="c-orange fs16">￥<span v-if="refundDetail.list.goods_price ==0">0.00</span><span v-else>{{refundDetail.list.goods_price}}</span></span>
+                          <span class="origin-price ml20">¥<span v-if="refundDetail.list.totalGoodsPrice ==0">0.00</span><span v-else>{{refundDetail.list.totalGoodsPrice}}</span></span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="goods-joint">
+                    <div class="joint-tit">搭配商品</div>
+                    <ul class="plist-goods-joint">
+                      <li class="joint-item">
+                        <div class="goods-detail" v-for="(g_item,g_key) in refundDetail.list.goods_group">
+                          <div class="pic">
+                            <img :src="g_item.goodsImagePath" alt="">
+                          </div>
+                          <div class="detail">
+                            <div class="detail-c1">
+                              <p class="count"> x {{g_item.num}}</p>
+                            </div>
+                            <div class="detail-c2">
+                              <a class="tit" @click="openGoods(g_item.goodsCommonId)">{{g_item.goodsName}}</a>
+                              <div class="intro">{{refundDetail.list.attr_text}}</div>
+                              <p class="joint-total-price">
+                                <span class="fs16">￥<span v-if="g_item.goodsPrice ==0">0.00</span><span v-else>{{g_item.goodsPrice}}</span></span>
+                                <span class="origin-price ml20">￥<span v-if="refundDetail.list.discountPrice ==0">0.00</span><span v-else>{{refundDetail.list.discountPrice}}</span></span>
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="item" v-else>
+                  <div class="goods-detail">
+                    <div class="pic">
+                      <img :src="refundDetail.list.goods_image" alt="">
+                    </div>
+                    <div class="detail">
+                      <div class="detail-c1">
+                        <p class="count">×{{refundDetail.list.goods_num}}</p>
+                        <p class="price">￥<span v-if="refundDetail.list.goods_price ==0">0.00</span><span v-else>{{refundDetail.list.goods_price}}</span></p>
+                      </div>
+                      <div class="detail-c2">
+                        <a class="tit" @click="openGoods(refundDetail.list.goods_commonid)">{{refundDetail.list.goods_name}}</a>
+                        <p class="intro" v-if="refundDetail.list.goods_spec !== ''">{{refundDetail.list.goods_spec}}</p>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+              <div class="return-msg">
+                <ul class="list-msg list-return">
+                  <li>
+                    <div class="tit">售后类型：</div>
+                    <div class="detail">{{refundDetail.list.refund_type == 1 ? '退款' : '退货'}}</div>
+                  </li>
+                  <li>
+                    <div class="tit">售后原因：</div>
+                    <div class="detail">{{refundDetail.list.reason_info}}</div>
+                  </li>
+                  <li>
+                    <div class="tit">申请金额：</div>
+                    <div class="detail">¥ <span v-if="refundDetail.list.buyer_refund_amount ==0">0.00</span><span v-else>{{refundDetail.list.buyer_refund_amount}}</span></div>
+                  </li>
+                  <li class="c-orange" v-if="refundDetail.list.seller_state == 2 || refundDetail.list.platform_state == 1">
+                    <div class="tit">同意金额：</div>
+                    <div class="detail">¥ <span v-if="refundDetail.list.refund_amount ==0">0.00</span><span v-else>{{refundDetail.list.refund_amount}}</span></div>
+                  </li>
+                  <li v-if="refundDetail.list.buyer_message !== ''">
+                    <div class="tit">附加说明：</div>
+                    <div class="detail">{{refundDetail.list.buyer_message}}</div>
+                  </li>
+                  <li v-if="typeof(refundDetail.list.pic_info) == 'object' && refundDetail.list.pic_info.length > 0">
+                    <div class="tit">附&emsp;&emsp;件：</div>
+                    <div class="detail">
+                      <div class="img-box js-tips-img" v-for="(p_item,p_key) in refundDetail.list.pic_info">
+                        <img :src="p_item" @click="showImageDetil(p_item)">
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+                <ul class="list-msg list-return">
+                  <li>
+                    <div class="tit">处理状态：</div>
+                    <div class="detail">{{sellerState[refundDetail.list.seller_state]}}</div>
+                  </li>
+                  <li v-if="refundDetail.list.seller_message !== ''">
+                    <div class="tit">商家备注：</div>
+                    <div class="detail">{{refundDetail.list.seller_message}}</div>
+                  </li>
+                  <li class="c-orange" v-if="refundDetail.list.is_platform_in !== 0">
+                    <div class="tit">平台状态：</div>
+                    <div class="detail">{{platformState[refundDetail.list.platform_state]}}</div>
+                  </li>
+                  <li v-if="refundDetail.list.admin_message !== ''">
+                    <div class="tit">平台备注：</div>
+                    <div class="detail">{{refundDetail.list.admin_message}}</div>
+                  </li>
+                </ul>
+              </div>
+              <div class="order-status">{{refundDetail.list.state_name}}</div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </template>
+    </qm-dialog>
+  <!--退款订单详情按钮的弹框-结束-->
+    <qm-dialog-img :imageUrl="imageUrl" :imageDialog="hasImageDialog" @close="hasImageDialog=false">
+    </qm-dialog-img>
+  </div>
+</div>

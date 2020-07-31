@@ -1,0 +1,12 @@
+<div class="qm-store-class-index">
+    <qm-tabs :tabs="tabs" :blod="false" class="store-tabs" :marginRight="20" @routerData="routerData($event)">
+    </qm-tabs>
+
+    <div class="menu-more" v-if="showAddBtn">
+        <a class="ncsc-btn ncsc-btn-orange" @click="addClass">新增分类</a>
+    </div>
+    <div class="clear"></div>
+
+    
+    <router-view />
+</div>

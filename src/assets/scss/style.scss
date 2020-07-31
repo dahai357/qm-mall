@@ -1,0 +1,194 @@
+
+// 颜色变量
+$red:#ff1800;
+$orange:#ff8519;
+$darkGray:#212121;
+$normalGray:#BBBBBB;
+$disabled:#CCC;
+$border:#DDD;
+$blue:#0093fa;
+$gray:#757575;
+// 颜色样式
+.C1{    color:$orange}/*标准色，当前状态，一般高亮显示*/
+.C2{    color:$darkGray;}/*标题文字，重要文字，列式菜单栏文字*/
+.C3{    color:$normalGray;}/*一级重文字，分类标题，说明*/
+.C4{    color:$normalGray}/*二级文字*/
+.C5{    color:$disabled   }/*不可点击*/
+.C6{    color:$border   }/*框架，边框颜色*/
+.C7{    color:$blue}/*特别注解，提示框，标签*/
+.C8{    color:$red}/*特殊说明*/
+
+// 字体
+.S1{    font-size:30px;   }  /*店铺设置*/
+.S2{    font-size:26px;   }  /*特别金额数据*/
+.S3{    font-size:22px;   }  /*一级标题（粗体）/上架流程*/
+.S4{    font-size:20px;   }  /*大按钮（粗体）/ 店铺设置引导菜单*/
+.S5{    font-size:18px;   }  /*二级标题（粗体）*/
+.S6{    font-size:16px;   }  /*主导航/侧边导航/三级标题/表单*/
+.S7{    font-size:14px;   }  /*正文/搜索/标签*/
+.S8{    font-size:12px;   }  /*备注说明*/
+
+// 宽高
+.size1{ width:160px;height:160px;} //图片空间
+.size2{ width:100px;height:100px;} //头像/二维码/商品图片
+.size3{ width:80px;height:80px;} //附件图片
+.size4{ width:70px;height:70px;} //配送员头像/会员头像/搭配商品
+.size4{ width:90px;height:50px;} //广告位图片
+.size5{ width:25px;height:25px;} //图标大小
+
+//按钮--只统一设置边框颜色，字体颜色，:hover状态--长，宽，边距根据具体需要设在
+.btn-base{
+    min-height: 24px;
+    max-height:46px;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px;
+    cursor: pointer;
+    border-radius: 5px;
+    background: #fff;
+}
+.btn-gray{   //灰色边框按钮
+    @extend .btn-base;
+    border: solid 0.5px $normalGray;
+    color: #000;    
+    background: #fff;
+    outline: none;
+    vertical-align: middle;
+    display: inline-block;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    text-align: center;
+    text-decoration: none;
+}
+.btn-gray:hover {
+    border: solid 0.5px $orange;
+    color: $orange;
+    outline:none;
+    text-decoration:none
+}
+
+.btn-orange{   //橙色按钮
+    @extend .btn-base;
+    border: solid 0.5px $orange;
+    color: $orange;
+    border-radius: 5px;
+    background: #fff;
+    padding: 0px 10px;
+    outline:none;
+}
+.btn-orange:hover {
+    border: solid 0.5px $orange;
+    color: #fff;
+    background-color: $orange;
+    outline:none;
+}
+
+.btn-orange-full{   //橙色填充按钮
+    @extend .btn-orange;
+    background:$orange;
+    color: #fff;
+}
+.btn-orange-full:hover {
+    border: solid 0.5px #EF7100;
+    color: #fff;
+    background-color: #EF7100;
+    outline:none;
+    text-decoration: none;
+}
+
+.btn-submit{   //提交按钮--大圆角
+    @extend .btn-orange;
+    background-color: $orange;
+    min-width: 200px;
+    height: 46px;
+    color: #fff;
+    border: none;
+    padding: 0 25px;
+    display: inline-block;
+    border-radius: 23px;
+    margin: 0 5px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.btn-submit:hover{
+    background-color: #EF7100;
+}
+
+.btn-orange-unfill{  //橙色不填充--大圆角
+    @extend .btn-base;
+    min-width: 200px;
+    height: 46px;
+    border-radius: 23px;
+    color: $orange;
+    border: solid 0.5px #EF7100;
+}
+.btn-orange-unfill:hover{
+    color: #fff;
+    background: $orange;
+}
+
+
+
+// 三级页面根div样式
+.qm-store-class-index{
+    // border: 1px solid #d7dde4;
+    background: #fff;
+    padding: 10px 20px 30px;
+    width: 980px;
+    // box-sizing: border-box;
+}
+.qm-store-class-base{
+    border-top: solid 0.5px rgb(221, 221, 221);
+    font-size: 12px;
+    display: inline-block;
+    vertical-align: top;
+    width: 460px;
+    padding: 10px 20px 20px;
+    border-top: 1px solid #eee;
+    box-sizing: border-box;
+    // min-height: 740px;
+    width: 940px;
+}
+
+* {
+    box-sizing: border-box;
+}
+.menu-more {
+  float: right;
+  right: 0;
+  top: 0;
+  display: block;
+  z-index: 1;
+  bottom: 10px;
+  right: -5px;
+}
+.menu-more a {
+  margin: 0 5px;
+}
+.menu-more a:hover{
+  text-decoration: none;
+}
+.qm-store-class-record{
+  margin-top: 20px;
+  padding-bottom: 20px;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-weight: normal;
+}
+h1{font-size: 32px;}
+h2{font-size: 25px;}
+h3{font-size: 22px;}
+h5{font-size: 15px;}
+h6{font-size: 13px;}
+
+
+.qm-store-class-index{
+  min-height: 640px;
+}
+.error-p{
+  display: none;
+}
+
+.fs14_1.5{
+    font: 14px/1.5 "Microsoft Yahei", "PingFang SC", "ST Heiti", SimHei, sans-serif, "Helvetica Neue", Tahoma;
+}

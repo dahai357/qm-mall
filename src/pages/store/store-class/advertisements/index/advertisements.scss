@@ -1,0 +1,174 @@
+.advertisements{
+    padding-top: 30px;
+    font: 14px/1.5 "Microsoft Yahei", "PingFang SC", "ST Heiti", SimHei, sans-serif, "Helvetica Neue", Tahoma, SimSun, "PingFang SC", "ST Heiti", sans-serif;
+}
+
+
+.ncsc-form-default {
+    padding-bottom: 20px;
+    min-height: 600px;
+}
+
+.ncsc-form-default dl {
+    line-height: 20px;
+    display: table;
+    width: 100%;
+}
+
+.ncsc-form-default dt {
+    font-size: 14px;
+    line-height: 30px;
+    vertical-align: top;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-align: right;
+    display: table-cell;
+    min-width: 180px;
+    max-width: 19%;
+    padding: 15px 1% 15px 0;
+    margin: 0;
+}
+
+.ncsc-form-default dd {
+    font-size: 14px;
+    line-height: 30px;
+    vertical-align: top;
+    letter-spacing: normal;
+    word-spacing: normal;
+    display: table-cell;
+    width: 79%;
+    padding: 15px 0;
+}
+
+.atooltip {
+    border: solid 1px rgb(0,147,250) !important;
+    /* width: 590px; */
+  }
+  
+
+.ncsc-upload-img-list .ncsc-upload-img-item {
+    float: left;
+    margin: 0 5px;
+}
+.list-advertisements-img .ncsc-upload-img-item {
+    margin: 0 40px 40px 0;
+}
+  .ncsc-upload-img-item .ncsc-upload-img-box img {
+    width: 248px;
+    height: 71px;
+}
+.ncsc-upload-img-item .ncsc-upload-img-box {
+    width: 140px;
+    height: 140px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    position: relative;
+    border-radius: 5px;
+}
+.ncsc-upload-img-item .ncsc-upload-img-box img{width: 100%; height: 100%; border-radius:5px;}
+
+.ncsc-upload-img-250 .ncsc-upload-img-box, .ncsc-upload-img-250 .ncsc-upload-btn {
+    width: 250px;
+    height: 73px;
+}
+
+
+.ncsc-upload-btn p {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 15%;
+    font-size: 12px;
+    line-height: 20px;
+    color: #757575;
+    text-align: center;
+    z-index: 1;
+    margin: 0;
+}
+
+.ncsc-form-default dd p {
+    clear: both;
+}
+
+.ico-upload {
+    width: 24px;
+    height: 24px;
+    background-position: -75px -460px;
+}
+.ncsc-upload-btn p i {
+    vertical-align: middle;
+    display: block;
+    margin: 0 auto 20px;
+}
+
+.ncsc-upload-img-250 .ncsc-upload-btn p i {
+    margin-bottom: 0;
+}
+
+.submit {
+    text-align: center;
+    min-width: 200px;
+    font-size: 20px;
+    height: 46px;
+    line-height: 46px;
+    background: #ff8519;
+    color: #fff;
+    border: none;
+    padding: 0 25px;
+    display: inline-block;
+    border-radius: 23px;
+    margin: 0 5px;
+    margin-left: 189px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.list-advertisements-img li {
+    font-size: 14px;
+    display: inline-block;
+    vertical-align: top;
+    width: 50%;
+    padding: 20px 0;
+}
+.list-advertisements-img .item {
+    display: table;
+}
+.list-advertisements-img .item-c1 {
+    width: 7em;
+    min-width: 84px;
+}
+.list-advertisements-img .item-c1, .list-advertisements-img .item-c2 {
+    display: table-cell;
+    vertical-align: top;
+    padding: 5px 0;
+    line-height: 30px;
+}
+.ncsc-form-default .red{color:red; border:0px;}
+.ncsc-form-default label.error{color:red;}
+.ncsc-form-default .error i{margin:0 5px 3px;}
+.ncsc-form-default p.error{color:red; line-height: 1.5; margin-top: 5px; font-size: 12px;}
+.comfirm {
+  padding-bottom: 20px;
+  font-size: 16px;
+  text-align: center;
+  max-width: 500px;
+  word-break: break-all;
+}
+
+
+.ncsc-upload-btn .input-file, .input-file {
+    font-size: 16px !important;
+}
+
+#lightbox-secNav-btnClose {
+    width: 66px;
+    float: right;
+    /* padding-bottom: 0.7em; */
+    margin-top: 10px;
+}
+.loader{
+    height: 230px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 230px;
+}

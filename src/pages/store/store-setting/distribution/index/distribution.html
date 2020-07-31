@@ -1,0 +1,414 @@
+<div class="store-store-setting-distribution">
+        
+        
+        <div class="base-item">
+            <div class="base-label">
+                <label >
+                        <p class="ncsc-form-hint p0"><span class="bold">买家自提，</span>为店铺配货后，由买家自己到店铺提货。</p>
+                        <qm-checkbox-frame v-model="buyerDistribution" :text="'支持买家自提'" :size="'large'"></qm-checkbox-frame>
+                </label>
+            </div>
+            <div class="base-content">
+                <div class="outline" v-if="buyerDistribution">
+                    <div class="base-item">
+                        <div class="base-label">
+                            <label >
+                                <i class="required">*</i>配货时长:
+                            </label>
+                            <input type="text" class="set-send-fei-input" @keyup="distanceValid(distrReadyTime,'distrReadyTime')" v-model="distrReadyTime"/>分钟
+                            <p class="fs12 c-gray">配货时长系统默认30分钟，即买家可选的最快到店自提是30分钟后整点/半点，预留商家备货时间，商家可根据店内情况调整配货时长</p>
+                            <p class="fs12 c-gray">例如：用户下单时间为10点20分，商家设置配货时长为30分钟， 那么用户最快可选的到店自提时间是当天的11点</p>
+                        </div>
+
+                    </div>
+                    <div class="base-item" id="storeTimeIs">
+                        <div class="base-label">
+                            <label >
+                                <i class="required">*</i> 自提时间:
+                            </label>
+                        </div>
+                        <div class="base-content">
+                            <qm-checkbox-frame v-model="storeTimeIs" :text="'同营业时间 ('+basicStore.storeTimeStr+')'" ></qm-checkbox-frame>
+                            <template v-if="!storeTimeIs">
+                                <template v-for="(data,t) in buyerDistributionList">
+                                    <div class="bussiness-time">
+                                        <qm-timepickers :name="'buyerFirstDate'+t" v-model="data.startTime" @on-change="timeChange(data,t,2)" :min="setMinStart(data,t,2)" :max="setMaxStart(data,t)" ></qm-timepickers>
+                                        <span class="tild">~</span>
+                                        <qm-checkbox-frame v-model="data.isNextDay" :text="'次日'" @valueChage="isNextDay1(data,t,2)"></qm-checkbox-frame>
+                                        <qm-timepickers :name="'buyerEndDate'+t" v-model="data.endTime" :min="setMinEnd(data,t)" :max="setMax(data,t,2)" @on-change="endTimeChange(data,t,2)"></qm-timepickers>
+
+                                        <a v-if="t==0" class="distribution-node" @click="addDistribution(2)">[增加自提时间段]</a>
+                                        <a v-if="t>0" class="distribution-node" :id="t" @click="delDistribution(t,2)">[删除]</a>
+                                    </div>
+                                </template>
+                            </template>
+                            <p class="ncsc-form-error" v-if="!storeTimeIs && buyerDistributionListErr">自提时间不能为空</p>
+                        </div>
+                    </div>
+                </div>
+                <hr class="hr"/>
+
+            </div>
+        </div>
+    
+        <div class="base-item">
+            <div class="base-label">
+                <label >
+                        <p class="ncsc-form-hint p0"><span class="bold">商家配送，由店铺自主配送。</span></p>
+                        <qm-checkbox-frame v-model="sellerDistribution" :text="'开启自主配送 '" :size="'large'" style="display: inline-block;"></qm-checkbox-frame>
+                        <label v-if="!sellerDistribution && !buyerDistribution" for="seller_distribution " class="error fs12" style="display: inline-block;">至少需要选择一种配送方式</label>
+                </label>
+            </div>
+            <div class="base-content">    
+                    <div class="outline" v-if="sellerDistribution" id="storeDisDayIs">
+                            <div class="base-item">
+                                <div class="base-label">
+                                    <label >
+                                            <i class="required">*</i> 配送时间:
+                                    </label>
+                                </div>
+                                <div class="base-content">   
+                                        <qm-checkbox-frame v-model="storeDisDayIs" :text="'全天配送'" ></qm-checkbox-frame>
+                                        <template v-if="!storeDisDayIs">
+                                            <template v-for="(data,t) in distributionList">
+                                                <div class="bussiness-time">
+                                                    <qm-timepickers :name="'firstDate'+t" v-model="data.startTime" @on-change="timeChange(data,t,1)" :min="setMinStart(data,t,1)" :max="setMaxStart(data,t)" ></qm-timepickers>
+                                                    <span class="tild">~</span>
+                                                    <qm-checkbox-frame v-model="data.isNextDay" :text="'次日'" @valueChage="isNextDay1(data,t,1)"></qm-checkbox-frame>
+                                                    <qm-timepickers :name="'endDate'+t" v-model="data.endTime" :min="setMinEnd(data,t)" :max="setMax(data,t,1)" @on-change="endTimeChange(data,t,1)"></qm-timepickers>
+
+                                                    <a v-if="t==0" class="distribution-node" @click="addDistribution(1)">[增加配送时段]</a>
+                                                    <a v-if="t>0" class="distribution-node" @click="delDistribution(t,1)">[删除]</a>
+                                                </div>
+                                            </template>
+                                        </template>
+                                        <p class="ncsc-form-error" v-if="!storeDisDayIs && distributionListErr">配送时间不能为空</p>
+                                </div>
+                            </div>
+                            <div class="base-item mt-20" id="distributionDiv">
+                                    <div class="base-label mb-20">
+                                        <label >
+                                            <i class="required">*</i>配送费
+                                        </label>
+                                        <a class="distribution-node" @click="tipSendFee()">配送费说明 »</a>
+                                    </div>
+                                    <div class="base-content outline">
+                                        <div class="base-label">
+                                            <label class="radio-label">
+                                                <i class="required">*</i>默认模板:
+                                            </label>
+                                            <div :class="['ncsc-form-custom-radio',(1 == timeTypeShow) ? 'checked' : '']">
+                                                <div class="ncsc-custom-radio-frame">
+                                                    <input type="radio" name="timeTypeShow" value="1" id="timeTypeShow1" class="ncsc-custom-radio" v-model="timeTypeShow">
+                                                </div>
+                                                <label for="timeTypeShow1" class="ncsc-custom-txt">
+                                                    <span class="name  radio-span">可选时间段模板</span>
+                                                </label>
+                                            </div>
+                                            <div :class="['ncsc-form-custom-radio',(2 == timeTypeShow) ? 'checked' : '']">
+                                                <div class="ncsc-custom-radio-frame">
+                                                    <input type="radio" name="timeTypeShow" value="2" id="timeTypeShow2" class="ncsc-custom-radio" v-model="timeTypeShow">
+                                                </div>
+                                                <label for="timeTypeShow2" class="ncsc-custom-txt">
+                                                    <span class="name  radio-span">非可选时间段模板</span>
+                                                </label>
+                                            </div>
+                                            <p class="fs12 c-gray">设置默认的配送费模板类型，商品默认按对应设置的默认模板计算配送费，个别商品需要特殊计算的可进行单独编辑</p>
+                                        </div>
+                                        <div class="base-label">
+                                            <label class="radio-label">
+                                                <i class="required">*</i>配送费模板设置:
+                                            </label>
+                                        </div>
+                                        <div class="delivery-div">
+                                            <div :class="this.timeType == 1?'delivery-span delivery-span-choosed':'delivery-span'" @click="changeTimeType(1)">可选时间段模板</div>
+                                            <div :class="this.timeType == 2?'delivery-span delivery-span-choosed':'delivery-span'" @click="changeTimeType(2)">非可选时间段模板</div>
+                                            <div class="delivery-exmaple">
+                                                <el-tooltip placement="right-start" effect="light" popper-class="atooltip" >
+                                                    <div slot="content" class="toolTipCont">
+                                                        <!-- <div class="tip-doubt-con"> -->
+                                                        <img src="@/assets/seller/images/seller/example/pssl.jpg" alt="">
+                                                        <!-- </div>    -->
+                                                    </div>
+
+                                                    <p class="lightBlue">
+                                                        <i class="fa fa-question-circle" aria-hidden="true"></i>示例
+                                                    </p>
+                                                </el-tooltip>
+                                            </div>
+                                        </div>
+                                        <p class="fs12 c-gray" v-if="this.timeType == 1">可选时间段模板主要用于餐饮类对配送时间段相对有要求的行业</p>
+                                        <p class="fs12 c-gray" v-else>非可选时间段模板主要用于对可能存在快递配送，无法严苛按时间段配送的行业；例如：图书，服饰等行业</p>
+                                        <div class="delivery-tips">
+                                            <button class="distribution-add-module btn"  @click="addModel()">添加模板</button>
+                                            <p class="tips">特别提醒：如对应时间段没有设置配送费（空白），则用户手机端不显示该时间段的选项</p>
+                                        </div>
+                                        <table class="distribution-table" v-if="this.timeType == 1">
+                                               <thead>
+                                                   <tr>
+                                                       <th  style="width: 200px !important"><i class="required" >*</i>配送模板</th>
+                                                       <th><i class="required">*</i>范围<p>（公里）</p></th>
+                                                       <th>0.5小时内送达<p>（元）</p></th>
+                                                       <th>1小时内送达<p>（元）</p></th>
+                                                       <th>2小时内送达<p>（元）</p></th>
+                                                       <th>1天内送达<p>（元）</p></th>
+                                                       <th>2天内送达<p>（元）</p></th>
+                                                       <th>3天内送达<p>（元）</p></th>
+                                                       <th>快递配送<p>（元）</p></th>
+                                                   </tr>
+                                               </thead>
+                                               <!-- <tbody>
+                                                   <tr v-for="(tdata,t) in tableData" :key="'tdata'+t">
+                                                        <td v-if="tdata.row" :rowspan="tdata.row">{{tdata.mName}}</td>
+                                                        <td v-for="(item,key,i) in tdata" v-if="key != 'row' && key != 'mName'">
+                                                                {{item}}
+                                                        </td>
+                                                   </tr>
+                                               </tbody> -->
+
+                                               <tbody>
+                                                   <template v-for="(tdata,t) in tableData">
+                                                        <tr v-for="(item,i) in tdata.list">
+                                                                <td :rowspan="tdata.list.length" v-if="i == 0">
+                                                                    <div>
+
+                                                                        <template v-if="tdata.template_id == 'time0'">
+                                                                            {{tdata.template_name}}
+                                                                        </template>
+                                                                        <template v-if ="tdata.template_id != 'time0'">
+                                                                            <template v-if="t == tableData.length-1" >
+                                                                                <input  :id="'templateName'+t"  v-model="tdata.template_name" type="text"  @blur="formulaValid()"/>
+                                                                            </template>
+                                                                            <template v-else>
+                                                                                <input   v-model="tdata.template_name" type="text"  @blur="formulaValid()"/>
+                                                                            </template>
+                                                                        </template>
+                                                                        <p>[<a class="distribution-node-nomargin" @click="addDistance(tdata,t)">添加范围</a>]<template v-if="t != 0">[<a class="distribution-node-nomargin" @click="deleteModel(t)">删除</a>]</template></p>
+                                                                    </div>
+                                                                    <!-- <div v-else>
+                                                                            {{tdata.template_name}}
+                                                                            <p>[<a class="distribution-node-nomargin">添加范围</a>] [<a class="distribution-node-nomargin">删除</a>]</p>
+                                                                    </div> -->
+                                                                </td>
+
+                                                                <td height="50px">
+                                                                    <div><input v-if="item.distance !='other'" v-model="item.distance" @keyup="distanceValid(item,i)" @blur="formulaValid()"/><template v-else>全国范围内</template></div>
+                                                                    <p v-if="i != tdata.list.length - 1">[<a class="distribution-node-nomargin" @click="deleteDistace(tdata,t,i)">删除</a>]</p>
+                                                                </td>
+                                                                <td height="50px"><input  v-model="item.half" @keyup="onlyNumber(item,i,'half')"  @blur="formulaValid()"/></td>
+                                                                <td height="50px"><input  v-model="item.one" @keyup="onlyNumber(item,i,'one')" @blur="formulaValid()"/></td>
+                                                                <td height="50px"><input  v-model="item.two" @keyup="onlyNumber(item,i,'two')" @blur="formulaValid()"/></td>
+                                                                <td height="50px"><input  v-model="item.day" @keyup="onlyNumber(item,i,'day')" @blur="formulaValid()"/></td>
+                                                                <td height="50px"><input  v-model="item.twodays" @keyup="onlyNumber(item,i,'twodays')" @blur="formulaValid()"/></td>
+                                                                <td height="50px"><input  v-model="item.threedays" @keyup="onlyNumber(item,i,'threedays')" @blur="formulaValid()"/></td>
+                                                                <td height="50px"><input  v-model="item.other" @keyup="onlyNumber(item,i,'other')"  @blur="formulaValid()"/></td>
+                                                                <!-- <td v-for="(value,key,index) in item" v-if="key != 'row' && key != 'mName' && index != 1">
+                                                                        {{value}}
+                                                                </td> -->
+                                                        </tr>
+                                                   </template>
+                                                    <!-- <tr v-for="(tdata,t) in tableData1" :key="'tdata'+t">
+                                                         <td v-if="tdata.row" :rowspan="tdata.row">{{tdata.mName}}</td>
+                                                         <td v-for="(item,key,i) in tdata" v-if="key != 'row' && key != 'mName'">
+                                                                 {{item}}
+                                                         </td>
+                                                    </tr> -->
+                                                </tbody>
+                                           </table>
+                                        <table class="distribution-table" v-if="this.timeType == 2">
+                                            <thead>
+                                            <tr>
+                                                <th  style="width: 200px !important"><i class="required" >*</i>配送模板</th>
+                                                <th><i class="required">*</i>范围<p>（公里）</p></th>
+                                                <th>1天内送达<p>（元）</p></th>
+                                                <th>2天内送达<p>（元）</p></th>
+                                                <th>3天内送达<p>（元）</p></th>
+                                                <th>4天内送达<p>（元）</p></th>
+                                                <th>7天内送达<p>（元）</p></th>
+                                                <th>快递配送<p>（元）</p></th>
+                                            </tr>
+                                            </thead>
+                                            <!-- <tbody>
+                                                <tr v-for="(tdata,t) in tableData" :key="'tdata'+t">
+                                                     <td v-if="tdata.row" :rowspan="tdata.row">{{tdata.mName}}</td>
+                                                     <td v-for="(item,key,i) in tdata" v-if="key != 'row' && key != 'mName'">
+                                                             {{item}}
+                                                     </td>
+                                                </tr>
+                                            </tbody> -->
+
+                                            <tbody>
+                                            <template v-for="(tdata,t) in tableDataDay">
+                                                <tr v-for="(item,i) in tdata.list">
+                                                    <td :rowspan="tdata.list.length" v-if="i == 0">
+                                                        <div>
+
+                                                            <template v-if="tdata.template_id == 'day0'">
+                                                                {{tdata.template_name}}
+                                                            </template>
+                                                            <template v-if ="tdata.template_id != 'day0'">
+                                                                <template v-if="t == tableData.length-1" >
+                                                                    <input  :id="'templateNameDay'+t"  v-model="tdata.template_name" type="text"  @blur="formulaValid()"/>
+                                                                </template>
+                                                                <template v-else>
+                                                                    <input   v-model="tdata.template_name" type="text" @blur="formulaValid()"/>
+                                                                </template>
+                                                            </template>
+                                                            <p>[<a class="distribution-node-nomargin" @click="addDistance(tdata,t)">添加范围</a>]<template v-if="t != 0">[<a class="distribution-node-nomargin" @click="deleteModel(t)">删除</a>]</template></p>
+                                                        </div>
+                                                        <!-- <div v-else>
+                                                                {{tdata.template_name}}
+                                                                <p>[<a class="distribution-node-nomargin">添加范围</a>] [<a class="distribution-node-nomargin">删除</a>]</p>
+                                                        </div> -->
+                                                    </td>
+
+                                                    <td height="50px">
+                                                        <div><input v-if="item.distance !='other'" v-model="item.distance" @keyup="distanceValid(item,i)" @blur="formulaValid()"/><template v-else>全国范围内</template></div>
+                                                        <p v-if="i != tdata.list.length - 1">[<a class="distribution-node-nomargin" @click="deleteDistace(tdata,t,i)">删除</a>]</p>
+                                                    </td>
+                                                    <td height="50px"><input  v-model="item.one" @keyup="onlyNumber(item,i,'one')"  @blur="formulaValid()"/></td>
+                                                    <td height="50px"><input  v-model="item.two" @keyup="onlyNumber(item,i,'two')" @blur="formulaValid()"/></td>
+                                                    <td height="50px"><input  v-model="item.three" @keyup="onlyNumber(item,i,'three')" @blur="formulaValid()"/></td>
+                                                    <td height="50px"><input  v-model="item.four" @keyup="onlyNumber(item,i,'four')" @blur="formulaValid()"/></td>
+                                                    <td height="50px"><input  v-model="item.seven" @keyup="onlyNumber(item,i,'seven')" @blur="formulaValid()"/></td>
+                                                    <td height="50px"><input  v-model="item.other" @keyup="onlyNumber(item,i,'other')"  @blur="formulaValid()"/></td>
+                                                    <!-- <td v-for="(value,key,index) in item" v-if="key != 'row' && key != 'mName' && index != 1">
+                                                            {{value}}
+                                                    </td> -->
+                                                </tr>
+                                            </template>
+                                            <!-- <tr v-for="(tdata,t) in tableData1" :key="'tdata'+t">
+                                                 <td v-if="tdata.row" :rowspan="tdata.row">{{tdata.mName}}</td>
+                                                 <td v-for="(item,key,i) in tdata" v-if="key != 'row' && key != 'mName'">
+                                                         {{item}}
+                                                 </td>
+                                            </tr> -->
+                                            </tbody>
+                                        </table>
+                                        <p class="ncsc-form-error" v-if="formulaValidFlag==false&&timeType==1"><i class="fa fa-exclamation-circle"></i>{{formulaValidTips}}</p>
+                                        <p class="ncsc-form-error" v-if="dayFormulaValidFlag==false&&timeType==2"><i class="fa fa-exclamation-circle"></i>{{dayFormulaValidTips}}</p>
+                                        <p class="fs12 c-gray">不同公里数、不同时间要求，对应不同的配送费。请结合您的服务覆盖范围设置公里数和配送费；</p>
+                                        <p class="fs12 c-orange">友情提示：同一个订单内A商品使用可选时间段模板，B商品使用非可选时间段模板时，则订单将按非可选时间段模板进行处理</p>
+                                    </div>
+                            </div>
+                            <div class="base-item">
+                                <div class="base-label">
+                                    <label >
+                                        配送特殊说明:
+                                    </label>
+                                </div>
+                                <div class="base-content">
+                                    <textarea type="text" class="textarea ncsc-form-control" style="width: 100%;height: 60px;"  v-model="deliveryMemo" maxlength="40">
+                                    </textarea>
+                                    <p class="fs12 c-gray">最多可输入40个字；存在一些因素可能导致配送延迟等情况，可备注说明，用户下单时可见
+                                        <el-tooltip placement="right-start" effect="light" popper-class="atooltip" >
+                                            <div slot="content" class="toolTipCont">
+                                                <!-- <div class="tip-doubt-con"> -->
+                                                <img src="@/assets/seller/images/seller/example/pssm.jpg" alt="">
+                                                <!-- </div>    -->
+                                            </div>
+                                            <p class="lightBlue">
+                                                <i class="fa fa-question-circle" aria-hidden="true"></i>示例
+                                            </p>
+                                        </el-tooltip>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="base-item">
+                                <div class="base-label">
+                                    <label >
+                                            <qm-checkbox-frame v-model="startShippingPriceIs" :text="'设置起送价'" :size="'large'"></qm-checkbox-frame>
+                                    </label>
+                                </div>
+                                <div class="base-content">
+                                        <div v-if="startShippingPriceIs" class="set-send-fei">
+                                            <span class="ncsc-form-tit">起送价：</span>
+                                            <input type="text" autocomplete="off" class="set-send-fei-input" v-model="startShippingPrice"  @keyup="validFeeValue('startShippingPrice')">
+                                            <span class="ncsc-form-tit">元</span>
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="base-item">
+                                <div class="base-label">
+                                    <label >
+                                        <qm-checkbox-frame v-model="freeShippingPriceIs" :text="'设置免配送费'" :size="'large'"></qm-checkbox-frame>
+                                    </label>
+                                </div>
+                                <div class="base-content">
+                                    <div v-if="freeShippingPriceIs" class="set-send-fei">
+                                        <span class="ncsc-form-tit">满</span>
+                                        <input type="text" autocomplete="off" name="free_shipping_price" class="set-send-fei-input" v-model="freeShippingPrice"  @keyup="validFeeValue('freeShippingPrice')">
+                                        <span class="ncsc-form-tit">免配送费</span>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                <hr class="hr"/>
+            </div>
+
+        </div>
+    <div class="base-item">
+        <div class="base-content">
+            <div class="outline">
+                <div class="base-item">
+                    <div class="base-label">
+                        <label >
+                            <i class="required">*</i>配送订单自动确认收货时间
+                        </label>
+                        <p class="outline">订单发货后 <input type="text" class="set-send-fei-input" @keyup="distanceValid(automaticDeliveryClerkDay,'automaticDeliveryClerkDay')" v-model="automaticDeliveryClerkDay"/> 天自动确认收货</p>
+                        <p class="fs12 outline c-gra" style="color: gray">为避免用户忘记确认收货操作，导致订单始终处于配送中，增加自动确认收货功能，天数设置不得小于{{minAutomaticDeliveryClerkDay}}天
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+                
+        <qm-dialog :dialogVisible="dialog2" :width="'800px'" @close="dialog2 = false">
+                <template slot="title">配送费说明</template>
+                <template slot="content" >
+                        <div class="dialog-bd">
+                                <div class="dialog-mod-info">
+                                    <div class="title">1.配送模板是指商品对应的模板，没有特殊要求，就是用默认。</div>
+                                    <p class="text">特殊要求指的是：如卖场有销售大家电，则可创建一个大家电的模板，对这类产品设置不同的配送费。</p>
+                                    <p class="img"><img src="@/assets/seller/images/seller/img704x314.jpg" alt=""></p>
+                                    <div class="title">2.可以根据用户距离店铺的地址及送达时间需求设置不同的价格。</div>
+                                    <p class="text">比如1公里内，可以设置 0.5小时、1小时 等。1公里到2公里之间的距离，做不到0.5小时送达可以不设置，只设置 1小时之后的。同理，2小时和1天也都可以不设置，只有<span class="c-orange">快递配送是必须填写的。</span>
+                                    </p>
+                                    <p class="text">
+                                    假如不设置配送费，那么用户选择配送时间的时候，则不显示前一个配置时间段到当前时间的时间段。<br>
+                                        比如:用户在1.5公里的位置，送达时间可以从1小时后开始选择。 这个时候配送费就是最近的25元，店家可自主决定是否接单。选择第二天的就是10元，选择第三天为5天。而超出2公里的，则用户只能选择快递配送，统一收12元。
+                                    </p>
+                                </div>            
+                            </div>
+                </template>
+            </qm-dialog>
+        
+    
+        <div class="bottom">
+            <label class="submit-border"><input id="store_submit" type="button" class="submit" value="提交" @click="distributionSubmit()" ></label>
+        </div>
+  <qm-dialog :dialogVisible="tipMessage" :width="'500px'" @close="tipMessage == false">
+    <template slot="title">提示信息</template>
+    <template slot="content" >
+      <div class="dialog-bd eject_con">
+        <div class="dialog_message_contents comfirm"><i class="alert_info"></i><span>{{errorMsg}}</span></div>
+        <dl class="bottom rightBtn">
+          <dt></dt>
+          <dd>
+            2秒后页面跳转
+          </dd>
+        </dl>
+      </div>
+    </template>
+  </qm-dialog>
+
+        <!--<qm-tips :tipsVisible="dialog1" :showCancel="false" :width="'420px'" @close="dialog1 = false"  @confirm="dialog1 = false">
+                <template slot="title">{{dialogTitle1}}</template>
+                <template slot="content">{{dialogMessage1}}</template>
+            </qm-tips>-->
+    
+    </div>

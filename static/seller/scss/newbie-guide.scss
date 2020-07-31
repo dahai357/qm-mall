@@ -1,0 +1,293 @@
+$font-nor:"Helvetica Neue", Tahoma, "Microsoft Yahei", "PingFang SC", "ST Heiti", SimHei, sans-serif;
+$font-sp:"Helvetica Neue", Tahoma, SimSun, "PingFang SC", "ST Heiti", sans-serif;
+$sprite-ng: url('../images/seller/newbie-guide/sprite-ng.png');
+
+.diloag-newbie-guide{ position: fixed; left: 0; right: 0; top: 0; bottom: 0; z-index: 9999; background: #000; background: rgba(0,0,0,.5); font-family:$font-nor,$font-sp; font-size: 14px; color:#000; line-height: 1.5; margin: 0; padding: 0; color:#212121;
+
+    div, p,ul,li, input, textarea, button, select, th, td{ margin: 0; padding: 0;}
+    input, textarea, button, select{ font-family: inherit; font-size: 100%;}
+    img { border-style: none; vertical-align: middle;}
+    ul { list-style: none outside none;}
+
+    .ng-red{ color:red}
+    .ng-gray{ color:#757575;} 
+    .ng-orange{ color:#ff8518;}
+
+    .ng-hint{ color:#ff8518; font-size: 14px;
+        b{ font-weight: bold;}
+    }
+    .ng-hint-gray{ color:#757575; font-size: 12px; display: inline-block; vertical-align: middle;}
+    .ng-btn{ display: inline-block; background: #ff8518; border:none; color:#f5f5f5; text-align: center; font-size: 20px; line-height: 2.5; padding: 0 30px; height: 50px; outline: none; border-radius:10px; box-sizing: border-box; text-decoration: none;
+        &:hover{ cursor: pointer; background: #ef7101;}
+    }
+    .ng-btn2{ display: inline-block; border:1px solid #ff8518; color:#ff8518; text-align: center; font-size: 20px; line-height: 2.5; padding: 0 20px; height: 50px; outline: none; border-radius:10px; box-sizing: border-box; text-decoration: none;
+        &:hover{ color:#f5f5f5;  background: #ff8518;}
+    }
+
+    .ng-form-control{ display: inline-block; box-sizing: border-box; border:1px solid #dbdbdb; background: #fff; outline: none; padding: 0 10px; font-size: 16px; color:#212121; border-radius:5px; vertical-align: middle;}
+    input[type="text"].ng-form-control, input[type="time"].ng-form-control, input[type="tel"].ng-form-control{ line-height: 26px; height: 40px; padding-top: 6px; padding-bottom: 6px;}
+    textarea.ng-form-control{ resize: none; line-height: 30px; padding-top: 4px; padding-bottom: 4px; height: 100px;}
+    .ng-form-control::placeholder{ color: #bbb;}
+    .ng-form-item{ font-size: 0;}
+    .ng-form-sep{ display: inline-block; vertical-align: middle; margin:0 10px; color:#bbb; font-size: 16px;}
+    .ng-form-tit{ font-size: 16px; line-height: 2.25;}
+    .ng-form-checkbox{ display: inline-block; vertical-align: middle;
+        .ng-checkbox-frame{ position: relative; display: inline-block; vertical-align: middle; margin:3px 13px 0 0; position: relative; width: 20px; height: 20px;
+            &::before{ content:''; display: block;  width: 20px; height: 20px; border:1px solid #757575; box-sizing: border-box; border-radius:3px;}
+            &::after{ content:''; position: absolute; width: 26px; height: 16px; background:$sprite-ng -65px -20px no-repeat; left: -2px; top: 0; display: none;}
+        }
+        .ng-checkbox{ position: absolute; width: 20px; height: 20px; left: 0; top: 0; opacity: 0; z-index: 2;}
+        .ng-checkbox-txt{ display: inline-block; vertical-align: middle; font-size: 20px;}
+        &.ng-form-checkbox-s{
+            .ng-checkbox-frame{  width: 16px; height: 16px; margin: 0 5px 0 0;
+                &::before{ width: 16px; height: 16px;}
+                &::after{ width: 20px; height: 13px; background-position: -105px -40px;}
+            }
+            .ng-checkbox{ width: 16px; height: 16px;}
+            .ng-checkbox-txt{ font-size: 16px;}
+        }
+        &.checked{
+            .ng-checkbox-frame{ 
+                &::before{ border-color:#ffae21;}
+                &::after{ display: block;}
+            }
+        }
+        &.disabled{
+            .ng-checkbox-frame{ 
+                &::before{ border-color:#eee;}
+                &::after{ display: none;}
+            }
+            .ng-checkbox-txt{ color: #757575;}
+        }
+    }
+    .ng-error{ display: inline-block; vertical-align: middle; font-size: 12px; color:red;
+        label{
+            &:before{ content:''; display: inline-block; vertical-align: middle; width: 12px; height: 12px; background:$sprite-ng -90px -40px no-repeat; margin:0 2px 2px 5px;}
+        }
+    }
+    .ng-form-time{ 
+        .ng-form-control{ width: 170px; text-align: center;}
+    }
+    .ng-form-tel{
+        .ng-form-control{ text-align: center;}
+        .ng-form-tel-c1{ width: 140px;}
+        .ng-form-tel-c2{ width: 210px;}
+    }
+    .ng-form-tip{ position: relative; display: inline-block; vertical-align: middle; margin:0 5px 2px;
+        .ng-tip-tit{ color:#0093fa; font-size: 12px;}
+        .ng-ico-doubt{ display: inline-block; vertical-align: middle; width: 13px; height: 13px; background:$sprite-ng -95px -20px no-repeat; margin:0 4px 2px 0}
+        .ng-tip-con{ position: absolute; left: 50px; display: none; }
+        &:hover{ cursor: pointer;
+            .ng-tip-con{ display: block; z-index: 500;}
+        }
+    }
+    .ng-form-tip-img{
+        .ng-tip-con{ top:-7px; background: #fff; padding:10px; border:1px solid #0093fa; border-radius:5px;      &:before, &:after{ content:''; display:block;overflow:hidden;position:absolute;width:0;height:0;font-size:0;border-bottom:6px dashed transparent;border-left:6px dashed transparent;border-top:6px dashed transparent;border-right-style:solid;border-right-width:6px; top: 9px;}
+            &:before{ left:-12px;color:#0093fa}
+            &:after{ z-index:2;left:-11px;color:#fff}        
+        }
+    }    
+    .ng-form-s{ 
+        .ng-form-tit{ line-height: 30px; font-size: 14px;}        
+        input[type="text"].ng-form-control{ line-height:16px; height: 30px; font-size: 14px;}
+    }
+    .ng-form-inline{ display: inline-block; vertical-align: middle;}
+
+    .ng-upload-img-item{ 
+        .ng-upload-img, .ng-upload-btn{ width: 120px; height: 120px;} 
+        .ng-upload-img-box{ position: relative;}
+        .ng-upload-img{ 
+            img{ width: 100%; height: 100%; border-radius:20px;}
+        }
+        .ng-upload-del{  position: absolute; right: 0; top: 0; color: #fff; font-size: 18px; text-align: center; width: 26px; height: 26px; border-radius:100%; text-align: center; line-height: 26px; background: #000; background: rgba(0, 0, 0, 0.6); font-size: 14px; font-family: SimSun; z-index: 5;
+            &:hover{ background: #ff8519; cursor: pointer;}
+        }
+        .ng-upload-btn{ position: relative; background: #f5f5f5; border:1px solid #d6d6d6; border-radius:20px; box-sizing: border-box; padding-top: 35px;}
+        .ng-upload-file{ font-size: 100px; position: absolute; width: 120px; height: 120px; left: 0; top: 0; z-index: 3; opacity: 0; filter: alpha(opacity=0); overflow: hidden;    
+            &:hover{ cursor: pointer;}
+        }
+        .ng-upload-txt{ text-align: center; color:#888; font-size: 12px;
+            &:before{ content:''; display: block;  background:$sprite-ng -115px 0 no-repeat; width: 31px; height: 32px; margin:0 auto 15px;}
+        }
+        &.ng-upload-img-l{
+            .ng-upload-img, .ng-upload-btn{ width: 140px; height: 140px;} 
+            .ng-upload-btn{ padding-top: 50px;}
+        }
+    }
+    .ng-upload-img-list{ overflow: hidden; margin:0 -10px;
+        .ng-upload-img-item{ float: left; margin:0 10px;} 
+    }
+
+    .ng-form-item{ border-top:1px dotted #dbdbdb; padding: 30px 0;
+        &:first-child{ border: none; padding-top: 0;}
+        .ng-hint{ margin-bottom: 5px;}
+    }
+    
+    &:before, &:after{ content:''; position: absolute; left: 50%; top: 0;}
+    &:before{ width: 2px; background: #ffb423; height: (1500-700)/2*1px; height: calc((100% - 700px)/2); margin-left: -377px;}
+    &:after{ width: 21px; height: 9px; background:$sprite-ng no-repeat; margin-left: -386px;}
+
+    .dialog-ng-in{ position: absolute; width: 960px; left: 50%; top: 50%; margin:-350px 0 0 -480px; background: #fff url('../images/seller/newbie-guide/bg-ng.jpg') left bottom no-repeat; border-radius:20px;
+        &:before{ content:''; position: absolute; width: 83px; height: 12px; left: 50%; background:$sprite-ng -25px 0 no-repeat; margin-left: -413px; top: -12px;}
+    }  
+
+    .ng-list-tab{ margin-left: 80px;
+        li{ overflow: hidden; line-height: 32px;  border-top-left-radius: 25px; border-bottom-left-radius: 25px; padding:9px 7px; margin-bottom: 10px; font-size: 20px;  color:#fff; background: #ffd890; background:rgba(255,255,255,.5);}
+        .ng-num{ float: left; width: 32px; height: 32px; line-height: 32px; border-radius:100%; text-align: center; margin-right: 9px; font-style: italic; background: #fae7c3; background:rgba(245,245,245,.5);}
+        .ng-tit{ overflow: hidden;}
+        .finish{ 
+            .ng-num{ font-size: 0; position: relative; 
+                &:before{ content:''; position: absolute; width: 20px; height: 12px; background:$sprite-ng -20px -20px no-repeat; top: 50%; left: 50%; margin:-6px 0 0 -10px;}
+            }            
+            &:hover{ cursor: pointer;}
+        }
+        .active{ background: #fff; color:#ff8518;
+            .ng-num{ background: #f5f5f5; font-size: 20px;
+                &:before{ display: none;}
+            }
+            .ng-tit{ color:#ff8518;}
+        }
+    }
+    .ng-tab{ overflow: hidden;
+        &-hd, &-bd{ height: 700px;}
+        &-hd{ width: 230px; float: left; position: relative;}
+        &-bd{ overflow: hidden; position: relative; padding-top: 30px; box-sizing: border-box;}
+        .ng-title{ color:#fff; font-size: 30px; text-align: center; padding: 25px 0 30px;}
+        .ng-close{ position: absolute; color:#fff; font-size: 16px; left: 34px; bottom: 30px;
+            &:after{ content:''; display: inline-block; vertical-align: middle; background:$sprite-ng 0 -20px no-repeat; width: 17px; height: 14px; margin: 0 0 3px 6px;}
+            &:hover{ cursor: pointer; text-decoration: none; color:#fff;}
+        }
+    }     
+    .ng-bottom{ position: absolute; right: 20px; bottom: 30px;
+        [class^="ng-btn"]{ margin:0 20px; min-width: 150px;}
+    }
+    .ng-con{ padding: 0 110px 0 30px;}
+
+    .ng-form-time-section{ margin-top: 5px;}
+
+    .ng-shop-info{ 
+        &::after { content: "\0020"; display: table; clear: both; }
+        .ng-shop-c1{ float: left;}
+        .ng-shop-c2{ width: 540px; float: right;
+            .ng-form-item:first-child{ padding-top: 0;}             
+            .ng-form-tip{ margin:0 10px 0;
+                img{ max-width:400px}
+            }   
+            textarea{ margin-bottom: 6px;}   
+        }
+        .ng-hint{ font-size: 12px; text-align: center; margin-top: 5px;}
+        .ng-form-control{ width: 400px;}
+        input.ng-form-control{ padding-top: 10px; padding-bottom: 10px; height: 46px;}
+    } 
+    .ng-con1{ padding-right: 0;
+        .ng-form-item{ padding-top: 15px; padding-bottom: 0; border: none;}
+    }
+
+    .ng-btn-reset-map{ color:#ff8518; font-size: 20px; display: inline-block; position: relative; padding-left: 30px;
+        &:before{ content:''; display: inline-block; background:$sprite-ng -40px -20px no-repeat; width: 20px; height: 18px; vertical-align: middle; margin:0 10px 3px 0}
+        &:hover{ cursor: pointer;}
+    } 
+    .ng-map-box{ 
+        .ng-map-hint{ color:#ff8518; padding:10px; line-height: 1.5; margin-bottom: 15px;}
+        .ng-map{ position: relative;}
+        .amap-container{ border-radius:20px;}
+        .ng-map-info-box{ position: absolute; right: 15px; bottom: 15px; background:#fff; padding:5px 10px; border-radius:5px; word-break:break-all; font-size: 12px; width: 30%;
+            .ng-map-warn{ color:#ff8518; margin-bottom: 3px;}
+        }
+    }  
+
+    .ng-con3{ 
+        .ng-form-item{ padding: 15px 0;
+            &:first-child{ padding-top: 0;}
+        }
+        .ng-form-pay, .ng-form-online-pay{ margin-left: 35px;}
+        .ng-form-pay{ margin-top:7px; 
+            .ng-form-tit{ margin-top: 10px;}
+            .ng-form-tip{ 
+                .ng-tip-con{ top: -15px;}
+            }
+            textarea{ height: 70px; width: 400px;}
+        }  
+        .ng-form-online-pay{ font-size: 14px; margin-top: 10px;
+            p{ margin-top: 5px;}
+            a{ color:#0093fa;
+                &:hover{ color:#0093fa; text-decoration: underline;}
+            }
+        }      
+    }
+    
+    .ng-table-sr-box{ width: 632px; margin-bottom: 5px;}
+    .ng-table-sr, .ng-table-sr-sub{ width: 100%;}    
+    .ng-table-sr{ border-collapse: separate; border:1px solid #dbdbdb; border-radius:5px; margin-top: 8px;  box-sizing: border-box; font-size: 12px;
+        th, td, .ng-sr-txt, .ng-sr-name{ width: 80px;}
+        input{ font-size: 12px;}
+        th, td{ text-align: center; vertical-align: middle; border-left:1px solid #dbdbdb;}
+        th{ padding:10px 0; font-weight: normal;}
+        td{ border-top:1px solid #dbdbdb; }
+        .ng-sr-txt{ display: block; border:none; background: none; outline: none; text-align: center; padding:15px 5px; box-sizing: border-box; height: 50px; margin:0 auto;}
+        tr th:first-child, tr td:first-child{ border-left:none;}
+        .ng-sr-name{ 
+            .ng-sr-txt{ height: 20px; padding: 0;}
+        }
+        td.ng-sr-name{ padding-top: 5px; padding-bottom: 5px;}
+        p.ng-sr-name{ margin:0 auto} 
+        .ng-btn-sr{ color:#ff8518; text-decoration: none; font-size: 12px; display: inline-block; margin:0 2px;
+            &:hover{ text-decoration: underline;}
+        }
+        .ng-table-sr-sub{
+            p.ng-sr-name{ line-height: 66px;}
+            tr:first-child td{ border-top: none;}
+        }        
+    }
+
+    .ng-shipping-rates{ margin-top: 25px;
+        .ng-sr-title{ font-size: 16px;}
+        .ng-btn-add{ color:#ff8518; font-size: 12px; display: inline-block; vertical-align: middle; line-height: 1.5; border:1px solid #ff8518; padding: 0 6px; border-radius:3px; text-decoration: none; margin-left: 5px;
+            &:hover{ cursor: pointer; background: #ff8518; color:#fff;}
+        }
+        .ng-form-tip{ margin-left: 5px; margin-right: 5px;
+            .ng-tip-con{ left: -235px; top: -205px;}
+        }
+        .ng-hint{ font-size: 12px;}   
+        .ng-btn-shipping-rates{ color:#ff8518; font-size: 12px; margin-left: 5px;}
+    }
+    .ng-con4{ max-height:580px; overflow-y: auto; overflow-x:hidden; padding-right: 30px;
+        .ng-form-item{ padding: 15px 0;
+            &:first-child{ padding-top: 0;}
+        }
+        .ng-seller-distribution-detail{ padding-left: 35px;}
+        .ng-form-time{ margin-top: 5px;}   
+        .ng-is-start-shipping-price, .ng-is-free-shipping-price{ margin-top: 10px;}     
+        .ng-start-shipping-price, .ng-free-shipping-price{ margin-top: 5px;}
+        .ng-bottom{ right: 10px;}
+    }
+
+    .ng-ico-success{ width: 166px; height: 166px; display: inline-block; background: #fff3e7; border-radius:100%;  text-align: center; line-height: 166px; vertical-align: middle;
+        &:before{ content:''; display: inline-block; width: 88px; height: 102px; background:$sprite-ng 0 -40px no-repeat; vertical-align: middle; margin-bottom: 3px;}
+    }
+    .ng-con6{ text-align: center; padding-top: 50px; padding-right: 30px;
+        &-t1{ font-size: 30px; color:#ff8518; margin-top: 10px;}
+        &-t2{ font-size: 20px; margin-top: 10px;}
+        &-t3{ font-size: 16px; margin-top: 20px;}
+        .ng-link-box{ font-size: 0; margin-top: 40px;
+            a{ min-width: 180px; margin:0 10px; vertical-align: middle; padding: 0 20px;}
+        }
+        .ng-form-checkbox{ margin-top: 30px;}
+    }
+
+    .ng-info{ position: absolute;  width: 730px; height: 700px; right: 0; top: 0; background: #fff; z-index: 10;  box-sizing: border-box; padding:20px 30px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; display: none;
+        .ng-info-close{ position: absolute; color:#ff8518; font-size: 20px; font-family: 'SimSun'; line-height: 26px; text-align: center; width: 26px; border:1px solid #ff8518; right: 20px; top: 20px; border-radius:100%;
+            &:hover{ cursor: pointer;}
+        }
+    }
+    .ng-mod-info{
+        .ng-mod-hd{ margin-bottom: 10px; text-align: center;
+            .ng-tit{ font-size: 20px; font-weight: bold;} 
+        }
+        .ng-title{ font-size: 16px;font-weight: bold; margin-bottom: 3px;}
+        .ng-text{ margin-bottom:8px;}
+        .ng-img{ margin-bottom:8px;
+            img{ max-width:100%}
+        }
+    }
+}

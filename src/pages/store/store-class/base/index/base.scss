@@ -1,0 +1,217 @@
+@import '../../../../../assets/scss/style.scss';
+
+select {
+    font: 400 13.3333px Arial;
+    font-size: 14px;
+    display: inline-block;
+    color: #212121;
+    background-color: #FFF;
+    height: 30px;
+    vertical-align: middle;
+    padding: 4px;
+    border: solid 1px #ddd;
+    border-radius: 5px;
+}
+select option {
+    line-height: 20px;
+    display: block;
+    height: 20px;
+    padding: 4px;
+}
+
+.column-cont {
+    display: table;
+    width: 100%;
+}
+.column-3 {
+    display: table-cell;
+    width: 33.33%;
+    vertical-align: top;
+    padding-left: 20px;
+}
+.column-3:first-child {
+    padding-left: 0;
+}
+
+.item-top-bar {
+    line-height: 34px;
+}
+.column-3 .list-cont {
+    padding: 10px 10px 20px;
+    box-shadow: 0px 0px 20px 0px rgba(74,144,226,0.1);
+    box-sizing: border-box;
+}
+.item-top-bar .title {
+    font-size: 22px;
+}
+.c-black {
+    color: $darkGray;
+}
+.item-top-bar .c-tag {
+
+    @extend .btn-orange-full;
+    @extend .S7;
+
+    border: solid 1px #ddd;
+    text-align: center;
+    float: right;
+    margin-top: 3px;
+    
+}
+
+.c-gray {
+    color: #757575;
+}
+.two-list .two-top-bar {
+    padding: 10px 0;
+    @extend .S5;
+    border-bottom: 1px solid #f8f8f8;
+}
+
+.two-list li.active .two-top-bar .icon {
+    display: inline-block;
+    margin-right: 5px;
+    width: 14px;
+    height: 14px;
+    background: url(../../../../../assets/seller/images/seller/retract.png) no-repeat;
+}
+.two-list li .two-top-bar .icon {
+
+    display: inline-block;
+    margin-right: 5px;
+    width: 14px;
+    height: 14px;
+    background: url(../../../../../assets/seller/images/seller/spread.png) no-repeat;
+}
+
+.two-list .two-top-bar .p-btn, .p-btn{
+    @extend .btn-orange;
+    @extend .S8;
+    float: right;
+    line-height: 28px;
+    height: 28px;
+}
+
+.two-list li.active .three-list {
+    display: block;
+    box-sizing: border-box;
+}
+.three-list li {
+    padding: 10px 0 10px 10px;
+    line-height: 24px;
+    border-bottom: 1px solid #f8f8f8;
+    position: relative;
+    color: #757575;
+}
+.three-list li.ui-state-disabled {
+    @extend .C4;
+}
+
+.three-list li .icon {
+    font-size: 1.2em;
+    display: inline-block;
+    margin-right: 5px;
+    width: 14px;
+    height: 14px;
+    background: url(../../../../../assets/seller/images/seller/move.png) no-repeat;
+}
+.three-list li span {
+    @extend .S7
+}
+
+.three-list li .btn-group {
+    width: 100px;
+    position: absolute;
+    right: 0;
+    top: 10px;
+    white-space: nowrap;
+}
+
+.btn-mini {
+    @extend .S8;
+    @extend .C2;
+    // line-height: 22px;
+    text-align: center;
+    vertical-align: middle;
+    display: inline-block;
+    height: 24px;
+    padding: 0 10px;
+    margin-right: 2px;
+    cursor: pointer;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+
+.show-more-tips {
+    display: block;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    line-height: 45px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.eject_con dl dt {
+    text-align: right;
+    width: 8em;
+    padding-right: 1em;
+    color: #757575;
+}
+
+#oneName,#twoName{
+    color:black;
+}
+
+.ncsc-form-error {
+    display: inline-block;
+    vertical-align: middle;
+    color: red;
+    margin: 0;
+    font-size: 12px;
+}
+#threeName{
+    width: 150px;
+}
+
+.comfirm {
+    padding-bottom: 20px;
+    font-size: 16px;
+    text-align: center;
+    max-width: 500px;
+    word-break: break-all;
+}
+
+.ncsc-btn{
+    border-radius: 15px;
+}
+
+.cancle{
+    @extend .btn-gray ;
+    margin: 0 10px;
+    min-width: 90px;
+    border-radius: 15px;
+    height: 30px;
+    font-size: 12px;
+}
+
+.rightBtn {
+    text-align: right;
+    margin: 20px 20px 0;
+}
+
+.ghost{
+    border: dotted 1px #ff8519;
+    box-shadow: 2px 2px 2px rgba(153, 153, 153, 0.25);
+    filter: alpha(opacity=75);
+    -moz-opacity: 0.75;
+    opacity: .75;
+    cursor: ns-resize;
+    background-color: #ffeddd;
+  }
+
+  .fs14_15{
+    font: 14px/1.5 "Microsoft Yahei", "PingFang SC", "ST Heiti", SimHei, sans-serif, "Helvetica Neue", Tahoma;
+}

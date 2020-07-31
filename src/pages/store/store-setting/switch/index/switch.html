@@ -1,0 +1,84 @@
+<div class="store-store-setting-switch">
+
+
+        <div class="base-item">
+                <div class="base-label">
+                    <label >
+                            <!-- <qm-checkbox-frame v-model="isStoreOpen" :text="'店铺开发'" :size="'large'"></qm-checkbox-frame> -->
+                    </label>
+                </div>
+                <div class="base-content">
+                    <div class="settings">
+                        <div class="setting-item">
+                                <div>店铺状态情况</div>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-icon">
+                                <i class="setting-icon-success" v-if="basicStore.checkArray && basicStore.checkArray.storeInfo == 1"></i>
+                                <i class="ico-unset" v-else></i>
+                            </div>
+                            <div class="setting-title">店铺基本信息</div>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-icon">
+                                <i class="setting-icon-success" v-if="basicStore.checkArray && basicStore.checkArray.payWay == 1"></i>
+                                <i class="ico-unset" v-else></i>
+                            </div>
+                            <div class="setting-title">支付配置</div>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-icon">
+                                <i class="setting-icon-success" v-if="basicStore.checkArray && basicStore.checkArray.deliveryWay == 1"></i>
+                                <i class="ico-unset" v-else></i>
+                            </div>
+                            <div class="setting-title">配送方式</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    <div class="base-item">
+        <div class="base-label">
+            <label >
+                <qm-checkbox-frame v-model="isOpenAutomaticReceipt" :text="'开启自动接单'" :size="'large'"></qm-checkbox-frame>
+            </label>
+        </div>
+        <div class="base-content" style="color:darkgray">
+            开启自动接单，则有新订单时系统将为你自动接单；反之则需手动接单
+        </div>
+    </div>
+        <div class="base-item">
+                <div class="base-label">
+                    <label >
+                            <qm-checkbox-frame v-model="isStoreOpen" :text="'店铺开关'" :size="'large'"></qm-checkbox-frame>
+                    </label>
+                </div>
+                <div class="base-content" style="color:darkgray">
+                  <p class="C4 ">开启店铺后，可制作店铺海报进行推广&nbsp;&nbsp;<a class="orange" @click="$router.push('/promotion/store_poster/index')">前往制作>></a></p>
+                </div>
+            </div>
+
+
+        <div class="bottom">
+            <label class="submit-border"><input id="store_submit" type="button" class="submit" value="提交" @click="switchStore" :disabled="btnClick.switchStoreBtn"></label>
+        </div>
+
+    <!--    <qm-tips :tipsVisible="dialog1" :showCancel="false" :width="'420px'" @close="dialog1 = false"  @confirm="dialog1 = false">
+                <template slot="title">{{dialogTitle1}}</template>
+                <template slot="content">{{dialogMessage1}}</template>
+            </qm-tips>-->
+  <qm-dialog :dialogVisible="tipMessage" :width="'500px'" @close="tipMessage == false">
+    <template slot="title">提示信息</template>
+    <template slot="content" >
+      <div class="dialog-bd eject_con">
+        <div class="dialog_message_contents comfirm"><i class="alert_info"></i><span>{{errorMsg}}</span></div>
+        <dl class="bottom rightBtn">
+          <dt></dt>
+          <dd>
+            2秒后页面跳转
+          </dd>
+        </dl>
+      </div>
+    </template>
+  </qm-dialog>
+
+    </div>

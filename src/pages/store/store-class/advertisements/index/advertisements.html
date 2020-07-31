@@ -1,0 +1,150 @@
+<div class="qm-store-class-base advertisements">
+    <p class="c-gray">
+        该广告位在店铺分类页上，图片建议尺寸464*160
+        <el-tooltip placement="right-start" effect="light" popper-class="atooltip" >
+                <div slot="content" class="toolTipCont">
+                        <img src="@/assets/seller/images/seller/example/banner-dpflgg.jpg" alt="">
+                </div>
+                                
+                <p class="lightBlue">
+                <i class="fa fa-question-circle" aria-hidden="true"></i>示例
+                </p>
+        </el-tooltip>
+    </p>
+
+    <p class="c-gray mt5">上传两张以上就自动转换为多图模式。多图模式下,默认轮播时间为3秒。</p>
+
+    <div id="wrap>">
+        <dl class="ncsc-form-default">
+            <p class="mt30 ml50">&emsp;对应分类：&emsp;{{gc_name}}</p>
+            <ul class="list-advertisements-img ml50">
+                <li v-for="(item,i) in advertisingData">
+                    <div class="item item1">
+                        <div class="item-c1">
+                            广告{{list_num[i]}}图片：
+                        </div>
+                        <div class="item-c2 form-item">
+                            <div class="ncsc-upload-img-item ncsc-upload-img-250">
+                                    <div class="ncsc-upload-img-box" v-if="item.imageFile">
+                                        <div class="ncsc-upload-avatar js-tips-img">
+                                            <a @click="showImg(item.imageFile)"><img class="image-show" :src="item.imageFile"   /></a>
+                                        </div>
+                                        <input class="file" v-model="item.image" type="hidden">
+                                        <div class="image-delete" @click="deleteFile(item,i)">&times;</div>
+                                    </div>
+                                    <div class="ncsc-upload-btn" v-else>
+                                    <a href="javascript:void(0);">
+                                        <input type="file" class="input-file" accept="image/gif, image/jpeg, image/png, image/bmp" @change="localImgLoad($event,item,i,1)"/>
+                                        <p><i class="ico-upload"></i>图片上传</p>
+                                    </a>
+                                </div>
+                            </div>
+                            <p class="form-error error"  v-if="validData[i].imgFlag==false"><i class="fa fa-exclamation-circle"></i>广告图片不能为空</p>
+                        </div>
+                    </div>
+                    <div class="item item2">
+                        <div class="item-c1">
+                            广告{{list_num[i]}}链接：
+                        </div>
+                        <div class="item-c2 href-type">
+                            <div class="type-item1 form-item">
+                                <input type="radio" value="1" :id="'type_1'+i" v-model="item.type"/>
+                                <label :for="'type_1'+i">纯图片展示，不设置链接</label>
+                            </div>
+                            <div class="type-item2 form-item">
+                                <input type="radio" value="2"  :id="'type_2'+i"  v-model="item.type" />
+                                <label :for="'type_2'+i">跳转到指定网页</label>
+                                <div class="box" v-if="item.type==2" >
+                                    <div class='image_href'><input type='text'  v-model="item.href" class="input-href w250" placeholder="请输入网址" autocomplete="off"></div>
+
+                                    <p class="type-error error"  v-if="validData[i].hrefFlag==false"><i class="fa fa-exclamation-circle"></i>广告链接不能为空</p>
+                                    <p class="form-error error" v-if="validData[i].hrefValidFlag==false"><i class="fa fa-exclamation-circle"></i>填写正确的广告链接，以 http:// 或 https:// 或 gotoshenbd:// 开头</p>
+
+                                </div>
+                            </div>
+                            <div class="type-item3 form-item">
+                                <input type="radio" :id="'type_3'+i" value="3" v-model="item.type">
+                                <label :for="'type_3'+i">跳转查看指定图片</label>
+                                <div class="box" v-if="item.type==3">
+                                    <div class="ncsc-upload-img-item">
+                                        <div class="ncsc-upload-img-box" v-if="item.hrefImg" >
+                                            <div class="ncsc-upload-avatar js-tips-img">
+                                                <a @click="showImg(item.hrefImg)"><img class="image-show" :src="item.hrefImg"  /></a>
+                                            </div>
+                                            <input class="file"  v-model="item.hrefImg" type="hidden">
+                                            <div class="image-delete" @click="deleteSubImage(item,i)">&times;</div>
+                                        </div>
+                                        <div class="ncsc-upload-btn" v-else>
+                                            <a href="javascript:void(0);">
+                                                <input type="file" class="input-file" accept="image/gif, image/jpeg, image/png, image/bmp" @change="localImgLoad($event,item,i,2)"/>
+                                                <p><i class="ico-upload"></i>图片上传</p>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    
+                                    <p class="form-error error" v-if="validData[i].fileFlag==false"><i class="fa fa-exclamation-circle"></i>广告链接的图片不能为空</p>
+                                   
+                                </div>
+                            </div>
+                            <p class="form-error error" v-if="validData[i].linkFlag==false"><i class="fa fa-exclamation-circle"></i>广告链接不能为空</p>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div class="bottom ml50">
+                <input type="button" class="submit" @click="submitFile()" value="提交" />
+            </div>
+        </dl>
+        </div>
+
+
+
+
+        <qm-dialog :dialogVisible="deleteDialogVisible" :width="'500px'" @close="deleteDialogVisible = false">
+            <template slot="title">提示信息</template>
+            <template slot="content" >
+                <div class="dialog-bd eject_con">
+                    <div class="dialog_message_contents comfirm"><i class="alert_info"></i>保存成功</div>
+                </div>
+            </template>
+        </qm-dialog>
+
+
+        <el-dialog
+        :visible.sync="dialogVisible"
+        :lock-scroll="modalAppendToBody"
+        :width="imgWidth + 20 + 'px'"
+        :close-on-click-modal = "closeOnClickModal"
+        customClass="show-image">
+            <template v-if="hasImage">
+                <img :width="imgWidth" :src="imgUrl" />
+                <div class="closeDiv">
+                    <div id="lightbox-container-image-data">
+                        <div id="lightbox-image-details">
+                            <span id="lightbox-image-details-caption" style="display: none;"></span>
+                            <span id="lightbox-image-details-currentNumber" style="display: none;"></span>
+                        </div>
+                        <div id="lightbox-secNav">
+                            <a id="lightbox-secNav-btnClose" @click="dialogVisible = false">
+                                <img  src="//static.shenbd.com/lib/js/lightbox/img/lightbox-btn-close.gif">
+                            </a>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            
+        </el-dialog>
+
+        <el-dialog
+        :visible.sync="dialogVisibleFalse"
+        :lock-scroll="modalAppendToBody"
+        width="250px"
+        customClass="show-image">
+            
+            <div class="loader">
+                    <img src="//static.shenbd.com/lib/js/lightbox/img/lightbox-ico-loading.gif">
+            </div>
+        </el-dialog>
+
+</div>

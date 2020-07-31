@@ -1,0 +1,114 @@
+.layui-laypage, .layui-laypage em {
+    border-radius: 5px !important;
+    margin-right: 5px !important;;
+}
+.add-on {
+    zoom: 1;
+}
+.add-on {
+    line-height: 30px;
+    background-color: #f3f3f3;
+    vertical-align: middle;
+    display: inline-block;
+    text-align: center;
+    width: 30px;
+    height: 30px;
+    border: solid #ddd;
+    border-width: 1px 1px 1px 0;
+    box-sizing: border-box;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    margin-left: -5px;
+    color: #757575;
+}
+.input-add-on {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    line-height: 30px;
+    color: #212121;
+    background-color: #FFF;
+    vertical-align: middle;
+    display: inline-block;
+    height: 30px;
+    padding: 0 10px;
+    border: solid 1px #ddd;
+    outline: 0 none;
+    box-sizing: border-box;
+    font-size: 12px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    color: #757575;
+}
+.qm-store-class-record{
+    margin-top: 20px;
+    padding-bottom: 20px;
+}
+.closeDiv{
+    width: 500px;
+}
+#lightbox-container-image-data {
+    padding: 0 10px;
+    color: #666;
+}
+#lightbox-secNav-btnClose {
+    width: 66px;
+    float: right;
+    /* padding-bottom: 0.7em; */
+    margin-top: 10px;
+}
+.loader{
+    height: 230px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 230px;
+}
+input{font-size: 12px}
+.list-summary li{
+  padding:0 10px;
+}
+.left-li{
+  display: inline-block;
+  width:70%;
+  text-align: center;
+  border-right: 1px solid #eee;
+}
+.left-li .c-li{
+  margin:0px 100px;
+}
+.left-li .c-li-2{
+  margin:0px 60px 0px 60px;
+}
+.right-li{
+  vertical-align: middle!important;
+  width:30%;
+}
+.update-dialog dt{
+  vertical-align: middle;
+}
+.mark-info{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width:60px;
+}
+.tip-mark{
+  cursor:pointer;
+}
+.tip-mark:hover .tip-doubt-con{display: block;}
+.tip-mark-info .tip-doubt-con {
+  max-width: 230px;
+  left: 60px !important;
+  top: -34px;
+}
+.go-order a:hover{
+  text-decoration-color: #0093fa;
+}
+.mark-textarea{
+  marign:0px;
+  padding:0px;
+  height: auto;
+  border:none;
+  width:100%;
+  overflow:auto;
+  word-break:break-all;
+}

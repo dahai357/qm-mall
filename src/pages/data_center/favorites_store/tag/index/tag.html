@@ -1,0 +1,318 @@
+<div>
+  <div class="menu-more"><a @click="doRouter('/user/favorites_store/import_user')" class="ncsc-btn ncsc-btn-orange">批量导入</a></div>
+  <div class="clear"></div>
+  <div class="tab-style qm-store-class-base">
+        <div class="qm-store-class-record">
+          <select class="w130 mr5" @change="search()" v-model="pageParams.levelNum">
+            <option value="">所有会员等级</option>
+            <option value="0">未归属等级</option>
+            <option v-for="(litem) in userLevel" :value="litem.level_num">VIP{{litem.level_num}}-{{litem.level_name}}</option>
+          </select>
+          <select id="tag_id" name="tag_id" class="w130 mr5" @change="search()" v-model="pageParams.tagId">
+            <option value="">所有会员标签</option>
+            <option value="-1">未分类标签</option>
+            <option v-for="(titem) in favoritesTagList" :value="titem.tag_id">{{titem.tag_name}}</option>
+          </select>
+          <select @change="search()" class="w130 mr5" v-model="pageParams.searchType">
+            <option value="1">按关注时间搜索</option>
+            <option value="2">按会员购买力搜索</option>
+          </select>
+          <span class="ncsc-form-tit"> 搜索时间范围：</span>
+          <input name="start_time" id="start_time" type="text" class="input-add-on w90" :value="pageParams.beginTime" readonly="readonly">
+          <label class="add-on"><i class="fa fa-calendar" aria-hidden="true"></i></label>
+          <span class="ncsc-sep">-</span>
+          <input name="end_time" id="end_time" type="text" class="input-add-on w90" :value="pageParams.endTime" readonly="readonly">
+          <label class="add-on mr5"><i class="fa fa-calendar icon-calendar"></i></label>
+          <div class="mt10">
+            <input type="text" placeholder="名称模糊搜索/会员手机号搜索/更多信息" class="w250 mr5" autocomplete="off" id="member_name" name="member_name" v-model.trim="pageParams.searchText">
+            <input type="submit" class="ncsc-btn" value="搜索" @click="search()">
+            <input v-show="resetBtn" type="submit" class="ncsc-btn" value="重置" @click="restSearch()">
+          </div>
+        </div>
+    <!--统计数据展示-开始-->
+    <div class="summary-box summary-diliveryman mb20">
+      <ul class="list-summary">
+        <div class="left-li">
+        <div>
+          <li>
+            <div class="name">总会员数
+              <div class="tip-doubt tip-doubt-word tip-l tip-notit">
+                <p class="tip-tit"><i class="ico-doubt"></i></p>
+                <div class="tip-doubt-con">
+                  <div class="tip-txt c-gray fs12">
+                    <p>列表会员数合计</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="num c-blue"><span>{{totalMember.total_member}}</span></p>
+          </li>
+          <li class="c-li">
+            <div class="name">激活会员数
+              <div class="tip-doubt tip-doubt-word tip-l tip-notit">
+                <p class="tip-tit"><i class="ico-doubt"></i></p>
+                <div class="tip-doubt-con">
+                  <div class="tip-txt c-gray fs12">
+                    <p>已注册我的身边店软件用户的会员</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="num c-blue"><span>{{totalMember.jhTotalCount}}</span></p>
+          </li>
+          <li>
+            <div class="name">留存会员数
+              <div class="tip-doubt tip-doubt-word tip-l tip-notit">
+                <p class="tip-tit"><i class="ico-doubt"></i></p>
+                <div class="tip-doubt-con">
+                  <div class="tip-txt c-gray fs12">
+                    <p>仍为关注状态的会员数</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="num c-blue"><span>{{totalMember.fav_count}}</span></p>
+          </li>
+        </div>
+        <div>
+          <li>
+            <div class="name">今日新增会员数
+              <div class="tip-doubt tip-doubt-word tip-l tip-notit">
+                <p class="tip-tit"><i class="ico-doubt"></i></p>
+                <div class="tip-doubt-con">
+                  <div class="tip-txt c-gray fs12">
+                    <p>今日增加的新会员数</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="num c-orange"><span>{{totalMember.today_add}}</span></p>
+          </li>
+          <li class="c-li-2">
+            <div class="name">今日老会员回归数
+              <div class="tip-doubt tip-doubt-word tip-l tip-notit">
+                <p class="tip-tit"><i class="ico-doubt"></i></p>
+                <div class="tip-doubt-con">
+                  <div class="tip-txt c-gray fs12">
+                    <p>已取消的老用户在今日重新关注的数量</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="num c-blue"><span>{{totalMember.today_old_add}}</span></p>
+          </li>
+          <li>
+            <div class="name">新增会员数
+              <div class="tip-doubt tip-doubt-word tip-l tip-notit">
+                <p class="tip-tit"><i class="ico-doubt"></i></p>
+                <div class="tip-doubt-con">
+                  <div class="tip-txt c-gray fs12">
+                    <p>搜索时间范围内新增的会员数</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="num c-orange"><span>{{totalMember.new_add_total}}</span></p>
+          </li>
+        </div>
+        </div>
+          <li class="right-li">
+            <div class="name">购买业绩<span class="fs14">(元)</span>
+              <div class="tip-doubt tip-doubt-word tip-l tip-notit">
+                <p class="tip-tit"><i class="ico-doubt"></i></p>
+                <div class="tip-doubt-con">
+                  <div class="tip-txt c-gray fs12">
+                    <p>购买金额合计，不包含已关闭已取消和已退款的金额</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="num c-orange"><span v-if="totalMember.order_total >=0">{{totalMember.order_total|f2y}}</span></p>
+          </li>
+      </ul>
+    </div>
+    <!--统计数据展示-结束-->
+    <div class="operate-bar">
+      <label for="all" class="mr10"><input type="checkbox" id="all" class="checkall" v-model="checkAllState" @click="checkall">本页全选</label>
+      <a href="javascript:void(0)" class="ncsc-btn-mini mr5" @click="showLabel(0,0,1)">设置标签</a>
+      <a href="javascript:void(0)" class="ncsc-btn-mini mr5" @click="changeLevel()">变更等级</a>
+    </div>
+  <qm-table :pageParams="pageParams">
+    <template slot="table">
+        <table class="ncsc-table table-transaction-online">
+            <thead>
+                <tr nc_type="table_header">
+                  <th class="w15"></th>
+                  <th class="w300">会员名称</th>
+                  <th class="w90">会员等级</th>
+                  <th class="w100"><a @click="sort($event)" class="sort js-sort" data-sort="performance_sort">购买业绩<i class="ico-top"></i><i class="ico-bottom"></i></a></th>
+                  <!--<th class="w100">购买量</th>-->
+                  <th class="w100"><a @click="sort($event)" class="sort js-sort" data-sort="favtime_sort">关注时间<i class="ico-top"></i><i class="ico-bottom"></i></a></th>
+                  <th class="w100">用户来源</th>
+                  <th class="w100">关注状态</th>
+                  <th class="w130">更多信息</th>
+                  <th class="w250">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+          <tr v-for="(item) in list">
+            <td><input type="checkbox" class="checkitem" :value="item.favid" v-model="checkState"></td>
+            <td>
+              <div class="info-box">
+              <div class="pic">
+                <img width="60" height="60" class="br100p" :src="item.member_avatar">
+
+                <i v-if="item.is_backlist == 1" class="ico-black"></i>
+              </div>
+              <div class="detail">
+                <input :value="item.member_name" style="border:none;border-radius:0px;" readonly>
+                <p class="c-gray fs12">
+                  <span v-if="item.member_mobile && item.member_mobile.length == 11">{{item.member_mobile}}</span>
+                  <span v-else>{{item.import_mobile}}</span>
+                </p>
+                <p v-if="item.store_tag_ids !== undefined && item.store_tag_ids.length > 0 && favoritesTag" class="c-gray fs12">
+                <span v-for="(titem) in item.store_tag_ids">
+                  <span class="favorite-tag" v-if="favoritesTag[titem]">{{favoritesTag[titem]}}&nbsp;</span>
+                </span>
+                </p>
+              </div>
+              </div>
+            </td>
+            <td>
+              <span v-if="item.level_num> 0">VIP{{item.level_num}}</span>
+              <span v-else>-</span>
+            </td>
+
+           <!-- <td class="favorite-tag-td">
+
+            </td>-->
+             <td class="go-order" v-if="item.order_total > 0"><a @click="goOrder(item.member_id)"><span class="c-blue">{{item.order_total}}</span></a></td>
+            <td v-else>{{item.order_total}}</td>
+            <td class="c-gray">
+              <span v-if="item.fav_time">{{item.fav_time}}</span>
+              <span v-else>-</span>
+            </td>
+            <td class="fs12">{{item.fav_from}}</td>
+            <td class="fs12">{{item.fav_type}}</td>
+            <td class="fs12" :class="item.mark && item.mark.length > 4?'tip-mark':''">
+              <p class="mark-info" v-if="item.mark">{{item.mark}}</p>
+              <p class="mark-info" v-else>-</p>
+              <div v-if="item.mark && item.mark.length > 4" class="tip-doubt tip-doubt-word tip-l tip-notit tip-mark-info">
+                <div class="tip-doubt-con">
+                  <div class="tip-txt c-gray fs12">
+                    <textarea  class="mark-textarea" readonly v-model="item.mark"></textarea>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td class="handle">
+              <p><a class="ncsc-btn" @click="showUpdateMember(item)">编辑</a></p>
+             <!-- <p><a class="ncsc-btn" @click="showLabel(item.member_id,item.store_tag_ids,0)">编辑标签</a></p>-->
+              <p>
+                <a @click="doAddBlackList(item.member_id,0)"  class="ncsc-btn" v-if="item.is_backlist  == 1"><span>取消黑名单</span></a>
+                <a @click="doAddBlackList(item.member_id,1)"  class="ncsc-btn" v-else><span>加入黑名单</span></a>
+              </p>
+            </td>
+            </tr>
+            </tbody>
+        </table>
+    </template>
+  </qm-table>
+  <qm-pagination :pageParams="pageParams" @changeIndex="changeIndex($event)"></qm-pagination>
+  </div>
+
+  <qm-tips :tipsVisible="showLabelDialog" :width="'480px'" @update:tipsVisible="showLabelDialog = $event" :showCancel="false" @close="showLabelDialog = false"  @confirm="doAddMemberTag()">
+    <template slot="title">{{labelDialogTitle}}</template>
+    <template slot="content">
+      <div class="eject_con" style="text-align: left">
+          <dl>
+            <dt class="fs16"><i class="required">*</i>标签名称</dt>
+            <dd>
+              <label class="mr10" @click="chekedTag(tagVal)">
+                <input type="radio" name="tag_ids" value="-1"/>
+                <span class="fs16">无标签</span>
+              </label>
+              <label class="mr10" v-for="(tagVal,tagKey) in favoritesTagList" @click="chekedTag(tagVal)">
+                <input :id="tagVal.tag_id"  type="radio" name="tag_ids" :value="tagVal.tag_id"/>
+                <label :for="tagVal.tag_id" class="fs16">{{tagVal.tag_name}}&nbsp;</label>
+              </label>
+            </dd>
+          </dl>
+          <div id="warning"></div>
+      </div>
+    </template>
+  </qm-tips>
+  <qm-dialog :dialogVisible="tipMessage" :width="'500px'" @close="tipMessage == false">
+    <template slot="title">提示信息</template>
+    <template slot="content" >
+      <div class="dialog-bd eject_con">
+        <div class="dialog_message_contents comfirm"><i class="alert_info"></i><span>{{errorMsg}}</span></div>
+        <dl class="bottom rightBtn">
+          <dt></dt>
+          <dd>
+            2秒后页面跳转
+          </dd>
+        </dl>
+      </div>
+    </template>
+  </qm-dialog>
+  <qm-tips :tipsVisible="setLevelDialog" :width="'480px'" :showCancel="false" @close="setLevelDialog = false"  @confirm="doChangeLevel()">
+    <template slot="title">变更等级</template>
+    <template slot="content">
+      <div class="eject_con" style="text-align: left">
+        <dl>
+          <dt class="w150"><i class="required">*</i>变更后的等级：</dt>
+          <dd>
+            <select class="w200 mr5" v-model="levelArr.levelNum">
+              <option value="">请选择会员等级</option>
+              <option value="0">未归属等级</option>
+              <option v-for="(litem) in userLevel" :value="litem.level_num">&nbsp;&nbsp;&nbsp;VIP{{litem.level_num}}-{{litem.level_name}}</option>
+            </select>
+          </dd>
+        </dl>
+      </div>
+    </template>
+  </qm-tips>
+  <qm-tips :tipsVisible="updateMemberDialog" :width="'480px'" :showCancel="false" @close="updateMemberDialog = false"  @confirm="doUpdateMember()">
+    <template slot="title">编辑</template>
+    <template slot="content">
+      <div class="eject_con update-dialog" style="text-align: left">
+        <dl>
+          <dt class="w150">用户名称：</dt>
+          <dd>
+            <div class="info-box">
+            <div class="pic">
+              <img style="vertical-align: middle" width="50" height="50" class="br100p" :src="currentItem.member_avatar">
+              <i v-if="currentItem.is_backlist == 1" class="ico-black"></i>
+            </div>
+           <div class="detail">
+              <p>{{currentItem.member_name}}</p>
+              <p class="c-gray fs12">
+                <span v-if="currentItem.member_mobile && currentItem.member_mobile.length == 11">{{currentItem.member_mobile}}</span>
+                <span v-else>{{currentItem.import_mobile}}</span>
+              </p>
+            </div>
+            </div>
+          </dd>
+
+        </dl>
+        <dl>
+          <dt class="w150">会员等级：</dt>
+          <dd>
+            <select class="w150 mr5" v-model="currentItem.level_num">
+              <option value="0">未归属等级</option>
+              <option v-for="(litem) in userLevel" :value="litem.level_num">VIP{{litem.level_num}}-{{litem.level_name}}</option>
+            </select>
+          </dd>
+        </dl>
+        <dl>
+          <dt class="w150">更多信息：</dt>
+          <dd>
+           <textarea class="w250 h80" v-model="currentItem.mark" maxlength="100"></textarea>
+            <p class="c-gray">更多信息最多可输入100个字</p>
+          </dd>
+        </dl>
+      </div>
+    </template>
+  </qm-tips>
+    </div>

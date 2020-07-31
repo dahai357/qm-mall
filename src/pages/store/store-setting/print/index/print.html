@@ -1,0 +1,93 @@
+<div class="qm-store-class-base">
+
+    <div class="ncsc-form-default ncsc-form-store-setting">
+        <form method="post" id="my_store_form">
+            <div class="ncsc-form-item">
+                <div class="ncsc-form-tit">请设置默认打印样式</div>
+                <div class="ncsc-form-custom-radio-group">
+                    <div class="ncsc-form-box">
+                            <el-tooltip placement="right-start" effect="light" popper-class="atooltip" >
+                                <div slot="content" class="toolTipCont">
+                                    <img src="@/assets/seller/images/seller/example/print1.png" alt="">
+                                </div>
+                                <div class="ncsc-form-custom-radio tip-doubt-wrap" :class="printType ==0?'checked':''">    
+                                    <div class="ncsc-custom-radio-frame">
+                                        <input type="radio" name="print_type" value="0" class="ncsc-custom-radio" id="print_type_0" v-model="printType">
+                                    </div>
+                                    <label for="print_type_0" class="ncsc-custom-txt">
+                                        <span class="name">小票样式</span>
+                                    </label>
+                                </div>
+                            </el-tooltip>
+                    </div>
+                    <div class="ncsc-form-box">
+                            <el-tooltip placement="right-start" effect="light" popper-class="atooltip" >
+                                <div slot="content" class="toolTipCont">
+                                        <img src="@/assets/seller/images/seller/example/print2.png" alt="">
+                                </div>
+                                <div class="ncsc-form-custom-radio tip-doubt-wrap " :class="printType ==1?'checked':''">
+                                    <div class="ncsc-custom-radio-frame">
+                                        <input type="radio" name="print_type" value="1" class="ncsc-custom-radio" id="print_type_1" v-model="printType">
+                                    </div>
+                                    <label for="print_type_1" class="ncsc-custom-txt">
+                                        <span class="name">A4样式</span>
+                                    </label>
+                                </div>
+                            </el-tooltip>
+                    </div>
+                </div>
+            </div>
+            <p class="ncsc-form-hint">设置样式后默认以设置的样式进行打印，商家需自行确认连接的打印机设备。</p>
+            <div class="ncsc-form-item" style="border-top: 1px solid #eee;margin-top: 10px;">
+                <div class="ncsc-form-tit" style="margin-top: 10px;">打印备注</div>
+                <div class="ncsc-form-custom-radio-group">
+                    <div class="ncsc-form-box">
+                        <template>
+                            <div>
+                                <div class="text-area">
+                                  <textarea cols="79" name="print_remarks" v-model="printRemarks" style="resize:both ;">
+                                  </textarea>
+                                </div>
+                            </div>
+                            <p class="ncsc-form-hint">
+                                设置打印备注则打印的订单小票底部将显示对应信息
+                                <el-tooltip placement="right-start" effect="light" popper-class="atooltip-none" >
+                                    <div slot="content" class="toolTipCont">
+                                        <img src="@/assets/seller/images/seller/example/print-remarks.png" alt="" width="700">
+                                    </div>
+                            <p class="lightBlue">
+                                <i class="fa fa-question-circle" aria-hidden="true"></i>示例
+                            </p>
+                            </el-tooltip>
+                            </p>
+                        </template>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom">
+                <label class="submit-border"><input id="submitBtn" type="button" class="submit" value="提交" @click="submitPrintSet()"></label>
+            </div>
+            <input type="hidden" name="form_submit" value="ok">
+        </form>
+    </div>
+  <qm-dialog :dialogVisible="tipMessage" :width="'500px'" @close="tipMessage == false">
+    <template slot="title">提示信息</template>
+    <template slot="content" >
+      <div class="dialog-bd eject_con">
+        <div class="dialog_message_contents comfirm"><i class="alert_info"></i><span>{{errorMsg}}</span></div>
+        <dl class="bottom rightBtn">
+          <dt></dt>
+          <dd>
+            2秒后页面跳转
+          </dd>
+        </dl>
+      </div>
+    </template>
+  </qm-dialog>
+
+    <!--<qm-tips :tipsVisible="dialog1" :showCancel="false" :width="'420px'" @close="dialog1 = false"  @confirm="dialog1 = false">
+            <template slot="title">{{dialogTitle1}}</template>
+            <template slot="content">{{dialogMessage1}}</template>
+        </qm-tips>-->
+        
+</div>

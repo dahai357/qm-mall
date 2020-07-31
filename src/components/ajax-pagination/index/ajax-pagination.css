@@ -1,0 +1,83 @@
+.pagination {
+    display: block;
+    padding: 15px 0;
+    margin-top: 20px;
+    text-align: right;
+    font-size: 12px;
+    color: #757575;
+}
+ul, ol {
+    list-style: none outside none;
+}
+.pagination ul {
+    font-size: 0;
+    display: inline-block;
+    margin: 0 -3px;
+    padding: 0;
+    zoom: 1;
+    vertical-align: middle;
+}
+.pagination ul li {
+    vertical-align: middle;
+    letter-spacing: normal;
+    word-spacing: normal;
+    display: inline-block;
+    width: auto!important;
+    height: auto!important;
+    padding: 0!important;
+    margin: 0 3px;
+    border: none !important;
+}
+.pagination ul a span, .pagination ul span {
+    display: block;
+    font-size: 12px;
+    color: #333;
+    line-height: 24px;
+    height: 24px;
+    padding: 0px 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-decoration: none;
+}
+.pagination ul span.currentpage {
+    color: #FFF;
+    border-color: #ff8519;
+    background-color: #ff8519;
+}
+.pagination ul span:hover, .pagination ul span:active, .pagination .btn-skip:hover {
+    color: #fff;
+    background-color: #ff8519;
+    border-color: #ff8519;
+    cursor: pointer;
+    text-decoration: none;
+}
+.pagination ul a{
+    text-decoration: none;
+}
+.pagination .pagination-jump{
+    display: inline-block;
+    vertical-align: middle;
+    height: 24px;
+}
+.pagination .pagination-jump span{
+    display: inline-block;
+    font-size: 12px;
+    color: #333;
+    line-height: 24px;
+    height: 24px;
+    padding: 0px 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  
+}
+.pagination .pagination-jump span:hover{
+    color: #fff;
+    background-color: #ff8519;
+    border-color: #ff8519;
+    cursor: pointer;
+}
+.pagination .pagination-jump #jumpPage{
+    width: 40px;
+    height: 26px;
+   text-align: center;
+}

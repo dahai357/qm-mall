@@ -1,0 +1,33 @@
+.account-seller-log{
+    border: 1px solid #fff;
+    background: #fff;
+    padding: 10px 20px 30px;
+    width: 1000px;
+}
+.store-tabs{
+    width: 100%;
+    border-bottom: 1px solid #eee;
+}
+.log-list{
+    width: 50px;
+    height: 50px;
+}
+.qm-store-class-record{
+    margin-top: 60px;
+    padding-bottom: 20px;
+}
+.table-log-list{
+    margin-top: 20px;
+}
+.ncsc-default-table td{
+    padding: 20px 10px;
+}
+.ncsc-default-table .table-content {
+   transform: translate(35%);
+   
+}
+.ncsc-btn:hover {
+    text-decoration: none;
+    border-color: #ff8519;
+    color:#ff8519;
+  }

@@ -1,0 +1,49 @@
+<div class="account-seller-log">
+    <qm-tabs :tabs="tabs" :blod="false" class="store-tabs" :marginRight="20">
+    </qm-tabs>
+    <div class="qm-store-class-record">
+        <span class="ncsc-form-tit">时间：</span>
+        <input name="start_time" id="start_time" type="text" class="input-add-on w100" readonly="readonly"
+            :value="pageParams.startTime">
+        <label class="add-on"><i class="fa fa-calendar" aria-hidden="true"></i></label>
+        <span class="ncsc-sep">-</span>
+        <input name="end_time" id="end_time" type="text" class="input-add-on w100" :value="pageParams.endTime"
+            readonly="readonly">
+        <label class="add-on mr5"><i class="fa fa-calendar icon-calendar"></i></label>
+        <span class="ncsc-form-tit">操作人：</span>
+        <input placeholder="用操作账号/对应姓名进行快速搜索" type="text" id="seller_Name" style="width:238px;">
+        <span class="ncsc-form-tit">日志内容：</span>
+        <input type="text" id="log_Content">
+        <input type="submit" class="ncsc-btn" value="搜索" @click="search()" >
+      <qm-table :pageParams="pageParams">
+        <template slot="table">
+        <table class="ncsc-table table-log-list">
+            <thead>
+                <tr>
+                    <th style="width:15%">账号</th>
+                    <th style="width:40%">日志内容</th>
+                    <th style="width:10%">状态</th>
+                    <th style="width:15%">IP</th>
+                    <th style="width:20%">时间</th>
+                </tr>
+            </thead>
+            <tbody class="ncsc-default-table">
+                    <qm-table :pageParams="pageParams" ></qm-table>
+                <tr v-for="(item,i) in list" :key="i">
+                    <td>
+                      <p v-show="item.is_admin == 1">店主</p>
+                      <p v-show="item.log_seller_mark && item.is_admin !=1">{{item.log_seller_mark}}</p>
+                      <p>{{item.log_seller_name}}</p>
+                    </td>
+                    <td>{{item.log_content}}</td>
+                    <td>{{item.log_state | updataloglist}}</td>
+                    <td>{{item.log_seller_ip}}</td>
+                    <td>{{item.log_time | updataListTime}}</td>
+                </tr>
+            </tbody>
+        </table>
+        </template>
+      </qm-table>
+        <qm-pagination :pageParams="pageParams" @changeIndex="changeIndex($event)"></qm-pagination>
+    </div>
+</div>

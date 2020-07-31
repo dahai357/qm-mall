@@ -1,0 +1,184 @@
+@import '../../../assets/scss/style.scss';
+
+.div-goods-select-box {
+    position: relative;
+    max-width: 742px;
+}
+.td-lt {
+  text-decoration: line-through;
+}
+
+.div-goods-select .close, .div-goods-select-box .close {
+    font: lighter 18px/18px SimSun;
+    color: $gray;
+    background-color: #FFF;
+    text-align: center;
+    display: block;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #bbb;
+    border-radius: 20px;
+    position: absolute;
+    z-index: 1;
+    top: -11px;
+    right: -11px;
+    cursor: pointer;
+    right: -10px;
+}
+
+.div-goods-select {
+    position: relative;
+    margin-bottom: 20px;
+    border: solid 1px #eee;
+    padding: 20px 10px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    width: 742px;
+}
+
+
+.ncsc-search-form {
+    color: $gray;
+    font-size: 12px;
+    padding-bottom: 20px;
+}
+.div-goods-select .ncsc-search-form {
+    margin-left: 10px;
+}
+
+.ncsc-search-form .ncsc-form-tit, .ncsc-search-form input, .ncsc-search-form textarea, .ncsc-search-form select, .ncsc-search-form .ncsc-form-category-search, .ncsc-search-form .ncsc-btn {
+    font-size: 12px;
+}
+.ncsc-btn-orange-rim:hover{
+    color:white;
+}
+
+.div-goods-select .search-result .goods-list {
+    overflow: hidden;
+    margin-top: -20px;
+}
+
+.div-goods-select .search-result .goods-list li {
+    float: left;
+    margin: 0 10px;
+    width: 160px;
+    padding-top: 20px;
+    box-sizing: border-box;
+    line-height: 1.5;
+}
+.div-goods-select .search-result .goods-list .goods-item {
+    border: 1px solid #eee;
+    box-sizing: border-box;
+    padding: 10px;
+    border-radius: 5px;
+}
+.div-goods-select .search-result .goods-list .goods-item:hover {
+    border: 1px solid $orange;
+    box-sizing: border-box;
+    padding: 10px;
+    border-radius: 5px;
+}
+.div-goods-select .search-result .goods-thumb {
+    width: 100px;
+    margin: 0 auto;
+    display: table;
+    table-layout: fixed;
+}
+.div-goods-select .search-result .goods-info {
+    margin-bottom: 5px;
+    margin-top: 10px;
+    line-height: 20px;
+}
+.tc {
+    text-align: center !important;
+}
+
+.div-goods-select .search-result .goods-thumb-in {
+    display: table-cell;
+    width: 100%;
+    height: 100px;
+    vertical-align: middle;
+    text-align: center;
+}
+.div-goods-select .search-result .goods-thumb img {
+    max-width: 100px;
+    max-height: 100px;
+}
+.div-goods-select .search-result .goods-info p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.div-goods-select .search-result .goods-info .goods-tit {
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    //white-space: nowrap;
+    cursor: pointer;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+    height: 40px;
+    line-height: 20px;
+}
+.goods-tit a:hover {
+    color: $orange;
+}
+.ncsc-form-default dd p {
+    clear: both;
+}
+.div-goods-select .search-result .goods-info p {
+    font-size: 12px;
+}
+
+.ncsc-btn-mini.add:hover{
+
+    color:$orange;
+    border: solid 1px $orange;
+}
+.ncsc-btn-mini.move{
+    color:$orange;
+    border: solid 1px $orange;
+}
+.ncsc-btn-mini.move:hover{
+    background: $orange;
+    color:white
+}
+
+
+.ncsc-btn-mini {
+    font-size: 12px;
+    line-height: 22px;
+    color: #212121;
+    text-align: center;
+    vertical-align: middle;
+    display: inline-block;
+    height: 24px;
+    padding: 0 10px;
+    margin-right: 2px;
+    border: none;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #fff;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.close:hover{
+    background-color: $orange;
+    color: #fff;
+    text-decoration: none;
+    border:none;
+}
+.noresult{
+    height: 280px;
+    text-align: center;
+    line-height: 280px;
+}
+.div-goods-select-noborder .div-goods-select{
+    border: none;
+}
+.div-goods-select-noborder .close{
+    display: none !important;
+}

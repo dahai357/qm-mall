@@ -1,0 +1,334 @@
+.header{
+    line-height: 30px;
+    background: #212121;
+    /* background: url(../../assets/images/header_bg.png); */
+    width: 100%;
+    /* width: 1880px; */
+    z-index: 66666667;
+    /* position: fixed;
+    top:0; */
+    position: absolute;
+    top:0px
+}
+.menu-div{
+    width: 1220px;
+    margin: auto;
+    height: 50px;
+}
+.main-logo{
+    display: block;
+    float: left;
+    width: 200px;
+    background: #ff8518;
+    text-align: center;
+    height: 50px;
+  margin-left: 17px;
+  }
+  .main-logo a{
+    height: 50px;
+  }
+  .logo{
+      width: 160px;
+      height: 50px;
+      display: block;
+      margin:0px auto;
+  }
+  .ncsc-nav{
+    font-size: 0;
+    float: left;
+    margin-left: 30px;
+    zoom: 1;
+  }
+  .menu{
+        float: left;
+        height: 30px;
+        line-height: 30px;
+        z-index: 5;
+        margin: 10px 10px 0px 10px;
+        font: normal 16px/30px "microsoft yahei";
+        color: #fff;
+        padding: 0 10px;
+        cursor: pointer;
+  }
+
+  .curent-menu{
+    float: left;
+    height: 30px;
+    line-height: 30px;
+    z-index: 5;
+    margin:10px 10px 0px 15px;
+    font: normal 16px/30px "microsoft yahei";
+    color: #ff8518;
+    padding: 0 10px;
+    cursor: pointer;
+}
+.new-menu{
+    float: left;
+    height: 30px;
+    line-height: 30px;
+    z-index: 5;
+    margin-top: 10px;
+    font: normal 16px/30px "microsoft yahei";
+    color: #fff;
+    padding: 0 10px;
+}
+.circle-orange{
+    width: 6px;
+    height: 6px;
+    border-radius: 3px;
+    background: #ff8518;
+    float: right;
+}
+.menu:hover,.curent-menu{
+    color: #ff8518;
+  }
+.ncsc-admin {
+    float: right;
+    color: #fff;
+    font-size: 14px;
+    position: relative;
+    padding: 0 0px 0 20px;
+}
+ .admin-name {
+    line-height: 50px;
+    max-width: 120px;
+    overflow: hidden;
+    white-space: nowrap;
+    vertical-align: middle;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    display: inline-block;
+}
+.admin-icon{
+    margin-left: 5px;
+    color:  #fff;
+}
+.sub-menu{
+    background-color: #000;
+    z-index: 66666668;
+    margin-left: -10px;
+    background: rgba(0,0,0,.8);
+    color:white;
+    font-size: 12px;
+    padding: 0 10px;
+    position:absolute;
+    min-width: 100px;
+}
+.account-menu{
+  position:absolute;
+  right: 0;
+}
+
+.sub-menu-item{
+  white-space: nowrap;
+}
+.sub-menu-item:hover{
+    color:#ff8518;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.sub-menu-item a{
+  font-size: 12px;
+  color: #fff;
+  white-space: nowrap;
+  clear: both;
+  position: relative;
+  text-decoration: none;
+}
+.sub-menu-item a:hover{
+  color:#ff8518;
+  cursor: pointer;
+}
+/*.sub-menu-item:hover{*/
+  /*color:#ff8518;*/
+  /*cursor: pointer;*/
+/*}*/
+.ncsc-nav .red-dot {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.ncsc-nav .sub-menu-item .red-dot {
+  right: -5px;
+  width: 4px;
+  height: 4px;
+}
+.red-dot {
+  width: 6px;
+  height: 6px;
+  background: #ff8518;
+  border-radius: 100%;
+}
+.ncsc-nav>div{
+  position: relative;
+}
+.home{
+    /* border: 1px solid #d7dde4; */
+    background: #f5f7f9;
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .center-nav{
+    margin: 0 auto;
+    margin-right: 20px;
+  }
+  .system-nav{
+    position: absolute;
+    right: 20px;
+  }
+  .layout-wrap {
+    height: calc(100vh - 72px);
+    margin-top: 70px;
+    margin-left:10px;
+  }
+  .menu-name {
+    position: relative;
+    z-index: 3;
+  }
+
+  .download{
+      width:198px;
+      height: 54px;
+      display: block;
+        font-size: 20px;
+        line-height: 2.7;
+        color: #ff8519;
+        margin-top: 20px;
+        background: #fff;
+        text-align: center;
+        text-decoration: none
+  }
+  .download:hover{
+      color: #fff;
+      background: #ff8519;
+}
+
+  .icon-small{font-size: 1.2em;margin-left: 4px}
+
+
+  #footer{
+    border: none;
+    background: none;
+    font-size: 12px!important;
+    line-height: 20px;
+    color: #666;
+    text-align: center;
+    display: block;
+    width: 100%;
+    clear: both;
+    margin-left: -280px;
+    padding: 20px 0;
+    overflow: hidden;
+    line-height: 1.8;
+  }
+
+  .content{
+    /* width: 1205px; */
+    width: 100%;
+    margin: 70px auto 0 auto;
+    /* margin-left: calc((100% - 1200px)/2 + (100vw - 100%)/2); */
+    margin-left: calc((100% - 1200px)/2);
+    height: calc(100vh - 50px);
+  }
+  .routerContent{
+    /* width: 985px; */
+    width: calc(100% - 198px - 20px - ((100% - 1200px)/2));
+    margin-left: 20px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    /* height: 100%; */
+    max-height: 100%;
+    padding-top: 20px;
+  }
+
+  .routerContent::-webkit-scrollbar{
+    width: 5px;
+    height: 8px;
+    background-color: rgba(75,75,75,0.2);
+  }
+
+  .routerContent::-webkit-scrollbar-thumb{
+    /* background-color: #ff8519; */
+    background-color: #757575;
+    border-radius: 5px;
+  }
+
+  /* .test-1::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: #EDEDED;
+ } */
+
+
+  #tbox {
+    width: 52px;
+    float: right;
+    position: fixed;
+    right: 20px;
+    bottom: 10px;
+    z-index: 2;
+}
+#tbox .btn {
+  text-align: center;
+  height: 52px;
+  padding: 6px 0 2px 0;
+  margin-bottom: 5px;
+  cursor: auto;
+}
+
+#tbox .btn:hover {
+  text-align: center;
+  height: 52px;
+  padding: 6px 0 2px 0;
+  margin-bottom: 5px;
+  background:#757575;
+}
+
+#tbox .btn i {
+  background: url(../../assets/seller/images/seller/ncsc_bg_img.png) -260px -450px no-repeat ;
+  display: block;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+#tbox .btn:hover i {
+  background: url(../../assets/seller/images/seller/ncsc_bg_img.png) -290px -450px no-repeat ;
+  display: block;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+#tbox .btn a {
+  font: 11px/20px "microsoft yahei";
+  color: #666;
+  text-decoration: none;
+  display: block;
+}
+#tbox .btn:hover a {
+  font: 11px/20px "microsoft yahei";
+  color: #fff;
+  text-decoration: none;
+  display: block;
+}
+
+.empertyLeft{
+  width: 200px;
+  height: 675px;
+}
+.empertyLeft1{
+  width: 100px;
+  height: 675px;
+}
+
+.absoluteMenu{
+  float: left;
+  /* position: fixed; */
+}

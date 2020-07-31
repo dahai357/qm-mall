@@ -1,0 +1,1927 @@
+
+<div class="qm-store-class-base">
+
+        <div class="tabmenu-sub" v-if="pageParams.state_type == 'dada'">
+            <ul class="comm-tab">
+            <li :class="dadaState == 'all' ?'active':'normal'"><a @click="changeDadaState('all')">全部</a></li>
+            <li :class="dadaState == '1' ?'active':'normal'"><a @click="changeDadaState(1)">待接单</a></li>
+            <li :class="dadaState == '5' ?'active':'normal'"><a @click="changeDadaState(5)" >已取消</a></li>
+            <li :class="dadaState == '7' ?'active':'normal'"><a @click="changeDadaState(7)" >已过期</a></li>
+            <li :class="dadaState == '2' ?'active':'normal'"><a @click="changeDadaState(2)" >待取货</a></li>
+            <li :class="dadaState == '3' ?'active':'normal'"><a @click="changeDadaState(3)" >配送中</a></li>
+            <li :class="dadaState == '9' ?'active':'normal'"><a @click="changeDadaState(9)" >异常</a></li>
+        </ul>
+        </div>
+
+  <div class="tabmenu-sub" v-if="pageParams.state_type == 'state_deal'">
+    <ul class="comm-tab">
+      <li @click="changeDealState(0)" :class="pageParams.deal_state == 0 ?'active':'normal'"><a>待配送</a><i class="red-dot" v-if="this.getOrderTips.hasOwnProperty('wait_send_count') && this.getOrderTips.wait_send_count"></i></li>
+      <li @click="changeDealState(1)" :class="pageParams.deal_state == 1 ?'active':'normal'"><a>配送中</a></li>
+      <li @click="changeDealState(2)" :class="pageParams.deal_state == 2 ?'active':'normal'"><a>待自提</a><i class="red-dot" v-if="this.getOrderTips.hasOwnProperty('self_mention_wait_count') && this.getOrderTips.self_mention_wait_count"></i></li>
+      <li @click="changeDealState(3)" :class="pageParams.deal_state == 3 ?'active':'normal'"><a>已送达（待确认收货）</a></li>
+      <li @click="changeDealState(4)" :class="pageParams.deal_state == 4 ?'active':'normal'" v-if="this.getOrderTips.hasOwnProperty('wrong_count') && this.getOrderTips.wrong_count"><a>配送异常处理</a><i class="red-dot" ></i></li>
+    </ul>
+  </div>
+    <form class="mt20">
+      <div class="ncsc-search-form">
+        <div class="search-item" v-show="showManage.orderType">
+          <label  class="ncsc-checkbox-txt">订单类型：</label>
+          <select name="shipping_type" class="w200 mr5" v-model="pageParams.shipping_type"  @change="changeShipping($event)">
+            <option value="-1">所有类型</option>
+            <option value="1">配送订单</option>
+            <option value="2">自提订单</option>
+          </select>
+        </div>
+        <div class="search-item" v-show="showManage.orderState">
+          <label  class="ncsc-checkbox-txt">订单状态：</label>
+          <select name="order_state"  class="w200 mr5" v-model="pageParams.order_state" >
+            <option value="-1">所有状态</option>
+<!--
+             <option :value="key" v-for="(item,key) in searchOrderStates">{{item}}</option>
+-->
+            <option value="2" v-show="pageParams.shipping_type == -1 || pageParams.shipping_type == 1">待发货</option>
+            <option value="3" v-show="pageParams.shipping_type == -1 || pageParams.shipping_type == 2">待到店自提</option>
+            <option value="4" v-show="pageParams.shipping_type == -1 || pageParams.shipping_type == 1">配送中</option>
+            <option value="5" v-show="pageParams.shipping_type == -1 || pageParams.shipping_type == 1">已送达</option>
+            <option value="6">待确认收货</option>
+            <option value="7">取消待确认</option>
+            <option value="8">取消待确认打款</option>
+            <option value="10">已关闭</option>
+            <option value="11">已完成</option>
+          </select>
+        </div>
+        <div class="search-item" v-show="showManage.dateType">
+          <label  class="ncsc-checkbox-txt">时间类型：</label>
+          <select name="date_type"  :class="[pageParams.deal_state == '4' || pageParams.deal_state == '2'|| pageParams.deal_state == '3' ?'w120':'w200','mr5']" v-model="pageParams.date_type">
+            <option :value="key" v-for="(item,key) in searchDateTypes" v-show="(item!='取消/关闭时间' || (item=='取消/关闭时间' && pageParams.order_state != 4 ))">{{item}}</option>
+          </select>
+        </div>
+          <div class="search-item"  v-show="showManage.dateTime">
+            <span class="ncsc-checkbox-txt" v-show="showManage.timeLabel">下单时间：</span>
+            <span class="ncsc-checkbox-txt" v-show="showManage.timeRangeLabel">时间范围：</span>
+            <input type="text" class="input-add-on w100 query_start_date_b" name="query_start_date" :value="pageParams.query_start_date" readonly="readonly">
+            <label class="add-on"><i class="fa fa-calendar" aria-hidden="true"></i></label>
+            <span class="ncsc-sep">-</span>
+            <input class="input-add-on w100 query_end_date_b" type="text" name="query_end_date" :value="pageParams.query_end_date" readonly="readonly">
+            <label class="add-on"><i class="fa fa-calendar" aria-hidden="true"></i></label>
+          </div>
+        <div class="search-item"  v-show="showManage.printState">
+          <label  class="ncsc-checkbox-txt">打印状态：</label>
+          <select name="or_com_type" class="w100 mr5" v-model="pageParams.or_com_type">
+            <option value="-1">所有状态</option>
+            <option value="0">未打印</option>
+            <option value="1">已打印</option>
+          </select>
+        </div>
+        <div class="search-item" v-show="showManage.keyword">
+          <label  class="ncsc-checkbox-txt">关键词：</label>
+          <div :class="[isActive?'active ':'','ncsc-form-category-search mr5']">
+            <div class="search-category"  @mouseover="isActive=true" @mouseout="isActive=false">
+              <div class="search-category-name">
+                <span class="category-txt">{{curSearchTypeTxt}}</span>
+                <i class="fa fa-angle-down"></i>
+              </div>
+              <div class="search-category-drop"  @mouseover="isActive=true" @mouseout="isActive=false">
+                <ul class="list-search-category">
+                  <li v-for="(type,k) in searchTypes" v-show="k != pageParams.key_type"><a @click="changeKeyType(k,type)">{{type}}</a></li>
+                </ul>
+              </div>
+            </div>
+            <input  type="text" :class="pageParams.deal_state == 2 || pageParams.deal_state == 3 ? 'w235' : 'w250'" name="key" autocomplete="off"  v-model="pageParams.keyword" />
+          </div>
+        </div>
+        <div class="search-item" v-show="showManage.payType">
+          <label  class="ncsc-checkbox-txt">支付方式：</label>
+          <select name="pay_type" class="w200 mr5"  v-model="pageParams.pay_type">
+            <option value="-1">所有支付方式</option>
+            <option value="0" v-show="!pageParams.state_type == 'state_receive_money'">线上支付</option>
+            <option value="1">线下支付</option>
+            <option value="2">货到付款</option>
+          </select>
+        </div>
+        <div class="search-item"  v-show="showManage.deliveryType">
+          <label  class="ncsc-checkbox-txt">配送方式：</label>
+          <select name="pay_type" class="w200 mr5" v-model="pageParams.delivery_type">
+            <option value="-1">所有配送方式</option>
+            <option value="0">自主配送</option>
+
+            <option value="1">达达配送</option>
+            <option value="2">快递配送</option>
+          </select>
+        </div>
+
+        <div class="search-item" v-show="showManage.orderSn">
+          <span class="ncsc-form-tit">订单号：</span>
+          <input type="text"   class="w267 mr5" name="order_sn" v-model="pageParams.order_sn" autocomplete="off" placeholder="请输入订单号进行查询">
+        </div>
+<!-- -------------------------------------------------------------------------------------------------------------------------------- -->
+        <div class="inline" v-show="pageParams.state_type == 'all' || pageParams.state_type == null  || pageParams.state_type == ''">
+        <div class="search-item">
+        <label  class="ncsc-checkbox-txt">订单类型：</label>
+        <select name="shipping_type" class="w200 mr5" v-model="pageParams.shipping_type" @change="changeShipping($event)">
+          <option value="-1">所有类型</option>
+          <option value="1">配送订单</option>
+          <option value="2">自提订单</option>
+        </select>
+        </div>
+        <div class="search-item">
+        <label  class="ncsc-checkbox-txt">订单状态：</label>
+        <select name="order_state"  class="w200 mr5" v-model="pageParams.order_state" >
+          <option value="-1">所有状态</option>
+          <option value="0">待付款</option>
+          <option value="1" >待接单</option>
+          <option value="2" v-show="pageParams.shipping_type == -1 || pageParams.shipping_type == 1">待发货</option>
+          <option value="3" v-show="pageParams.shipping_type == -1 || pageParams.shipping_type == 2">待到店自提</option>
+          <option value="4" v-show="pageParams.shipping_type == -1 || pageParams.shipping_type == 1">配送中</option>
+          <option value="5" v-show="pageParams.shipping_type == -1 || pageParams.shipping_type == 1">已送达</option>
+          <option value="6">待确认收货</option>
+          <option value="7">取消待确认</option>
+          <option value="8">取消待确认打款</option>
+          <option value="9">已取消</option>
+          <option value="10">已关闭</option>
+          <option value="11">已完成</option>
+        </select>
+        </div>
+        <div class="search-item">
+        <span class="ncsc-form-tit">订单号：</span>
+        <input type="text"   class="w267 mr5" name="order_sn" v-model="pageParams.order_sn" autocomplete="off" placeholder="请输入订单号进行查询">
+        </div>
+        <div class="search-item">
+          <label  class="ncsc-checkbox-txt">打印状态：</label>
+        <select name="or_com_type" class="w200 mr5" v-model="pageParams.or_com_type">
+          <option value="-1">所有状态</option>
+          <option value="0">未打印</option>
+          <option value="1">已打印</option>
+        </select>
+        </div>
+        <div class="search-item">
+        <label  class="ncsc-checkbox-txt">时间类型：</label>
+        <select name="date_type" class="w200 mr5" v-model="pageParams.date_type">
+          <option value="0">下单时间</option>
+          <option value="1">收款时间</option>
+          <option value="2">发货时间</option>
+          <option value="3"  v-show="pageParams.order_state != 4">取消/关闭时间</option>
+          <option value="4">完成时间</option>
+        </select>
+        </div>
+        <div class="search-item">
+        <span class="ncsc-checkbox-txt">时间范围：</span>
+        <input type="text" class="input-add-on w100 query_start_date" name="query_start_date" :value="pageParams.query_start_date" readonly="readonly">
+        <label class="add-on"><i class="fa fa-calendar" aria-hidden="true"></i></label>
+        <span class="ncsc-sep">-</span>
+        <input class="input-add-on w100 query_end_date" type="text" name="query_end_date" :value="pageParams.query_end_date" readonly="readonly">
+        <label class="add-on"><i class="fa fa-calendar" aria-hidden="true"></i></label>
+        </div>
+        <div class="search-item">
+        <label  class="ncsc-checkbox-txt">支付方式：</label>
+        <select name="pay_type" class="w200 mr5"  v-model="pageParams.pay_type">
+          <option value="-1">所有支付方式</option>
+          <option value="0">线上支付</option>
+          <option value="1">线下支付</option>
+          <option value="2">货到付款</option>
+        </select>
+        </div>
+        <div class="search-item" v-show="pageParams.pay_type == 0 || pageParams.pay_type == -1">
+        <label  class="ncsc-checkbox-txt">支付渠道：</label>
+        <select name="pay_type" class="w200 mr5" v-model="pageParams.pay_channel">
+          <option value="-1">所有支付渠道</option>
+          <option value="0">微信支付</option>
+          <option value="1">支付宝支付</option>
+          <option value="2">微信小程序支付</option>
+        </select>
+        </div>
+        <div class="search-item">
+          <label  class="ncsc-checkbox-txt">关键词：</label>
+        <div :class="[isActive?'active ':'','ncsc-form-category-search mr5']">
+          <div class="search-category"  @mouseover="isActive=true" @mouseout="isActive=false">
+            <div class="search-category-name">
+              <span class="category-txt">{{curSearchTypeTxt}}</span>
+              <i class="fa fa-angle-down"></i>
+            </div>
+            <div class="search-category-drop"  @mouseover="isActive=true" @mouseout="isActive=false">
+              <ul class="list-search-category">
+                <li v-for="(type,k) in searchTypes" v-show="k != pageParams.key_type"><a @click="changeKeyType(k,type)">{{type}}</a></li>
+              </ul>
+            </div>
+          </div>
+          <input  type="text" class="w282" name="key" autocomplete="off"  v-model="pageParams.keyword" />
+        </div>
+        </div>
+          <div class="search-item">
+          <label  class="ncsc-checkbox-txt">配送方式：</label>
+          <select name="pay_type" class="w200 mr5" v-model="pageParams.delivery_type">
+            <option value="-1">所有配送方式</option>
+            <option value="0">自主配送</option>
+            <option value="1">达达配送</option>
+            <option value="2">快递配送</option>
+          </select>
+          </div>
+          <div class="search-item">
+          <label  class="ncsc-checkbox-txt">优惠券情况：</label>
+          <select name="pay_type" class="w200 mr5"  v-model="pageParams.has_coupon">
+            <option value="-1">全部</option>
+            <option value="0">没有使用优惠券</option>
+            <option value="1">有使用优惠券</option>
+          </select>
+        </div>
+            <div class="search-item">
+                <label  class="ncsc-checkbox-txt">打款状态：</label>
+                <select name="make_already_transfer" class="w200 mr5"  v-model="pageParams.make_already_transfer">
+                    <option value="-1">全部</option>
+                    <option value="1">已打款</option>
+                    <option value="0">未打款</option>
+                    <option value="2">无需打款</option>
+                </select>
+            </div>
+        </div>
+      </br>
+        <input type="button" class="ncsc-btn ncsc-btn-orange" value="搜索" @click="searchData(pageParams)" >
+        <input type="button" class="ncsc-btn ncsc-btn-orange-rim" value="重置" v-show="conditionSearch" @click="reset()" >
+        <input UNSELECTABLE='on' type="button"  class="ncsc-btn ncsc-btn-orange-rim" @click="exportData(pageParams)" value="导出" readonly/>
+          <p  class="print-all-address fb fs14" @click="printAddress()" v-if="pageParams.state_type == 'state_deal' && (pageParams.deal_state==0 || pageParams.deal_state==1) && orderList.length>0">批量打印订单地址>>></p>
+      </div>
+
+      <!--  <div class="ncsc-search-form">
+            <input type="hidden" name="c" value="store_order">
+            <input type="hidden" name="a" value="index">
+                <input type="hidden" name="state_type" value="store_order">
+
+                <select name="shipping_type" @change="searchData(pageParams)" class="w100 mr5" v-model="pageParams.shipping_type" v-if="(pageParams.state_type == 'all' || pageParams.state_type == null  || pageParams.state_type == '') || pageParams.state_type == 'state_success'">
+                    <option value="">所有类型</option>
+                    <option value="1">配送订单</option>
+                    <option value="2">自提订单</option>
+                </select>
+                <span class="ncsc-form-tit">下单时间：</span>
+                <input type="text" class="input-add-on w100" name="query_start_date" id="query_start_date" :value="pageParams.query_start_date" readonly="readonly">
+                <label class="add-on"><i class="fa fa-calendar" aria-hidden="true"></i></label>
+                <span class="ncsc-sep">-</span>
+                <input id="query_end_date" class="input-add-on w100" type="text" name="query_end_date" :value="pageParams.query_end_date" readonly="readonly">
+                <label class="add-on"><i class="fa fa-calendar" aria-hidden="true"></i></label>
+                <label for="skip_off" class="ncsc-checkbox-txt">打印状态：</label>
+                <select name="or_com_type" class="w100 mr5" @change="searchData(pageParams)" v-model="pageParams.or_com_type">
+                    <option value="all">全部</option>
+                    <option value="1">已打印</option>
+                    <option value="0">未打印</option>
+                </select>
+                <input type="text" :disabled="!canSearch" class="w180 mr5" name="order_sn" v-model="pageParams.order_sn" autocomplete="off" placeholder="请输入收货人手机号或订单号 或取件码">
+                <input type="button" class="ncsc-btn" value="搜索" @click="searchData(pageParams)" :disabled="!canSearch">
+
+                <div class="ncsc-form-checkbox mr5" v-if="pageParams.state_type == 'all' || pageParams.state_type == null  || pageParams.state_type == ''">
+                    <input type="checkbox" class="ncsc-checkbox" id="skip_off" value="1" name="skip_off" v-model="pageParams.skip_off" @change="changeSkipOff($event)">
+                    <label for="skip_off" class="ncsc-checkbox-txt">不显示已关闭的订单</label>
+                    &nbsp;&nbsp;
+                    <input type="checkbox" class="ncsc-checkbox" id="only_cancel" value="1" name="only_cancel" v-model="pageParams.only_cancel" @change="changeOnlyCancel($event)">
+                    <label for="only_cancel" class="ncsc-checkbox-txt">只显示已取消的订单</label>
+                </div>
+        </div>-->
+    </form>
+  <div v-show="(isReceiveOrder.count > 0 && lastGetlistTime && lastGetlistTime < isReceiveOrder.new_order_time)">
+    <div class="new-order-tip" v-if="pageParams.state_type == 'all' || pageParams.state_type =='state_wait'" @click="newOrderTip()">您有新的订单，点击刷新</div>
+    <div class="new-order-tip" v-else @click="goWaitOrder()">您有新的订单，去接单</div>
+  </div>
+  <qm-table :pageParams="pageParams">
+            <template slot="table">
+                    <table class="table-order" v-for="(list,l) in orderList">
+                            <thead >
+                            <tr>
+                                <td colspan="2" class="action-wrap">
+                                    <p class="serial-number">
+                                        <span class="c-gray fs12 ml5 span_1"  STYLE="font-size: 13px" v-if="list.order_state!=10 && list.order_state!=20 && list.order_state!=-1 && list.shipping_code>0">#<span style="font-size: 16px;font-weight: bold;margin-left: 0px;margin-right: 30px;">{{list.shipping_code}}</span></span>
+                                        <span class="c-gray fs12 ml5" STYLE="font-size: 13px;margin-left: 0;">订&ensp;单&ensp;号：{{list.order_sn}}</span>
+                                        <span class="c-gray fs12 ml5" :style="getCssStyle(list.level_info.level_color)">买&ensp;家：{{list.buyer_name}}</span>
+                                        <span class="c-gray fs12 ml5" STYLE="font-size: 13px" v-if="list.add_time">下单时间：{{list.add_time | datetime}}</span>
+                                        <span class="c-gray fs12 ml5" STYLE="font-size: 13px" v-if="list.serviceTime && list.shipping_type==1 && list.order_state==30">确认送达时间：{{list.serviceTime | datetime}}</span>
+                                        <span class="c-gray fs12 ml5" STYLE="font-size: 13px" v-if="list.serviceTime && list.shipping_type==0 && list.order_state==30">确认自提时间：{{list.serviceTime | datetime}}</span>
+                                        <span class="c-gray fs12 ml5" STYLE="font-size: 13px" v-if="list.send_time && list.shipping_type==1 && list.order_state==30 && list.serviceTime==0">发货时间：{{list.send_time | datetime}}</span>
+                                        <span class="c-gray fs12 ml5" STYLE="font-size: 13px" v-if="list.order_state == 0">取消时间：{{list.cancel_time | datetime}}</span>
+                                        <span class="c-gray fs12 ml5" STYLE="font-size: 13px" v-if="list.order_state == -1">关闭时间：{{list.close_time | datetime}}</span>
+                                        <span class="c-gray fs12 ml5" STYLE="font-size: 13px" v-if="list.order_state == 40">完成时间：{{list.finnshed_time | datetime}}</span>
+                                    </p>
+                                </td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                            <td class="w280" style="">
+                                <!--template>
+                                        <p class="serial-number">
+                                          <span v-if="list.shipping_code">#{{list.shipping_code}}</span>
+                                          <span class="c-gray fs12" :class="list.shipping_code?'ml5':''" v-if="list.or_com_type"> 已打印</span>
+                                        </p>
+                                </template-->
+                                <template v-if="list.shipping_type == 1">
+                                        <div class="address">
+                                            <p>送达时间：<br>
+                                                <span class="fs16">{{list.delivery_time > 0 ?getDeliveryTime(list):'快递配送'}}</span>
+                                            </p>
+
+                                            <p>{{list.extend_order_common.reciver_info.address}}</p>
+                                            <p> {{list.extend_order_common.reciver_name | base64}} {{list.extend_order_common.reciver_info.phone}} <a @click="changeAddress(list)" class="change_address" href="javascript:;" v-if="list.order_state == 10 || list.order_state == 20 || list.order_state == 25 ">[修改地址]</a></p>
+                                        </div>
+                                        <div class="delivery-msg" v-if="list.diliveryman_id > 0 && list.delivery_type == 0">
+                                            <ul class="list-msg list-pay">
+                                                <li>
+                                                    <div class="tit">配送员：</div>
+                                                    <div class="detail" v-if="list.diliveryman_name">{{list.diliveryman_name}}</div>
+                                                </li>
+                                                <li>
+                                                    <div class="tit">配送费：</div>
+                                                    <div class="detail">
+                                                        <template v-if="list.extend_deliveryman_log">
+                                                            {{list.extend_deliveryman_log.distribution_fee | f2y}}
+                                                        </template>
+                                                        <template v-else>0</template>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                </template>
+                                <template v-if="list.shipping_type == 0">
+                                        <div class="delivery-msg">
+                                                <p v-if="list.shipping_type == 0" >买家自提(自提时间：
+                                                        {{list.delivery_time > 0 ?getMyselfDeliveryTime(list):'其它时间'}} )
+                                                </p>
+                                                <p class="delivery-code" v-if="(list.shipping_type !=0 || !(list.order_state == 0 || list.order_state == 10 || list.order_state == 20 || list.order_state == -1 )) && list.take_code>0">
+                                                    取件码：{{list.take_code}}
+                                                </p>
+                                                <p v-if="list.shipping_type == 0">{{list.extend_order_common.reciver_name | base64}}&nbsp;{{list.extend_order_common.reciver_info.phone}} </p>
+                                            </div>
+                                </template>
+
+                                <div class="pay-msg">
+                                    <p class="pay-type" :class="list.payment_type == 0 && list.is_receive_payment == 0?'c-orange':''">
+                                                        <template v-if="list.payment_type == 0">
+                                                            <template v-if="list.is_receive_payment > 0">线下付款,已核实 </template>
+                                                            <template v-else>线下付款,请核实</template>
+                                                        </template>
+                                                        <template v-else-if="list.payment_type == 2">货到付款</template>
+                                                        <template v-else>
+                                                            <template v-if="list.payment_time > 0">线上付款</template>
+                                                            <template v-else>待线上付款</template>
+                                                        </template>
+
+                                    </p>
+                                    <ul class="list-msg list-pay">
+                                        <li>
+                                            <div class="tit">商品件数：</div>
+                                            <div class="detail">{{list.goods_num_new_count>0?list.goods_num_new_count:0}}件</div>
+                                        </li>
+                                        <li>
+                                            <div class="tit">原价合计：</div>
+                                            <!--div class="detail">¥ {{list.goods_amount | f2y}}</div-->
+                                          <div class="detail">¥ {{list.goods_amount_sum | f2y}}</div>
+                                        </li>
+                                        <li  v-if="list.shipping_type!=0">
+                                            <div class="tit">配送费：</div>
+                                            <div class="detail">¥ {{list.shipping_fee | f2y}}</div>
+                                        </li>
+                                      <li>
+                                        <div class="tit">折扣金额：</div>
+                                        <div class="detail">¥ {{list.goods_discount_amount | f2y}}</div>
+                                      </li>
+                                        <li>
+                                            <div class="tit">会员折扣：</div>
+                                            <div class="detail">¥ {{list.member_discount_amount | f2y}}</div>
+                                        </li>
+                                        <li>
+                                            <div class="tit">优惠金额：</div>
+                                          <div class="detail">¥ <span>{{list.coupon_amount | f2y}}</span></div>
+                                        </li>
+
+                                        <li :class="((list.payment_type == 0 || list.payment_type == 2)&& list.is_receive_payment == 0)|| (list.payment_type != 0 && list.payment_type != 2 && list.payment_time == 0)?'c-orange':''">
+
+                                            <div class="tit">
+                                                <template v-if="list.payment_type == 0 || list.payment_type == 2">
+                                                    <template v-if="list.is_receive_payment > 0">实付金额：</template>
+                                                    <template v-else>应收金额：</template>
+                                                </template>
+                                                <template v-else>
+                                                    <template v-if="list.payment_time > 0">实付金额：</template>
+                                                    <template v-else>待付金额：</template>
+                                                </template>
+                                             </div>
+                                            <div class="detail">¥ {{list.order_amount | f2y}}</div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!--div class="info">
+                                    <p>订&ensp;单&ensp;号：{{list.order_sn}}</p>
+                                    <div class="info-tip-box">
+                                        <p class="info-btn-more"><i class="ico-more"></i></p>
+                                        <div class="info-tip">
+                                            <p>买&emsp;&emsp;家：{{list.buyer_name}}</p>
+                                            <p v-if="list.add_time">下单时间：{{list.add_time | datetime}}</p>
+                                            <p v-if="list.send_time">发货时间：{{list.send_time | datetime}}</p>
+                                            <p v-if="list.order_state == 0">取消时间：{{list.gmt_update | datetime}}</p>
+                                            <p v-if="list.order_state == -1">关闭时间：{{list.gmt_update | datetime}}</p>
+                                        </div>
+                                    </div>
+                                </div-->
+                            </td>
+
+
+                            <td class="action-wrap">
+                                <ul :class="['plist-goods',list.has_more ? (list.toggle?'toggle-down':'toggle-up'):'']">
+                                    <template v-for="(goods,gs) in list.goods_list">
+                                            <template v-if="goods.goods_commonid == 0">
+                                                    <li class="item">
+                                                            <div class="goods-detail">
+                                                                <div class="pic">
+                                                                    <img :src="goods.image_60_url" alt="">
+                                                                </div>
+                                                                <div class="detail">
+                                                                    <div class="detail-c1">
+                                                                        <p class="count">×{{goods.goods_num}}</p>
+                                                                        <p class="price">￥{{goods.goods_price | f2y}}</p>
+                                                                    </div>
+                                                                    <div class="detail-c2">
+                                                                        <div class="tit">
+                                                                            {{goods.goods_name}}
+                                                                                                                                                </div>
+                                                                        <div class="total-price">
+                                                                            <p class="price_intro intro" >
+                                                                                商品原价￥{{goods.goods_group_marketprice | f2y}}，享{{goods.goods_price|discount_t(goods.goods_group_marketprice)}}折
+                                                                            <span v-if="goods.extend_sale_info"  style="width: 300px">
+                                                                                <el-popover
+                                                                                        placement="bottom-start"
+                                                                                        trigger="click" width="300">
+                                                                                    <div  class="toolTipCont">
+                                                                            <p>
+                                                                                <span>活动ID：</span> {{goods.extend_sale_info.sale_act_id}}
+                                                                            </p>
+                                                                            <p>
+                                                                                <span>活动名称：</span> {{goods.extend_sale_info.sale_title}}
+                                                                            </p>
+                                                                            <p>
+                                                                                <span>销售员：</span>  {{goods.extend_sale_info.store_sale_id}}-{{goods.extend_sale_info.sale_name}}<span v-if="goods.extend_sale_info.sale_mobile">({{goods.extend_sale_info.sale_mobile}})</span>
+                                                                            </p>
+                                                                        </div>
+                                                                        <p class="lightBlue" slot="reference" style="cursor:default">点击查看销售员信息</p>
+                                                                        </el-popover>
+                                                                        </span>
+                                                                        </p>
+                                                                            <span class="c-orange fs16">￥{{goods.goods_price | f2y}}</span>
+                                                                            <span class="origin-price ml20">¥{{goods.totalGoodsPrice | f2y}}</span>
+                                                                            <div class="status c-orange" v-if="goods.refund_state_name">{{goods.refund_state_name}}</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="goods-joint">
+                                                                <div class="joint-tit">搭配商品</div>
+                                                                <ul class="plist-goods-joint">
+                                                                    <li class="joint-item" v-for="(group,g) in goods.goods_group">
+                                                                        <div class="goods-detail">
+                                                                            <div class="pic">
+                                                                                <img :src="group.goodsImagePath" alt="">
+                                                                            </div>
+                                                                            <div class="detail">
+                                                                                <div class="detail-c1">
+                                                                                    <p class="count"> x {{group.num}}</p>
+                                                                                </div>
+                                                                                <div class="detail-c2">
+                                                                                  <a class="tit" @click="openGoods(group.goodsCommonId)">{{group.goodsName}}</a>
+                                                                                  <div class="intro">
+                                                                                        <template v-if="group.goodsAttr">
+                                                                                            <template v-for="(groupAttr,ga) in group.goodsAttr">{{groupAttr.attrName}}:{{groupAttr.attrValue}};</template>
+                                                                                        </template>
+                                                                                    </div>
+                                                                                    <p class="joint-total-price">
+                                                                                        <span class="fs16">￥{{group.discountPrice | f2y}}</span>
+                                                                                        <span class="origin-price ml20">￥{{group.goodsPrice | f2y}}</span>
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                </li>
+                                            </template>
+                                            <template v-else>
+                                                    <li class="item">
+                                                            <div class="goods-detail">
+                                                                <div class="pic">
+                                                                    <img :src="goods.image_60_url" width="50px" alt="">
+                                                                </div>
+                                                                <div class="detail">
+                                                                    <div class="detail-c1">
+                                                                        <p class="count">×{{goods.goods_num}}</p>
+                                                                        <p class="price">￥{{goods.goods_price | f2y}}</p>
+                                                                    </div>
+                                                                    <div class="detail-c2">
+                                                                      <a class="tit" @click="openGoods(goods.goods_commonid)">{{goods.goods_name}}</a>
+                                                                        <p class="price_intro intro" >商品原价￥{{goods.goods_marketprice | f2y}}，享{{goods.goods_price|discount_t(goods.goods_marketprice)}}折
+                                                                        <span v-if="goods.extend_sale_info"  style="width: 300px">
+                                                                            <el-popover
+                                                                                    placement="bottom-start"
+                                                                                    trigger="click" width="300">
+                                                                                <div  class="toolTipCont">
+                                                                        <p>
+                                                                            <span>活动ID：</span> {{goods.extend_sale_info.sale_act_id}}
+                                                                        </p>
+                                                                        <p>
+                                                                            <span>活动名称：</span> {{goods.extend_sale_info.sale_title}}
+                                                                        </p>
+                                                                        <p>
+                                                                            <span>销售员：</span>  {{goods.extend_sale_info.store_sale_id}}-{{goods.extend_sale_info.sale_name}}<span v-if="goods.extend_sale_info.sale_mobile">({{goods.extend_sale_info.sale_mobile}})</span>
+                                                                        </p>
+                                                                    </div>
+                                                                    <p class="lightBlue" slot="reference" style="cursor:default">点击查看销售员信息</p>
+                                                                    </el-popover>
+                                                                    </span>
+                                                                    </p>
+                                                                      <p class="intro" v-if="goods.goods_spec">{{goods.goods_spec}}</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="status c-orange" v-if="goods.refund_state_name">{{goods.refund_state_name}}</div>
+                                                            </div>
+                                                        </li>
+                                            </template>
+                                    </template>
+
+                                    <div class="goods-gift" v-if="list.extend_order_gifts">
+                                            <div class="gift-obj" v-for="(goodsGift,gg) in list.extend_order_gifts">
+                                                <p v-if="gg == 0"><span>使用{{goodsGift.coupon_title?goodsGift.coupon_title:'-'}}，赠品如下</span></p>
+                                                <div class="goods-detail" v-if="goodsGift">
+                                                    <div class="pic">
+                                                        <!-- <img :src="goods.image_60_url" width="30px" alt=""> -->
+                                                        <img :src="goodsGift.goods_image" >
+                                                    </div>
+                                                    <div class="detail" style="padding-bottom: 5px">
+                                                        <div class="detail-c1">
+                                                            <p class="count">×{{goodsGift.goods_num}}</p>
+                                                        </div>
+                                                        <div class="detail-c1">
+                                                            <p class="count">
+                                                                <!-- <template v-for="(val,key) in goodsGift.goods_spec">
+                                                                    {{val}}&nbsp;
+                                                                </template> -->
+                                                            </p>
+                                                        </div>
+                                                        <div class="detail-c2">
+                                                            <div class="tit">{{goodsGift.goods_name}}</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="detail">
+                                                        <div class="detail-c2 c-gray" style="text-align: left;font-size: 12px;">
+                                                            <template>
+                                                                <template v-for="(val,key) in goodsGift.goods_spec">
+                                                                    {{key}}:{{val}}&nbsp;
+                                                                </template>
+                                                            </template>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                     <div class="mask" v-show="list.has_more"><a href="javascript:;" @click="showToggle(l)"><i :class="['fa',list.toggle?'fa-chevron-circle-up':'fa-chevron-circle-down']" aria-hidden="true"></i>&nbsp;&nbsp;<template v-if="list.toggle">收起订单全部商品</template><template v-else>查看订单全部商品</template></a></div>
+                                </ul>
+                                <ul class="list-msg list-return">
+                                    <template v-if="list.extend_order_common && list.extend_order_common.order_message">
+                                        <li>
+                                            <div class="tit">买家留言：</div>
+                                            <div class="detail">{{list.extend_order_common.order_message}}</div>
+                                        </li>
+                                    </template>
+                                    <template v-if="list.shipping_type != 0 && firstDadaList.city && firstDadaList.city.city_name && list.order_state == 20">
+                                            <li>
+                                                <div class="tit">订单配送费：</div>
+                                                <div class="detail">{{list.shipping_fee | f2y}}</div>
+                                            </li>
+                                            <li>
+                                                <div class="tit">达达预计配送费：</div>
+                                                <div class="detail">
+                                                    <template v-if="list.delivery_fee > 0">
+                                                            &yen;{{list.delivery_fee | f2y}}
+                                                    </template>
+                                                    <template v-else>暂无</template>
+                                                    <span class="c-gray fs12 ml5">预计运费仅供参考，实际运费以达达最终产生的费用为准</span>
+                                                </div>
+                                            </li>
+                                    </template>
+                                    <template v-if="list.delivery_type == 1">
+                                            <li>
+                                                <div class="tit">达达运费：</div>
+                                                <div class="detail">
+                                                        <template v-if="list.delivery_fee > 0">
+                                                                &yen;{{list.delivery_fee | f2y}}
+                                                        </template>
+                                                        <template v-else>暂无</template>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="tit">达达小费：</div>
+                                                <div class="detail">&yen;{{list.tips | f2y}}
+                                                    <a @click="showAddTips(list.order_id)" class="c-orange ml10" v-if="list.delivery_status==1">增加小费&raquo;</a>
+                                                </div>
+                                            </li>
+                                    <template v-if="list.delivery_status == 1">
+                                            <li class="c-orange">
+                                                <div class="tit">达达状态：</div>
+                                                <div class="detail">待骑手接单</div>
+                                            </li>
+                                    </template>
+                                    <template v-else-if="list.delivery_status == 2">
+                                        <template v-if="list.cancel_confirm == 1">
+                                                <li class="c-orange">
+                                                    <div class="tit">达达状态：</div>
+                                                    <div class="detail">骑手发起取消订单</div>
+                                                </li>
+                                                <li class="c-orange">
+                                                    <div class="tit">取消原因：</div>
+                                                    <div class="detail">{{list.cancel_reason}}</div>
+                                                </li>
+                                        </template>
+                                        <template v-else>
+                                                <li class="c-orange">
+                                                    <div class="tit">达达状态：</div>
+                                                    <div class="detail">待骑手取货</div>
+                                                </li>
+                                        </template>
+                                        <li>
+                                            <div class="tit">配 送 员：</div>
+                                            <div class="detail">{{list.dm_name}}&ensp;{{list.dm_mobile}}</div>
+                                        </li>
+                                    </template>
+                                    <template v-else-if="list.delivery_status == 3">
+                                        <template  v-if="list.cancel_confirm == 1">
+                                                <li class="c-orange">
+                                                    <div class="tit">达达状态：</div>
+                                                    <div class="detail">骑手发起取消订单</div>
+                                                </li>
+                                                <li class="c-orange">
+                                                    <div class="tit">取消原因：</div>
+                                                    <div class="detail">{{list.cancel_reason}}</div>
+                                                </li>
+                                        </template>
+                                        <template v-else>
+                                                <li class="c-orange">
+                                                    <div class="tit">达达状态：</div>
+                                                    <div class="detail">配送中</div>
+                                                </li>
+                                        </template>
+                                        <li>
+                                            <div class="tit">配 送 员：</div>
+                                            <div class="detail">{{list.dm_name}}&ensp;{{list.dm_mobile}}</div>
+                                        </li>
+                                    </template>
+                                    <template v-if="list.delivery_status == 4">
+                                            <li class="c-orange">
+                                                <div class="tit">达达状态：</div>
+                                                <div class="detail">已送达</div>
+                                            </li>
+                                            <li>
+                                                <div class="tit">配 送 员：</div>
+                                                <div class="detail">{{list.dm_name}}&ensp;{{list.dm_mobile}}</div>
+                                            </li>
+                                            <!--<li class="c-orange">
+                                                <div class="tit">完成配送时间：</div>
+                                                <div class="detail">{{list.finnshed_time}}</div>
+                                            </li>-->
+                                    </template>
+                                    <template v-if="list.delivery_status == 5">
+                                            <li class="c-orange">
+                                                <div class="tit">达达状态：</div>
+                                                <div class="detail">已取消</div>
+                                            </li>
+                                            <li>
+                                                <div class="tit">取消类型：</div>
+                                                <div class="detail">
+                                                  <span v-if="list.cancel_from == 0">其他</span>
+                                                  <span v-if="list.cancel_from == 1">达达配送员取消</span>
+                                                  <span v-if="list.cancel_from == 2">商家主动取消</span>
+                                                  <span v-if="list.cancel_from == 3">系统或客服取消</span>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="tit">取消原因：</div>
+                                                <div class="detail">{{list.cancel_reason}}</div>
+                                            </li>
+                                    </template>
+                                    <template v-if="list.delivery_status == 7">
+                                            <li class="c-orange">
+                                                <div class="tit">达达状态：</div>
+                                                <div class="detail">已过期</div>
+                                            </li>
+                                            <li class="c-orange">
+                                                <div class="tit">过期原因：</div>
+                                                <div class="detail">订单30分钟未被骑士接单，系统自动将订单过期终结</div>
+                                            </li>
+                                    </template>
+                                    <template v-if="list.delivery_status == 9">
+                                            <li class="c-orange">
+                                                <div class="tit">达达状态：</div>
+                                                <div class="detail">妥投异常</div>
+                                            </li>
+                                            <li>
+                                                <div class="tit">配 送 员：</div>
+                                                <div class="detail">{{list.dm_name}}&ensp;{{list.dm_mobile}}</div>
+                                            </li>
+                                            <li>
+                                                <div class="tit">异常原因：</div>
+                                                <div class="detail">{{list.cancel_reason}}</div>
+                                            </li>
+                                    </template>
+                                    </template>
+                                </ul>
+                                <ul class="list-msg list-return">
+                                  <template v-if="list.delivery_type == 2">
+                                  <li>
+                                    <div class="tit">快递配送：</div>
+                                    <div class="detail">{{list.express_name}} - {{list.express_code}}</div>
+                                  </li>
+                                  </template>
+                                </ul>
+                                <div class="action-bar">
+
+                                    <template v-if="list.delivery_type == 1">
+                                        <template v-if="list.delivery_status == 1"><a @click="showCancelDadaOrder(list,l)" class="ncsc-btn-mini">取消达达订单</a></template>
+                                        <template v-else-if="list.delivery_status == 2">
+                                            <template v-if="list.cancel_confirm == 1">
+                                                <a @click="showHandleDada(list,l)" class="ncsc-btn-mini">处理达达订单</a>
+                                            </template>
+                                            <template v-else-if="list.dada_time > (Date.parse(new Date())/1000)-900"><a @click="showCancelDadaOrder(list,l)" class="ncsc-btn-mini">取消达达订单</a></template>
+                                        </template>
+                                        <template v-if="list.delivery_status == 9">
+                                                <a @click="showConfirmCancelDada(list.order_id)" class="ncsc-btn-mini">确认收货</a>
+                                        </template>
+                                        <template v-if="list.delivery_status == 5 || list.delivery_status == 7">
+                                          <a v-if="list.order_state!=0 && list.order_state != 35" class="ncsc-btn-mini select_deliveryman" @click="showDeliveryman(list,1,l);isFaHuo = true;">重新发货</a>
+                                        </template>
+                                    </template>
+                                    <template v-if="list.delivery_type != 1 && list.select_deliveryman">
+                                        <template v-if="list.diliveryman_name">
+                                                <a class="ncsc-btn-mini select_deliveryman" @click="showDeliveryman(list,0,l)">配送员:{{list.diliveryman_name}}</a>
+                                        </template>
+                                        <template v-else>
+                                                <a class="ncsc-btn-mini select_deliveryman"  @click="showDeliveryman(list,0,l);isFaHuo = true;"><template v-if="list.delivery_type == 2">修改发货信息</template><template v-else>发货</template></a>
+                                        </template>
+                                    </template>
+                                    <template v-if="list.delivery_type != 1 && list.shipping_type == 0 &&list.order_state == 25">
+                                        <a class="ncsc-btn-mini select_deliveryman"  @click="getOrderBySelf(list,l)">确认自提</a>
+                                    </template>
+                                    <template v-if="list.order_state != 35">
+                                        <template v-if="list.take_order">
+                                                <a class="ncsc-btn-mini" @click="takeOrder(list,l)">接单</a>
+                                                <a class="ncsc-btn-mini refuse-order" @click="unTakeOrder(list)">拒单</a>
+                                        </template>
+                                        <template v-if="list.if_spay_price && !list.hideMenu">
+                                                <a class="ncsc-btn-mini" @click="changePrice(list,l)">修改价格</a>
+                                        </template>
+                                        <template v-if="list.confirm_receipt">
+                                                <a class="ncsc-btn-mini" @click="recieveGoods(list,l)">确认收到货款</a>
+                                        </template>
+                                    </template>
+                                    <template v-else>
+                                            <a class="ncsc-btn-mini" @click="dealWith(list,l)">处理</a>
+                                    </template>
+                                  <template v-if="list.payment_type == 0">
+                                    <template v-if="((list.origin_refund_amount !=null && list.origin_refund_amount == 0)&& (list.order_state == 0 || list.order_state == -1))&& (list.make_already_transfer !=null && list.make_already_transfer == 0) && list.order_amount >0">
+                                            <a class="ncsc-btn-mini" @click="signMakeAlreadyTransfer(list,l)">标记为已打款</a>
+                                    </template>
+                                  </template>
+                                  <template v-if="list.payment_type == 2">
+                                    <template v-if="((list.origin_refund_amount !=null && list.origin_refund_amount == 0)&& (list.order_state == 0 || list.order_state == -1))&& (list.make_already_transfer !=null && list.make_already_transfer == 0) && list.order_amount >0 && list.is_receive_payment > 0">
+                                      <a class="ncsc-btn-mini" @click="signMakeAlreadyTransfer(list,l)">标记为已打款</a>
+                                    </template>
+                                  </template>
+                                  <template v-if="list.payment_type != 0 && list.payment_type != 2">
+                                    <template v-if="((list.origin_refund_amount !=null && list.origin_refund_amount == 0)&& (list.order_state == 0 || list.order_state == -1))&& (list.make_already_transfer !=null && list.make_already_transfer == 0) && list.order_amount >0 && list.payment_time >0">
+                                      <a class="ncsc-btn-mini" @click="signMakeAlreadyTransfer(list,l)">标记为已打款</a>
+                                    </template>
+                                  </template>
+                                    <template v-if="list.print_order" class="popover-c">
+                                        <el-popover placement="top-end"
+                                                trigger="click" v-if="list.shipping_type==1" popper-class="print-popover">
+                                            <div  class="toolTipCont">
+                                                <p style="text-align: center">
+                                                    <span><a  @click="routerPrint(list,'address')">打印订单地址</a></span>
+                                                </p>
+                                                <p style="text-align: center">
+                                                    <span><a  @click="routerPrint(list)">打印订单明细</a></span>
+                                                </p>
+                                            </div>
+                                            <p class="lightBlue ncsc-btn-mini" slot="reference" style="cursor:default;color: #0C0C0C;margin-bottom: 0px;">
+                                                <span  v-if="list.or_com_type">已打印</span>
+                                                <span v-else>打印订单</span>
+                                            </p>
+                                        </el-popover>
+                                        <a class="ncsc-btn-mini" @click="routerPrint(list)" v-if="list.or_com_type && list.shipping_type==0">已打印</a>
+                                      <a class="ncsc-btn-mini" @click="routerPrint(list)" v-else-if="list.shipping_type==0">打印订单</a>
+                                    </template>
+                                    <template v-if="list.modify_flag">
+                                            <a class="ncsc-btn-mini" @click="changeOrder(list,l)">修改订单</a>
+                                    </template>
+                                </div>
+                                <div class="order-status c-gray" >
+                                  <template v-if="list.payment_type == 0">
+                                    <template v-if="(list.origin_refund_amount != null && list.origin_refund_amount == 0) && (list.order_state == 0 || list.order_state == -1) && (list.make_already_transfer != null && list.make_already_transfer ==0) && list.order_amount >0">
+                                      取消待确认打款
+                                    </template>
+                                    <template v-else>{{list.state_desc}}</template>
+                                  </template>
+                                  <template v-if="list.payment_type == 2">
+                                    <template v-if="(list.origin_refund_amount != null && list.origin_refund_amount == 0) && (list.order_state == 0 || list.order_state == -1) && (list.make_already_transfer != null && list.make_already_transfer ==0) && list.order_amount >0 && ( list.is_receive_payment > 0)">
+                                      取消待确认打款
+                                    </template>
+                                    <template v-else-if="((list.origin_refund_amount != null && list.origin_refund_amount == 0) && (list.order_state == 0 || list.order_state == -1) && (list.make_already_transfer != null && list.make_already_transfer ==0) && list.order_amount >0 && ( list.is_receive_payment == 0))">
+                                      已取消
+                                    </template>
+                                    <template v-else>{{list.state_desc}}</template>
+                                  </template>
+                                  <template v-if="list.payment_type != 0 && list.payment_type != 2">
+                                    <template v-if="(list.origin_refund_amount != null && list.origin_refund_amount == 0) && (list.order_state == 0 || list.order_state == -1) && (list.make_already_transfer != null && list.make_already_transfer ==0) && list.order_amount >0 && list.payment_time >0">
+                                      取消待确认打款
+                                    </template>
+                                    <template v-else>{{list.state_desc}}</template>
+                                  </template>
+
+                                    <template >
+                                        <template v-if="(list.payment_type == 0 || list.payment_type == 2) && list.payment_time >0">
+                                                <p class="count-down" >{{list.maxtime}}</p>
+                                        </template>
+                                        <template v-else>
+                                                <p class="count-down" >{{list.maxtime}}</p>
+                                        </template>
+                                    </template>
+
+                                  <p style="color: #ff8518;" v-if="list.order_state == 20" >接单前用户可取消订单</p>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+            </template>
+    </qm-table>
+    <qm-pagination v-if="orderList && orderList.length>0" :pageParams="pageParams" @changeIndex="changeIndex($event)"></qm-pagination>
+
+
+<qm-tips :tipsVisible="dialog1" :showCancel="false" :width="'900px'"  @confirm="dialog1Success?dialog1 = false:changePriceSureNew('orderPrice')"  :showButton='true' @close="dialog1 = false" >
+    <template slot="title">修改价格</template>
+    <template slot="content">
+        <div class="eject_con" v-if="showL">
+            <form @submit.prevent="">
+                <input type="hidden" name="form_submit" value="ok">
+                <table class="ncsc-default-table table-order2 table-border">
+                    <caption>
+                        <p>订单号：{{curOrder.order_sn}}</p>
+                        <p>订单状态：
+                            <template v-if="curOrder.delivery_type == 1">{{curOrder.dada_state_desc}}</template>
+                            <template v-if="curOrder.delivery_type == 0">{{curOrder.state_desc}}</template>
+                        </p>
+                        <p>买家：{{curOrder.buyer_name}}</p>
+                        <p>下单时间：{{curOrder.add_time | datetime}}</p>
+                    </caption>
+                    <thead>
+                    <tr>
+                        <th colspan="2">商品名称</th>
+                        <th class="w120">原价（元）</th>
+                        <template v-if="curOrder.member_discount_amount>0">
+                            <th class="w120">售价（元）</th>
+                            <th class="w150">会员购买价（元）</th>
+                        </template>
+                        <template v-else>
+                        <th class="w120">购买价（元）</th>
+                        </template>
+                        <th class="w100">数量</th>
+                        <th class="w120">小计（元）</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <template v-if="curOrder.goods_list" v-for="(goods,gs) in curOrder.goods_list">
+                        <template v-if="goods.goods_commonid != null && goods.goods_commonid ==0">
+                            <tr>
+                                <td class="w100">
+                                    <p>{{goods.goods_name}}</p>
+                                    <p class="fs12 c-gray mt5">{{goods.goods_spec}}</p>
+                                </td>
+                                <td class="show-broder show-border-1" style="padding:0px;">
+                                    <p class="show-bottom" v-for="(v,key) in goods.goods_group">
+                                        {{v.goodsName}}
+                                        <template v-if="v.goodsAttr">
+                                                <br/><template v-for="(groupAttr,ga) in v.goodsAttr"><span class="fs12 c-gray mt5">{{groupAttr.attrName}}:{{groupAttr.attrValue}};</span></template>
+                                        </template>
+                                    </p>
+                                </td>
+                                <td>
+                                    <p>{{goods.goods_marketprice | f2y}}</p>
+                                </td>
+                                <template v-if="curOrder.member_discount_amount>0">
+                                <td>
+                                    <p>
+                                        <el-input-number size="mini"   v-model="goods.now_goods_saleprice" :precision="2" :step="0.01" :min="0"  @change="(newVal,oldVal)=>ediNowgoodsPrice(newVal,oldVal,gs,'goodsSaleprice')" :controls="false" ></el-input-number>
+                                    </p>
+                                    <p class="c-gray td-lt"></p>
+                                </td>
+                                </template>
+                                <td>
+                                    <p>
+                                        <el-input-number size="mini"   v-model="goods.now_goods_price" :precision="2" :step="0.01" :min="0"  @change="(newVal,oldVal)=>ediNowgoodsPrice(newVal,oldVal,gs,'goodsPrice')" :controls="false" ></el-input-number>
+                                    </p>
+                                    <p class="c-gray td-lt"></p>
+                                </td>
+                                <td>
+                                    <p class="goods-num" v-if="!goods.numChangeShow">{{goods.goods_num}}</p>
+                                </td>
+                                <td class="font-color-red">
+                                    ￥{{goods.now_goods_price*goods.goods_num*100| f2y}}
+                                </td>
+
+                            </tr>
+                        </template>
+                        <tr v-else>
+                            <td colspan="2">
+                                <div class="info-box">
+                                    <div class="detail">
+                                        <p>{{goods.goods_name}}</p>
+                                        <p class="fs12 c-gray mt5">{{goods.goods_spec}}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <p>{{goods.goods_marketprice | f2y}}</p>
+                                <p class="c-gray td-lt"></p>
+                            </td>
+                            <template v-if="curOrder.member_discount_amount>0">
+                                <td>
+                                    <p>
+                                        <el-input-number size="mini"   v-model="goods.now_goods_saleprice" :precision="2" :step="0.01" :min="0"  @change="(newVal,oldVal)=>ediNowgoodsPrice(newVal,oldVal,gs,'goodsSaleprice')" :controls="false" ></el-input-number>
+                                    </p>
+                                    <p class="c-gray td-lt"></p>
+                                </td>
+                            </template>
+                            <td>
+                                <p>
+                                    <el-input-number size="mini"   v-model="goods.now_goods_price" :precision="2" :step="0.01" :min="0"  @change="(newVal,oldVal)=>ediNowgoodsPrice(newVal,oldVal,gs,'goodsPrice')" :controls="false" ></el-input-number>
+                                </p>
+                                <p class="c-gray td-lt"></p>
+                            </td>
+                            <td>
+                                <p class="goods-num" v-if="!goods.numChangeShow">{{goods.goods_num}}</p>
+                            </td>
+                            <td class="font-color-red">
+                                ￥{{goods.now_goods_price*goods.goods_num*100| f2y}}
+                            </td>
+                        </tr>
+                    </template>
+                    </tbody>
+                </table>
+                <ul class="order-total">
+                    <li class=" wd33">
+                        <div class="item text-left">会员折扣金额：¥{{curOrder.now_member_discount_amount | f2y }}</div>
+                    </li>
+                    <li  class=" wd33">
+                        <div class="item text-left">优惠金额：¥{{(curOrder.now_coupon_amount) | f2y }}</div>
+                    </li>
+                    <template v-if="curOrder.shipping_type!=0">
+                    <li  class=" wd33">
+                        <div class="item text-left">
+                            订单收取配送费：<span>
+                            <el-input-number size="mini"   v-model="curOrder.change_shipping_fee" :precision="2" :step="0.01" :min="0"  @change="(newVal,oldVal)=>ediNowgoodsPrice(newVal,oldVal,'','changeShippingFee')" :controls="false" ></el-input-number>
+                        </span>
+                        </div>
+                    </li>
+                    </template>
+                </ul>
+                <ul>
+                    <li>
+                        <div class="item text-left">
+                            修改后订单应收金额：<span>
+                            <el-input-number size="mini"   v-model="nowOrderAmount" :precision="2" :step="0.01" :min="0"  @change="(newVal,oldVal)=>ediNowgoodsPrice(newVal,oldVal,'','orderAmount')" :controls="false" ></el-input-number>
+                        </span>
+                        </div>
+                    </li>
+                </ul>
+                <div v-if="error.goods_amount_error"><label  class="error">{{error.goods_amount_error_text}}</label></div>
+            </form>
+        </div>
+        <div class="mt10 c-orange edi-price">
+            <p class="edi-price-color-gray edi-price-weight">修改说明</p>
+            <p class="edi-price-color-gray edi-price-indent">1：支持商品价格/配送费的修改，系统自动计算修改后的订单应收金额。</p>
+            <p class="edi-price-color-gray edi-price-indent">2：支持修改订单应收金额，系统将自动反向计算修改后的单个商品金额；根据有效商品金额的占比，来平摊变化的订单金额。</p>
+            <p class="edi-price-color-red"> 注：变化的订单金额与商品数量除不尽的情况下，余下的款将自动扣减，最终订单金额与设置的金额偏差范围在0.1元内。</p>
+            <p class="edi-price-color-gray edi-price-indent">3：修改后的订单应收金额需要大于0</p>
+        </div>
+    </template>
+</qm-tips>
+
+    <!-- 旧版修改价格qm-tips :tipsVisible="dialog1" :width="'480px'" :showCancel="false" @confirm="dialog1Success?dialog1 = false:changePriceSure()"
+            :showButton='true' @close="dialog1 = false">
+            <template slot="title" v-if="!dialog1Success">修改价格</template>
+            <template slot="content" v-if="!dialog1Success">
+                    <div class="eject_con">
+                        <form @submit.prevent="">
+                            <input type="hidden" name="form_submit" value="ok">
+                            <dl>
+                            <dt>买&nbsp;家：</dt>
+                            <dd>{{curOrder.buyer_name}}</dd>
+                            </dl>
+                            <dl>
+                            <dt>订单号：</dt>
+                            <dd>{{curOrder.order_sn}}</dd>
+                            </dl>
+                            <dl>
+                                <dt>原&nbsp;价：</dt>
+                                <dd>{{curOrder.origin_amount | f2y}}</dd>
+                            </dl>
+                            <dl>
+                            <dt>修改价格：</dt>
+                            <dd>
+                                <input type="text" class="text" v-model="goods_amount"  @keyup ="onlyNumber('goods_amount')">
+                            </dd>
+                            </dl>
+
+                            <div v-if="error.goods_amount_error"><label  class="error">{{error.goods_amount_error_text}}</label></div>
+                        </form>
+                        </div>
+            </template>
+            <!-- <template slot="title" v-if="dialog1Success">{{dialogTitle1}}</template>
+            <template slot="content" v-if="dialog1Success">{{dialogMessage1}}</template> -->
+        <!--/qm-tips旧版本修改价格结束-->
+<qm-tips :tipsVisible="dialog3" :showCancel="false" :width="'900px'" @close="getPageData(pageParams,2);dialog3 = false"  @confirm="changePriceSureNew('orderInfo')">
+    <template slot="title">修改订单</template>
+    <template slot="content">
+        <div class="eject_con"  v-if="showL">
+            <div id="warning"></div>
+            <form @submit.prevent="">
+                <input type="hidden" name="form_submit" value="ok">
+                <table class="ncsc-default-table table-order2 table-border">
+                    <caption>
+                        <p>订单号：{{curOrder.order_sn}}</p>
+                        <p>订单状态：
+                            <template v-if="curOrder.order_state == 20">待接单</template>
+                            <template v-else>
+                                <template v-if="curOrder.delivery_type == 1">{{curOrder.dada_state_desc}}</template>
+                                <template v-if="curOrder.delivery_type == 0">{{curOrder.state_desc}}</template>
+                            </template>
+                            <!--     <template v-if="curOrder.payment_type == 0">
+                                     <template v-if="curOrder.is_receive_payment > 1">线下付款,已核实 </template>
+                                     <template v-else>线下付款,请核实</template>
+                                 </template>
+                                 <template v-else-if="curOrder.payment_type == 2">货到付款</template>
+                                 <template v-else>
+                                     <template v-if="curOrder.payment_time > 0">线上付款</template>
+                                     <template v-else>待线上付款</template>
+                                 </template>-->
+                        </p>
+                        <p>买家：{{curOrder.buyer_name}}</p>
+                        <p>下单时间：{{curOrder.add_time | datetime}}</p>
+                    </caption>
+                    <thead>
+                    <tr>
+                        <th colspan="2">商品名称</th>
+                        <th class="w100">原价</th>
+                        <template v-if="curOrder.member_discount_amount>0">
+                            <th class="w120">售价（元）</th>
+                            <th class="w150">会员购买价（元）</th>
+                        </template>
+                        <template v-else>
+                            <th class="w120">购买价（元）</th>
+                        </template>
+                        <th class="w60">数量</th>
+                        <th class="w100">小计</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <template v-if="curOrder.goods_list" v-for="(goods,gs) in curOrder.goods_list">
+                        <template v-if="goods.goods_commonid != null && goods.goods_commonid ==0">
+                            <tr>
+                                <td>
+                                    <p>{{goods.goods_name}}</p>
+                                    <p class="fs12 c-gray mt5">{{goods.goods_spec}}</p>
+                                </td>
+                                <td class="show-broder show-border-1" style="padding:0px;">
+                                    <p class="show-bottom" v-for="(v,key) in goods.goods_group">
+                                        {{v.goodsName}}
+                                        <template v-if="v.goodsAttr">
+                                            <br/><template v-for="(groupAttr,ga) in v.goodsAttr"><span class="fs12 c-gray mt5">{{groupAttr.attrName}}:{{groupAttr.attrValue}};</span></template>
+                                        </template>
+                                    </p>
+                                </td>
+                                <td>
+                                    <p>{{goods.goods_marketprice | f2y}}</p>
+                                </td>
+                                <template v-if="curOrder.member_discount_amount>0">
+                                    <td>
+                                        <el-input-number size="mini"    v-model="goods.now_goods_saleprice" :precision="2" :step="0.01" :min="0"  @change="(newVal,oldVal)=>orderEditPrice(newVal,oldVal,gs,'goodsSaleprice')" :controls="false" ></el-input-number>
+                                    </td>
+                                </template>
+                                <td>
+                                    <el-input-number size="mini"   v-model="goods.now_goods_price" :precision="2" :step="0.01" :min="0"  @change="(newVal,oldVal)=>orderEditPrice(newVal,oldVal,gs,'goodsPrice')" :controls="false" ></el-input-number>
+                                </td>
+                                <td>
+                                    <el-input-number   class="goods-num-input" size="mini"  v-model="goods.goods_num" :precision="0" :step-strictly="true"	:step="1" :min="0"  @change="(newVal,oldVal)=>orderEditPrice(newVal,oldVal,gs,'num')" :controls="false" ></el-input-number>
+                                </td>
+                                <td class="font-color-red">
+                                    ￥{{goods.now_goods_price*goods.goods_num*100| f2y}}
+                                </td>
+                            </tr>
+                        </template>
+                        <tr v-else>
+                            <td  colspan="2">
+                                <p>{{goods.goods_name}}</p>
+                                <p class="fs12 c-gray mt5">{{goods.goods_spec}}</p>
+                            </td>
+                            <td>
+                                <p>{{goods.goods_marketprice | f2y}}</p>
+                                <p class="c-gray td-lt"></p>
+                            </td>
+                            <template v-if="curOrder.member_discount_amount>0">
+                                <td>
+                                    <el-input-number size="mini"   v-model="goods.now_goods_saleprice" :precision="2" :step="0.01" :min="0"  @change="(newVal,oldVal)=>orderEditPrice(newVal,oldVal,gs,'goodsSaleprice')" :controls="false" ></el-input-number>
+                                </td>
+                            </template>
+                            <td>
+                                <el-input-number size="mini"   v-model="goods.now_goods_price" :precision="2" :step="0.01" :min="0"  @change="(newVal,oldVal)=>orderEditPrice(newVal,oldVal,gs,'goodsPrice')" :controls="false" ></el-input-number>
+                            </td>
+                            <td>
+                                <el-input-number size="mini"  class="goods-num-input"  v-model="goods.goods_num" :precision="0" :step-strictly="true"	:step="1" :min="0"  @change="(newVal,oldVal)=>orderEditPrice(newVal,oldVal,gs,'num')" :controls="false" ></el-input-number>
+                            </td>
+                            <td class="font-color-red">
+                                ￥{{goods.now_goods_price*goods.goods_num*100| f2y}}
+                            </td>
+                        </tr>
+                    </template>
+                    </tbody>
+                </table>
+                <template v-if="curOrder.shipping_type!=0">
+                    <div class="item text-left" style="line-height: 50px;">
+                        订单收取配送费：<span>
+                        <el-input-number size="mini"   v-model="curOrder.change_shipping_fee" :precision="2" :step="0.01" :min="0"  @change="(newVal,oldVal)=>orderEditPrice(newVal,oldVal,'','changeShippingFee')" :controls="false" ></el-input-number>
+                        </span>
+                    </div>
+                </template>
+                <template v-else>
+                    <div style="margin-top: 50px;">
+                    </div>
+                </template>
+                <h1  class="dashed-1"></h1>
+                <ul class="order-total">
+                    <li>
+                        <div class="item">原商品总额：¥ {{curOrder.goods_amount |f2y}}</div>
+                        <div class="item" v-if="curOrder.shipping_type!=0">原配送费：¥ {{curOrder.shipping_fee |f2y}}</div>
+                        <div class="item">原会员折扣：¥{{(curOrder.member_discount_amount) | f2y }}</div>
+                        <div class="item">原优惠金额：¥{{(curOrder.coupon_amount) | f2y }}</div>
+                        <div class="item">
+                            <template v-if="curOrder.payment_type == 0 || curOrder.payment_type == 2">
+                                <template v-if="curOrder.is_receive_payment > 0">
+                                    原实付金额：
+                                </template>
+                                <template v-else>
+                                    原应收金额：
+                                </template>
+                            </template>
+                            <template v-else>
+                                <template v-if="curOrder.payment_time > 0 ">
+                                    原实付金额：
+                                </template>
+                                <template>
+                                    原待付金额：
+                                </template>
+                            </template>
+                            ¥ {{curOrder.order_amount |f2y}}  </div>
+                    </li>
+                    <li>
+                        <div class="item">修改后商品总额：¥ <span id="goodsTotalAmount">{{curOrder.update_goods_amount |f2y}}</span></div>
+                        <div class="item" v-if="curOrder.shipping_type!=0">
+                            修改后配送费：¥ <span id="shippingFee">{{curOrder.change_shipping_fee*100|f2y}}</span>
+                        </div>
+                        <div class="item">修改后会员折扣：¥{{(curOrder.now_member_discount_amount) | f2y }}</div>
+                        <div class="item">
+                            修改后优惠金额：¥ <span id="reliefAmount">{{curOrder.now_coupon_amount | f2y }}</span>
+                        </div>
+                        <div class="item">
+                            修改后应收金额：¥ <span id="orderAmountSpan">
+                        <el-input-number size="mini" v-model="nowOrderAmount"   :precision="2" :step="0.01" :min="0"  @change="(newVal,oldVal)=>orderEditPrice(newVal,oldVal,'','orderAmount')" :controls="false" ></el-input-number>
+                        </span>
+                        </div>
+                    </li>
+                </ul>
+            </form>
+        </div>
+        <div v-if="error.goods_amount_error"><label  class="error">{{error.goods_amount_error_text}}</label></div>
+        <div class="mt10 c-orange edi-price">
+            <p class="edi-price-color-gray edi-price-weight">修改说明</p>
+            <p class="edi-price-color-gray edi-price-indent">          1：支持单个商品价格/数量/配送费的修改，系统自动计算修改后的订单应收金额。</p>
+            <p class="edi-price-color-gray edi-price-indent">          2：支持修改订单应收金额，系统将自动反向计算修改后的单个商品金额；根据有效商品金额的占比，来平摊变化的订单金额。</p>
+            <p class="edi-price-color-red"> 注：变化的订单金额与商品数量除不尽的情况下，余下的款将自动扣减，最终订单金额与设置的金额偏差范围在0.1元内。</p>
+            <p class="edi-price-color-gray edi-price-indent">3：修改后的订单应收金额需要大于0</p>
+        </div>
+    </template>
+</qm-tips>
+        <!--qm-tips旧版本修改订单-- :tipsVisible="dialog3" :showCancel="false" :width="'850px'" @close="getPageData(pageParams,2);dialog3 = false"  @confirm="submitChageOrder">
+            <template slot="title">修改订单</template>
+            <template slot="content">
+                <div class="eject_con">
+                        <div id="warning"></div>
+                        <form @submit.prevent="">
+                            <input type="hidden" name="form_submit" value="ok">
+                                    <table class="ncsc-default-table table-order2">
+                                <caption>
+                                    <p>订单号：{{curOrder.order_sn}}</p>
+                                    <p>订单状态：
+                                      <template v-if="curOrder.order_state == 20">待接单</template>
+                                      <template v-else>
+                                        <template v-if="curOrder.delivery_type == 1">{{curOrder.dada_state_desc}}</template>
+                                        <template v-if="curOrder.delivery_type == 0">{{curOrder.state_desc}}</template>
+                                      </template>
+                                   <!--     <template v-if="curOrder.payment_type == 0">
+                                            <template v-if="curOrder.is_receive_payment > 1">线下付款,已核实 </template>
+                                            <template v-else>线下付款,请核实</template>
+                                        </template>
+                                        <template v-else-if="curOrder.payment_type == 2">货到付款</template>
+                                        <template v-else>
+                                            <template v-if="curOrder.payment_time > 0">线上付款</template>
+                                            <template v-else>待线上付款</template>
+                                        </template>-->
+                                    <!--/p>
+                                    <p>买家：{{curOrder.buyer_name}}</p>
+                                    <p>下单时间：{{curOrder.add_time | datetime}}</p>
+                                </caption>
+                                <thead>
+                                <tr>
+                                    <th>商品名称</th>
+                                    <th class="w100">价格</th>
+                                    <th class="w100">数量</th>
+                                    <th class="w80">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <template v-if="curOrder.goods_list" v-for="(goods,gs) in curOrder.goods_list">
+                                        <template v-if="goods.goods_commonid != null && goods.goods_commonid ==0">
+                                            <tr>
+                                                <td>
+                                                    <p class="fs12 c-gray mb5">组合商品</p>
+                                                    <div class="info-box">
+                                                        <div class="pic">
+                                                            <img :src="goods.image_60_url" alt="" width="60" height="60">
+                                                        </div>
+                                                        <div class="detail">
+                                                            <p>{{goods.goods_name}}</p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <p>￥{{goods.goods_price | f2y}}</p>
+                                                </td>
+                                                <td>
+                                                    <p class="goods-num" v-if="!goods.numChangeShow">{{goods.goods_num}}</p>
+                                                    <div class="modify-num-box" v-if="goods.numChangeShow">
+                                                        <input type="text" @input="goods.goods_num = goods.goods_num.replace(/\D/g,'')"  min="0"  v-model="goods.goods_num" class="w80 goodsPrice" />
+                                                        <p class="mt5">
+                                                            <a class="c-blue mr10 btn-confirm" @click="numChangeSure(goods,gs)">确定</a>
+                                                            <a class="c-blue btn-cancel" @click="numChangeCancle(goods,gs)">取消</a>
+                                                        </p>
+                                                    </div>
+                                                </td>
+                                                <td><a class="c-blue btn-modify-num" @click="numChangeShow(goods,gs)" v-if="!goods.numChangeShow">修改</a></td>
+
+                                            </tr>
+                                            <tr v-for="(v,key) in goods.goods_group">
+                                                <td>
+                                                    <p class="fs12 c-gray mb5">搭配商品{{key+1}}</p>
+                                                    <div class="info-box">
+                                                        <div class="pic">
+                                                            <img :src="v.goodsImagePath" alt="" width="60" height="60">
+                                                        </div>
+                                                        <div class="detail">
+                                                            <p>{{v.goodsName}}</p>
+                                                            <p class="fs12 c-gray mt5">
+                                                                <template v-if="v.goodsAttr">
+                                                                    <template v-for="(v2,v2index) in v.goodsAttr">
+                                                                        {{v2.attrName}}:{{v2.attrValue}};
+                                                                    </template>
+                                                                </template>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <p>￥{{v.discountPrice |f2y}}</p>
+                                                </td>
+                                                <td>{{v.num}}</td>
+                                                <td></td>
+                                            </tr>
+                                    </template>
+                                        <tr v-else>
+                                                <td>
+                                                    <div class="info-box">
+                                                        <div class="pic">
+                                                            <img :src="goods.image_60_url" alt="">
+                                                        </div>
+                                                        <div class="detail">
+                                                            <p>{{goods.goods_name}}</p>
+                                                            <p class="fs12 c-gray mt5">{{goods.goods_spec}}</p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <p>￥{{goods.goods_price | f2y}}</p>
+                                                    <p class="c-gray td-lt"></p>
+                                                </td>
+                                                <td>
+                                                    <p class="goods-num" v-if="!goods.numChangeShow">{{goods.goods_num}}</p>
+                                                    <div class="modify-num-box" v-if="goods.numChangeShow">
+                                                        <input type="text" @input="goods.goods_num = goods.goods_num.replace(/\D/g,'')"  class="w80 goodsPrice" min="0" v-model="goods.goods_num" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
+                                                        <p class="mt5">
+                                                            <a class="c-blue mr10 btn-confirm" @click="numChangeSure(goods,gs)">确定</a>
+                                                            <a class="c-blue btn-cancel" @click="numChangeCancle(goods,gs)">取消</a>
+                                                        </p>
+                                                    </div>
+                                                </td>
+                                                <td><a class="c-blue btn-modify-num" @click="numChangeShow(goods,gs)" v-if="!goods.numChangeShow">修改</a></td>
+                                        </tr>
+                                    </template>
+                                 </tbody>
+                            </table>
+                    <ul class="order-total">
+                        <li>
+                            <div class="item">原商品总额：¥ {{curOrder.goods_amount |f2y}}</div>
+                            <div class="item">原配送费：¥ {{curOrder.shipping_fee |f2y}}</div>
+                            <div class="item">原优惠金额：¥{{(curOrder.goods_amount + curOrder.shipping_fee - curOrder.order_amount) | f2y }}</div>
+                            <div class="item">
+                                <template v-if="curOrder.payment_type == 0 || curOrder.payment_type == 2">
+                                    <template v-if="curOrder.is_receive_payment > 0">
+                                            原实付金额：
+                                    </template>
+                                    <template v-else>
+                                            原应收金额：
+                                    </template>
+                                </template>
+                                <template v-else>
+                                    <template v-if="curOrder.payment_time > 0 ">
+                                            原实付金额：
+                                    </template>
+                                    <template>
+                                            原待付金额：
+                                    </template>
+                                </template>
+                                ¥ {{curOrder.order_amount |f2y}}  </div>
+                        </li>
+                        <li>
+                            <div class="item">修改后商品总额：¥ <span id="goodsTotalAmount">{{curOrder.change_goods_amount |f2y}}</span></div>
+                            <div class="item">
+                                修改后配送费：¥ <span id="shippingFee">{{curOrder.change_shipping_fee | f2y}}</span>
+                            </div>
+                            <div class="item">
+                                修改后优惠金额：¥ <span id="reliefAmount">{{curOrder.change_reliefAmount | f2y }}</span>
+                            </div>
+                            <div class="item">
+                                修改后待付金额：¥ <span id="orderAmountSpan"><input class="w80" type="number" id="orderAmount" v-model="nowOrderAmount" @keyup="onlyNumber('nowOrderAmount')"></span>
+                            </div>
+                        </li>
+                    </ul>
+                    </form>
+                </div>
+            </template>
+        </qm-tips旧版本修改订单-->
+
+        <qm-tips :tipsVisible="dialog4" :width="'620px'" :showCancel="true" :confirmGray="(curOrder.dada_query == 2 && hideConfirm )?true:false" @cancel="dialog4=false" @confirm="changeDiliverymanSure()"
+            :showButton='true' @close="closeDialog4()">
+            <template slot="title">发货</template>
+            <template slot="content">
+                    <div class="dialog-bd">
+                            <div class="ncsc-form-s ncsc-dilivery-pay mt10 mb10">
+                                <div class="ncsc-form-tit ncsc-form-inline"><i class="required">*</i>配送方式：</div>
+                                <label class="mr20">
+                                    <input @click="changeType($event)" type="radio" name="r_delivery_type" value="0" class="ncsc-custom-radio" checked="">自主配送员配送
+                                </label>
+                              <label class="mr20">
+                                <input @click="changeType($event)" type="radio" name="r_delivery_type" value="2" class="ncsc-custom-radio" >快递配送
+                              </label>
+                               <!-- <label class="c-gray" v-show="!dada_shop || !dada_shop.cityName">
+                                    <input type="radio" disabled="disabled" name="r_delivery_type" value="1" class="ncsc-custom-radio">达达配送
+                                </label>-->
+                                <a v-show="!dada_shop || !dada_shop.cityName" @click="routerDada()" class="c-orange ib-vm fs12 ml10">申请接入达达 »</a>
+                                <label v-show="dada_shop && dada_shop.cityName">
+                                    <input @click="changeType($event)" type="radio" name="r_delivery_type" value="1" class="ncsc-custom-radio" >达达配送<span class="c-gray ml5">(预计配送费：<span class="sdelivery_fee c-orange" v-if="curOrder.delivery_fee>0">{{curOrder.delivery_fee | f2y}}</span><span class="sdelivery_fee c-orange" v-else>暂无</span>)</span>
+                                </label>
+                            </div>
+                            <div id="diliveryman-form">
+                                <input type="hidden" name="delivery_type" value="0">
+                                    <div class="diliveryman-box">
+                                        <ul class="plist-man ncsc-form-custom-radio-group">
+                                                <li v-for="(deliverier,dv) in deliveriers" v-if="deliveriers && deliveriers.length > 0" >
+                                                    <div class="ncsc-form-custom-radio" :class="deliverier.select?'checked':''">
+                                                        <div class="ncsc-custom-radio-frame">
+                                                            <input type="radio" name="diliveryman_id" class="ncsc-custom-radio" @click="changeDeliver(deliverier,dv)">
+                                                        </div>
+                                                        <label class="ncsc-custom-txt">
+                                                            <img :src="deliverier.memberAvatar">
+                                                            <span class="name">{{deliverier.trueName}}</span>
+                                                        </label>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                    </div>
+                                    <div class="diliveryman-new-box">
+                                        <div class="ncsc-form-custom-checkbox ncsc-form-custom-checkbox-s ncsc-add-diliveryman">
+                                            <qm-checkbox-frame v-model="new_diliveryman" :text="'新增并选定配送员'" @valueChage="addNewdiliveryman($event)"></qm-checkbox-frame>
+                                        </div>
+                                        <div class="ncsc-new-diliveryman" v-if="new_diliveryman">
+                                            <p class="ncsc-form-hint">配送员需先注册成为【我的身边店】用户。</p>
+                                            <div class="ncsc-form-s mt10">
+                                                <input type="text" class="ncsc-form-control w150" name="diliveryman-name" id="diliveryman-name" v-model="diliveryman_name" placeholder="请输入配送员姓名">
+                                                <input type="text" class="ncsc-form-control w180" name="diliveryman-tel" id="diliveryman-tel" v-model="diliveryman_tel" placeholder="请输入配送员手机号码">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ncsc-form-s ncsc-dilivery-pay mt10">
+                                        <div class="ncsc-form-tit ncsc-form-inline"><i class="required">*</i>配送费用：</div>
+                                        <input type="text" class="ncsc-form-control w200" id="diliveryman-fee" name="diliveryman-fee" v-model="curDeliveryFee" placeholder="请输入支付给配送员的金额">
+                                        <span class="ncsc-form-tit">元</span>
+                                    </div>
+                                <div class="mt10 c-orange">
+                                    <p>
+                                        <div style="margin-left: 17px;font-size: 12px;line-height: 17px;">友情提示:为避免出现配送争议，平台新增验证取件码功能，配送员将货物配送到用户时需要向用户索要订单取件码，操作确认送达时输入取件码进行验证，
+                                            取件码正确才能正常执行确认送达操作；请务必告知配送员点击确认送达按钮，否则您的订单将无法正常完成。</div>
+                                    </p>
+                                </div>
+                                <div class="item-c1">
+                                    <el-tooltip placement="right-start" effect="light" popper-class="atooltip" class="mt3">
+                                        <div slot="content" class="toolTipCont">
+                                            <p>
+                                                因部分商家雇佣快递员进行配送，所以为了保证货物的安全和商家的利益，<br/>
+                                                需要用取件码来监控配送员的工作是否合规。假如配送员的货物实际没送达，<br/>
+                                                但确点击了确认送达按钮，此时消费者和商家的利益都无法得到监控和保护。
+                                            </p>
+                                        </div>
+                                        <p class="lightBlue">
+                                        <i class="fa fa-question-circle" aria-hidden="true" style="margin-left: 10px;line-height: 17px;"></i>为何配送费需要验证取件码?
+                                        </p>
+                                    </el-tooltip>
+                                </div>
+                                    <p class="ncsc-form-error" id="diliveryman-errmsg" v-if="error.diliveryman_error">{{error.diliveryman_error_text}}</p>
+                            </div>
+                      <div id="dada-form" style="display: none;font-size:14px;">
+                        <input type="hidden" name="delivery_type" value="1" />
+                        <div class="ncsc-form-s ncsc-dilivery-pay mt10">
+                          <div class="ncsc-form-tit ncsc-form-inline">订单服务费：</div>
+                          <span id="pre_delivery_fee">{{curOrder.shipping_fee | f2y}}</span>
+                          <span class="ncsc-form-tit"></span>
+                        </div>
+                        <div class="ncsc-form-s ncsc-dilivery-pay mt10">
+                          <div class="ncsc-form-tit ncsc-form-inline">达达配送费：</div>
+                          <span class="sdelivery_fee"></span>
+                          <span style="color: gray;"><span v-if="curOrder.delivery_fee>0">{{curOrder.delivery_fee | f2y}}</span><span v-else>暂无</span>  (预计运费仅供参考，实际运费以达达最终产生的费用为准)</span>
+                        </div>
+                        <div class="ncsc-form-s ncsc-dilivery-pay mt10" style=" display: none;">
+                          <div class="ncsc-form-tit ncsc-form-inline">达达小费：</div>
+                          <input type="text" class="ncsc-form-control sdelivery_fee w250" name="tips"  value=""
+                                 placeholder="若订单较为紧急，可给订单增加小费" />
+                          <span class="ncsc-form-tit">元</span>
+                        </div>
+                        <div v-show="curOrder.dada_query == 2" class="dada_tips c-red mt10" id="dada_tips">收货地址与商家城市不一致，无法使用达达配送</div>
+                        <div v-show="curOrder.dada_query == 0 && curOrder.delivery_fee <= 0" class="dada_tips c-red mt10">商家余额不足,请充值</div>
+                        <div class="mt10 c-orange">
+                          <p>达达需知：</p>
+                          <p>
+                            1：达达订单可能存在特殊情况，存在无法预期送达的风险<br/>
+                            2：订单10分钟内可无条件取消订单，届时若对应达达已接单，取消订单产生的费用需要商户自行承担<br/>
+                            3：达达订单在骑手接单15分钟内支持取消订单，运费退回，同时扣除2元作为给配送员的违约金；未接单前可随时取消订单<br/>
+                          </p>
+                        </div>
+                      </div>
+                      <div v-show="choiceExpress">
+                        <div class="ncsc-form-item2">
+                          <div class="ncsc-form-tit ncsc-form-inline"><i class="required">*</i>发货公司：</div>
+                          <div class="category-used"  @click="openExpress()" >
+                            <div class="category-tit w250" ><template v-if="curExpressId == 0">请选择发货物流/快递公司</template><template v-else><span style="color: #0C0C0C">{{curExpressMame}}</span></template><i class="fa fa-angle-down"></i></div>
+                          </div>
+                          <p class="ncsc-form-tit more-tit" v-show="stapleExpressList.length > 0">最近使用：
+                          <ul>
+                          <li v-for="(item,key) in stapleExpressList" @click="selectExpress(item)">{{item.e_name}}</li>
+                        </ul>
+                          </p>
+                        </div>
+                        <div class="ncsc-form-s ncsc-dilivery-pay mt10">
+                          <div class="ncsc-form-tit ncsc-form-inline"><i class="required">*</i>发货单号：</div>
+                          <input  type="text" class="ncsc-form-control w200" maxlength="15" name="send_code" v-model="curSendCode" placeholder="输入发货物流/快递单号">
+                        </div>
+                      </div>
+                        </div>
+            </template>
+        </qm-tips>
+
+        <qm-tips :tipsVisible="dialog5" :width="'500px'" :showCancel="false" :confirmGray="currentContent.status==5 && handleDisabled?true:false" @confirm="dealWithSure()"
+            :showButton='true' @close="dialog5 = false">
+            <template slot="title">处理</template>
+            <template slot="content">
+                    <div class="eject_con">
+                            <form id="changeform">
+                            <dl>
+                                <dt>是否同意:</dt>
+                                <dd>
+                                    <label><input @change="changeAgree()" name="isAgree" type="radio" checked="" value="1" v-model="dealWithValue" width="1000"> 同意</label>
+                                  <label><input @change="changeAgree()" name="isAgree" class="radioChecks" type="radio" v-model="dealWithValue" value="0"> 拒绝</label>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>备注信息:</dt>
+                                <dd>
+                                    <textarea v-if="dealWithValue == 1" @input="changeMark($event)"  style="width: 300px;" name="promotion_info" v-model.trim="dealWithRemark"></textarea>
+                                    <textarea v-else @input="changeMark($event)" placeholder="请输入拒绝理由，拒绝理由不得为空" style="width: 300px;" name="promotion_info" v-model.trim="dealWithRemark"></textarea>
+                                    <p class="c-orange fs12" style="line-height: 21px;margin-top:10px;" v-if="dealWithValue==1" v-html="currentContent.content"></p></dd>
+                            </dl>
+
+                            <div id="warning" class="error-warn" v-if="error.dealWith_error">请输入拒绝理由</div>
+                        </form>
+                    </div>
+            </template>
+        </qm-tips>
+
+        <qm-tips :tipsVisible="dialog6" :width="'480px'" :showCancel="false" @confirm="recieveGoodSure()"
+            :showButton='true' @close="dialog6 = false">
+            <template slot="title">确认收到货款</template>
+            <template slot="content">
+                    <div class="eject_con">
+                            <form id="changeform" @submit.prevent="">
+                              <input type="hidden" name="form_submit" value="ok">
+                              <dl>
+                                <dt>买&nbsp;家：</dt>
+                                <dd>{{curOrder.buyer_name}}</dd>
+                              </dl>
+                              <dl>
+                                <dt>订单号：</dt>
+                                <dd>{{curOrder.order_sn}}</dd>
+                              </dl>
+                              <dl>
+                                  <dt>金额：</dt>
+                                  <dd class="c-orange">{{curOrder.order_amount | f2y}}</dd>
+                              </dl>
+                              <div id="warning"></div>
+                            </form>
+                          </div>
+            </template>
+        </qm-tips>
+
+        <qm-tips :tipsVisible="dialog14" :width="'480px'" :showCancel="false" @confirm="getOrderBySelfSure()"
+            :showButton='true' @close="dialog14 = false">
+            <template slot="title">确认买家自提</template>
+            <template slot="content">
+                    <div class="eject_con">
+                            <form id="changeform" method="post">
+                              <input type="hidden" name="form_submit" value="ok">
+                              <dl>
+                                <dt>买&nbsp;家：</dt>
+                                <dd>{{curOrder.buyer_name}}</dd>
+                              </dl>
+                              <dl>
+                                <dt>订单号：</dt>
+                                <dd>{{curOrder.order_sn}}</dd>
+                              </dl>
+                              <dl>
+                                  <dt>金额：</dt>
+                                  <dd class="c-orange">{{curOrder.order_amount | f2y}}</dd>
+                              </dl>
+                              <div id="warning"></div>
+                            </form>
+                          </div>
+            </template>
+        </qm-tips>
+
+        <qm-tips :tipsVisible="dialog7" :width="'480px'" :showCancel="false" @confirm="takeOrderSure()"
+            :showButton='true' @close="dialog7 = false">
+            <template slot="title">接单</template>
+            <template slot="content">
+                <div class="eject_con">
+
+
+                    <form id="changeform" @submit.prevent="">
+                      <input type="hidden" name="form_submit" value="ok">
+                      <dl>
+                        <dt>买&nbsp;家：</dt>
+                        <dd>{{curOrder.buyer_name}}</dd>
+                      </dl>
+                      <dl v-if="curOrder.level_info && curOrder.level_info.level_num && curOrder.level_info.level_name">
+                        <dt>会员等级：</dt>
+                        <dd>VIP{{curOrder.level_info.level_num}}-{{curOrder.level_info.level_name}}</dd>
+                      </dl>
+                      <dl v-if="curOrder.hasOwnProperty('tagNames') && curOrder.tagNames.length > 0">
+                        <dt>会员标签：</dt>
+                        <dd>{{curOrder.tagNames.join(';')}}</dd>
+                      </dl>
+                      <dl>
+                        <dt>订单号：</dt>
+                        <dd>{{curOrder.order_sn}}</dd>
+                      </dl>
+                      <dl v-if="curOrder.isBlacklist == 1">
+                            <dt></dt>
+                            <dd style="color: red">该用户为黑名单用户!</dd>
+                      </dl>
+                          <div id="warning"></div>
+
+                    </form>
+                  </div>
+            </template>
+        </qm-tips>
+
+        <qm-tips :tipsVisible="dialog8" :width="'480px'" :showCancel="false" @confirm="unTakeOrderSure()"
+            :showButton='true' @close="dialog8 = false">
+            <template slot="title">拒单</template>
+            <template slot="content">
+                <div class="eject_con tl_con">
+                    <form id="changeform" method="post" action="index.php?c=store_receiving&amp;a=change_state_refuse&amp;order_id=6">
+                        <input type="hidden" name="form_submit" value="ok">
+                        <dl>
+                            <dt>买&nbsp;家:</dt>
+                            <dd>{{curOrder.buyer_name}}</dd>
+                        </dl>
+                        <dl>
+                            <dt>订单号:</dt>
+                            <dd>{{curOrder.order_sn}}</dd>
+                        </dl>
+                        <dl>
+                            <dt>拒绝理由:</dt>
+                            <dd><textarea name="reason" style="width: 80%;" v-model="reason"></textarea></dd>
+                        </dl>
+                        <dl>
+                            <dt></dt>
+                            <dd>   <div id="warning" v-if="error.reason_error">请输入拒绝理由</div></dd>
+                        </dl>
+                    </form>
+                </div>
+            </template>
+        </qm-tips>
+
+  <qm-tips :tipsVisible="dialog9" :width="'480px'" :showCancel="false" @confirm="doAddTips()" :showButton='true' @close="dialog9 = false">
+    <template slot="title">增加小费</template>
+    <template slot="content">
+      <div class="eject_con tl_con">
+        <form @submit.prevent="">
+          <dl>
+            <dt>订单号：</dt>
+            <dd>{{tipInfo.orderSn}}</dd>
+          </dl>
+          <dl>
+            <dt>订单配送费：</dt>
+            <dd><span>&yen;{{tipInfo.shippingFee| f2y}}</span></dd>
+          </dl>
+          <dl>
+            <dt>达达运费：</dt>
+            <dd><span>&yen;{{tipInfo.deliveryFee | f2y}}</span></dd>
+          </dl>
+          <dl>
+            <dt>当前小费：</dt>
+            <dd><span>&yen;{{tipInfo.tips | f2y}}</span></dd>
+          </dl>
+          <dl>
+            <dt>增加小费：</dt>
+            <dd>
+              &yen; <input @input="changeTipInput($event)" id="tips" type="text" class="text" name="tips" value="" placeholder="小费最少0.1元"/>
+              <p class="ncsc-form-error error-tip"></p>
+            </dd>
+          </dl>
+          <dl>
+            <dt>添加后小费:</dt>
+            <dd class="c-orange">&yen;<span id="result_tips">{{tipInfo.tips | f2y}}</span></dd>
+          </dl>
+        </form>
+      </div>
+    </template>
+  </qm-tips>
+  <qm-tips :tipsVisible="dialog10" :width="'380px'" :showCancel="true"  @cancel="dialog10 = false"  @confirm="showDoCancelDadaOrder()" :showButton='true' @close="dialog10 = false">
+    <template slot="title">提示信息</template>
+    <template slot="content">
+      <div class="eject_con tl_con">
+        <div class="tc c-orange"><p class="tl ib">该达达订单已有骑手接单；当前取消订单的话需要扣除2元作为给骑手的违约金</p></div>
+        <p class="mt10 tc mb40 fs16">是否继续取消订单?</p>
+      </div>
+    </template>
+  </qm-tips>
+  <qm-tips :tipsVisible="dialog11" :width="'500px'" :showCancel="false"  @confirm="doCancelDadaOrder()" :showButton='true' @close="dialog11 = false">
+    <template slot="title">取消订单</template>
+    <template slot="content">
+      <div class="eject_con tl_con">
+        <form>
+          <dl>
+            <dt>取消原因：</dt>
+            <dd>
+              <select @change="changeCancelId($event)" name="cancel_reason_id" id="cancel_reason_id" class="w300">
+                <option value="">请选择订单取消原因</option>
+                <option v-for="(citem) in cancelDadaOrderInfo.reasonList" :value="citem.id">{{citem.reason}}</option>
+              </select>
+              <p class="ncsc-form-error error-cancel-id error-cancel"></p>
+            </dd>
+          </dl>
+          <dl>
+            <dt>原因说明：</dt>
+            <dd><textarea @input="changeCancelText()"  maxlength="200" name="cancel_reason" id="cancel-text" class="w300 h100"></textarea>
+              <p class="c-orange mt10 lh1-5 cancel_tips" v-if="this.cancelWarn">{{cancelDadaOrderInfo.tips}}</p>
+              <p class="ncsc-form-error error-cancel-text error-cancel"></p>
+            </dd>
+          </dl>
+        </form>
+      </div>
+    </template>
+  </qm-tips>
+  <qm-tips :tipsVisible="dialog12" :width="'500px'" :showCancel="true" @cancel="dialog12=false"  @confirm="doConfirmCancelDada()" :showButton='true' @close="dialog12 = false">
+    <template slot="title">确认收货</template>
+    <template slot="content">
+      <div class="eject_con tl_con">
+        <form>
+          <dl>确认收到骑士返回的物品！</dl>
+        </form>
+      </div>
+    </template>
+  </qm-tips>
+  <qm-tips :tipsVisible="dialog13" :width="'400px'" :showCancel="false"  @confirm="doHandelDada()" :showButton='true' @close="dialog13 = false">
+    <template slot="title">处理达达订单</template>
+    <template slot="content">
+      <div class="eject_con tl_con">
+          <dl>
+            <dt style="width:120px;">骑手取消原因：</dt>
+            <dd>{{curOrder.cancel_reason}}</dd>
+          </dl>
+          <dl>
+            <dt style="width:120px;">处理意见：</dt>
+            <dd>
+              <label><input @change="changeHandel()" type="radio" name="is_confirm" value="1" class="ncsc-custom-radio" />同意</label>
+              <label class="ml20"><input @change="changeHandel()" type="radio" name="is_confirm" value="0" class="ncsc-custom-radio" />不同意</label>
+              <p class="ncsc-form-error error-handel"></p>
+            </dd>
+          </dl>
+      </div>
+    </template>
+  </qm-tips>
+<qm-tips :tipsVisible="showChoiceExpress" :width="'420px'" @close="closeChoiceExpress()" :showButton="false" :noPadding="true">
+  <template slot="title">快递/物流公司</template>
+  <template slot="content" >
+    <div class="express-content" id="express-content" @scroll="scrollEvent">
+      <div class="express-search">
+        <input type="text" v-model.trim="expressKeyword" placeholder="输入发货物流/快递公司" class= "keyword search" />
+        <div class="buttons">
+          <input @click="resetExpress()" v-show="showExpressReset" type="button" class="ncsc-btn fr ml5 ncsc-btn-orange-rim" value="撤销检索" />
+          <input @click="confirmSearchExpress()" type="button" class="ncsc-btn ncsc-btn-orange  fr" value="搜索" />
+        </div>
+      </div>
+      <div class="express-list">
+        <template v-for="(item,key) in expressList">
+          <p class="tit">{{key}}</p>
+          <p class="item"><span v-for="(i,k) in item" :key="k" @click="selectExpress(i)">{{i.e_name}}</span></p>
+        </template>
+      </div>
+      <div class="need">
+        <p @click="showAddExpress=!showAddExpress">没有需要的快递/物流公司？自定义创建</p>
+        <div class="add" v-show="showAddExpress">
+          <input type="text" v-model.trim="addExpressName" maxlength="10" placeholder="输入物流/快递公司名称"  />
+          <input @click="addExpress()" type="button" class="ncsc-btn ncsc-btn-orange  fr" value="确定" />
+        </div>
+
+      </div>
+    </div>
+  </template>
+</qm-tips>
+<qm-tips :tipsVisible="showChangeAddress" :width="'700px'" :showCancel="false" @confirm="confirmChangeAddress()"
+         :showButton='true' @close="closeChangeAddress()">
+  <template slot="title">修改地址</template>
+  <template slot="content" >
+    <div class="eject_con">
+      <form @submit.prevent="">
+        <dl>
+          <dt>收货人：</dt>
+          <dd><input type="text" class="text w300" v-model="addressInfo.reciver_name"></dd>
+        </dl>
+        <dl>
+          <dt>收货电话：</dt>
+          <dd><input type="text" class="text w300" v-model="addressInfo.phone"></dd>
+        </dl>
+        <dl>
+          <dt>收货地址：</dt>
+          <dd>
+            <qm-area v-if="showChangeAddress" :province="addressInfo.province" :city="addressInfo.city" :district="addressInfo.district" @valueChange="areaValueChange($event)"></qm-area>
+          </dd>
+        </dl>
+        <dl>
+          <dt></dt>
+          <dd>
+            <textarea class="w500" v-model="addressInfo.subaddress"></textarea>
+            <p style="color:#ff8518;font-size: 14px;line-height: 18px;margin-top: 10px;">注：修改收货地址不会重新计算运费，若修改活动的收货地址存在运费差异请与用<br />户线下结算</p>
+          </dd>
+        </dl>
+      </form>
+    </div>
+  </template>
+</qm-tips>
+<qm-tips :tipsVisible="showExport" :width="'480px'" :showCancel="true" @confirm="confirmExport()" @cancel="showExport = false"
+         :showButton='true' @close="showExport = false">
+  <template slot="title">警告</template>
+  <template slot="content">
+    <div class="eject_con tl_con">
+      <div style="text-align: center">
+        <p>当前导出的数据量较大</p>
+        <p>系统将自动截取前5000条进行导出</p>
+        <p style="color:#ff8518;margin-top: 5px;">建议可分批次搜索导出，减少导出等待时长</p>
+      </div>
+    </div>
+  </template>
+</qm-tips>
+<qm-tips :tipsVisible="dialogPrintAddress" :width="'1200px'" :showCancel="false" @confirm="dialogPrintAddressSuccess?dialogPrintAddress = false:printOrderBatch()"
+         :show="loadingLayDate()"   :showButton='true' @close="closePrint()">
+    <template slot="title" v-if="!dialog1Success">选择需要批量打印地址的订单</template>
+    <template slot="content" v-if="!dialogPrintAddressSuccess">
+        <div class="ncsc-search-form" style="text-align: left">
+            <div class="search-item" >
+                <span class="ncsc-checkbox-txt">下单时间：</span>
+                <input type="text" id="query_start_date_b_print" class="input-add-on w100 query_start_date_b_print" name="query_start_date_print" :value="printAddressPageParams.query_start_date" readonly="readonly">
+                <label class="add-on"><i class="fa fa-calendar" aria-hidden="true"></i></label>
+                <span class="ncsc-sep">-</span>
+                <input id="query_end_date_b_print" class="input-add-on w100 query_end_date_b_print" type="text" name="query_end_date_print" :value="printAddressPageParams.query_end_date" readonly="readonly">
+                <label class="add-on"><i class="fa fa-calendar" aria-hidden="true"></i></label>
+            </div>
+            <div class="search-item">
+                <label  class="ncsc-checkbox-txt">支付方式：</label>
+                <select name="pay_type" class="w100 mr5"  v-model="printAddressPageParams.pay_type" @change="searchPrintData()">
+                    <option value="-1">全部</option>
+                    <option value="0">线上支付</option>
+                    <option value="1">线下支付</option>
+                    <option value="2">货到付款</option>
+                </select>
+            </div>
+            <div class="search-item">
+                <label  class="ncsc-checkbox-txt">关键词：</label>
+                <div :class="[isActivePrint?'active ':'','ncsc-form-category-search mr5']">
+                    <div class="search-category"  @mouseover="isActivePrint=true" @mouseout="isActivePrint=false">
+                        <div class="search-category-name">
+                            <span class="category-txt">{{curSearchTypeTxtPrint}}</span>
+                            <i class="fa fa-angle-down"></i>
+                        </div>
+                        <div class="search-category-drop"  @mouseover="isActivePrint=true" @mouseout="isActivePrint=false">
+                            <ul class="list-search-category">
+                                <li v-for="(type,k) in searchPrintTypes" v-show="type.key_type != printAddressPageParams.key_type">
+                                    <a @click="changeKeyTypePrint(k,type)">{{type.name_type}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <input  type="text" :class="printAddressPageParams.deal_state == 2 || printAddressPageParams.deal_state == 3 ? 'w235' : 'w250'" name="key" autocomplete="off"  v-model="printAddressPageParams.keyword" />
+                </div>
+            </div>
+            <input type="button" class="ncsc-btn ncsc-btn-orange" value="搜索" @click="searchPrintData()" >
+            <input type="button" class="ncsc-btn ncsc-btn-orange-rim" value="重置"  @click="resetPrint()" >
+        </div>
+        <div class="eject_con">
+            <div class="ncsc-search-form" v-if="orderPrintList.length>0">
+                <div  class="print-count" v-if="checkData.length==0" >当前未选中订单</div>
+                <div  class="print-count"  v-else >已选中<span style="font-size: 15px;font-weight: bold">{{checkData.length}}</span>个订单</div>
+                <div class="search-item page-size">
+                    <label  class="ncsc-checkbox-txt">每页显示数量：</label>
+                    <select name="pay_type" class="w30 mr5"  v-model="printAddressPageParams.pageSize" @change="searchPrintData()">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+            </div>
+            <div class="ncsc-default-table table-order2"  :class="{'print-all-address-table-overflow':printAddressPageParams.pageSize>5 && orderPrintList.length>5}" v-show="orderPrintList.length>0">
+            <form @submit.prevent="">
+                <input type="hidden" name="form_submit" value="ok">
+                <table class="ncsc-default-table table-order2 print-all-address-table" border="1">
+                    <thead>
+                    <tr>
+                        <th class="w70"><input type="checkbox" id="quan" class="checkboxPrint" @click="changeAllChecked($event)">本页全选</th>
+                        <th class="w100">订单序号</th>
+                        <th class="w150">订单号</th>
+                        <th class="w100">支付方式</th>
+                        <th class="w150">下单时间</th>
+                        <th class="w200">预计送达时间</th>
+                        <th class="w90">买家昵称</th>
+                        <th class="w90">收货人姓名</th>
+                        <th class="w120">收货人手机号</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <template v-if="orderPrintList" v-for="(list,l) in orderPrintList">
+                        <tr>
+                            <td><input type="checkbox" :value="list.order_id"  class="checkItem" v-model="checkData"  @click="changeChecked($event)"></td>
+                            <td>#{{list.shipping_code}}</td>
+                            <td>{{list.order_sn}}</td>
+                            <td>
+                                <template v-if="list.payment_type == 0">线下付款</template>
+                                <template v-else-if="list.payment_type == 2">货到付款</template>
+                                <template v-else>线上付款</template>
+                            </td>
+                            <td>{{list.add_time |datetime}}</td>
+                            <td>{{list.delivery_time > 0 ?getDeliveryTime(list):'快递配送'}}</td>
+                            <td>{{list.buyer_name}}</td>
+                            <td>{{list.extend_order_common.reciver_name | base64}}</td>
+                            <td>{{list.extend_order_common.reciver_info.phone}}</td>
+                        </tr>
+                    </template>
+                    </tbody>
+                </table>
+            </form>
+            </div>
+            <div class="ncsc-default-table table-order2 no-data"  style="text-align: center" v-show="!(orderPrintList.length>0)">
+                <div style="margin-top: 150px;">暂无符合条件的数据记录</div>
+            </div>
+        </div>
+        <qm-pagination v-if="orderPrintList && orderPrintList.length>0" :pageParams="printAddressPageParams" @changeIndex="changeIndexPrint($event)"></qm-pagination>
+    </template>
+    <!-- <template slot="title" v-if="dialog1Success">{{dialogTitle1}}</template>
+    <template slot="content" v-if="dialog1Success">{{dialogMessage1}}</template> -->
+</qm-tips>
+
+</div>

@@ -1,0 +1,70 @@
+<div v-cloak>
+<div class="menu-more"><a class="ncsc-btn ncsc-btn-orange" @click="showAddStoreTag(0,'')">添加标签</a></div>
+  <div class="clear"></div>
+  <div class="tab-style qm-store-class-base">
+  <qm-table :pageParams="pageParams">
+    <template slot="table">
+        <table class="ncsc-table table-transaction-online">
+            <thead>
+                <tr>
+                  <th>标签名称</th>
+                  <th class="w400">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(item) in list">
+              <td><span>{{item.tag_name}}</span></td>
+              <td class="handle">
+                <p><a class="ncsc-btn" @click="showAddStoreTag(item.tag_id,item.tag_name)">编辑</a></p>
+                <p><a class="ncsc-btn" @click="confirmDel(item.tag_id)">删除</a></p>
+              </td>
+            </tr>
+            </tbody>
+        </table>
+    </template>
+  </qm-table>
+  <qm-tips :tipsVisible="showEditLabel" :width="'480px'" @update:tipsVisible="showEditLabel = $event" :showCancel="false" @close="showEditLabel = false"  @confirm="doAddStoreTag()">
+    <template slot="title"><span v-if="editTagArr.tagId > 0">编辑会员标签</span><span v-else>新增标签</span></template>
+    <template slot="content">
+      <div class="eject_con" style="text-align: left">
+        <dl>
+          <dt><i class="required">*</i>标签名称</dt>
+          <dd>
+            <input class="text w200" type="text" maxlength="5" name="tag_name" id="tag_name" :value.trim="editTagArr.tagName"/>
+            <p class="error-p"><label class="error" style="font-size:14px;">请输入标签名称</label></p>
+          </dd>
+        </dl>
+      </div>
+    </template>
+  </qm-tips>
+    <qm-dialog :dialogVisible="tipMessage" :width="'500px'" @close="tipMessage == false">
+      <template slot="title">提示信息</template>
+      <template slot="content" >
+        <div class="dialog-bd eject_con">
+          <div class="dialog_message_contents comfirm"><i class="alert_info"></i><span>{{errorMsg}}</span></div>
+          <dl class="bottom rightBtn">
+            <dt></dt>
+            <dd>
+              2秒后页面跳转
+            </dd>
+          </dl>
+        </div>
+      </template>
+    </qm-dialog>
+    <qm-dialog :dialogVisible="deleteDialogVisible" :width="'500px'" @close="deleteDialogVisible = false">
+      <template slot="title">提示信息</template>
+      <template slot="content" >
+        <div class="dialog-bd eject_con">
+          <div class="dialog_message_contents comfirm"><i class="alert_info"></i>确认删除这个标签么?</div>
+          <dl class="bottom rightBtn">
+            <dt></dt>
+            <dd>
+              <label @click="doDelStoreTag()" class="submit-border"><input type="submit" class="ncsc-btn ncsc-btn-orange" value="确定"></label>
+              <label @click="deleteDialogVisible = false" class="submit-border"><input type="submit" class="cancle btn-gray" value="取消"></label>
+            </dd>
+          </dl>
+        </div>
+      </template>
+    </qm-dialog>
+    </div>
+</div>

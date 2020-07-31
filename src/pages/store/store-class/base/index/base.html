@@ -1,0 +1,154 @@
+<div class="qm-store-class-base">
+  <p class="C4 S7">若存在指定商品分类活动时，可制作海报，用户扫码可跳转三级分类商品列表页进行推广，配合活动宣传&nbsp;&nbsp;<a class="orange" @click="$router.push('/promotion/store_poster/index')">前往制作>></a></p>
+        <select name="city" lay-verify="" class="mt20 mb20"  @change="changeFirstClassData($event)" v-model="firstType">
+                <option value="-1">--请选择一级分类--</option>
+                <option :value="first.gc_parent_id" v-for="(first,f) in firstClassList">{{first.gc_name}}</option>
+              </select>
+
+  <qm-table :pageParams="pageParams">
+    <template slot="table">
+              <ul class="column-cont">
+
+                    <template v-for="(col,key) in colData">
+                            <li :id="col" class="column-3 m-rg-20">
+                                    <div class="item-cont">
+                                        <template v-for="(first,f) in col">
+                                                <div class="item-top-bar">
+                                                    <span class="title c-black">{{first.gc_name}}</span>
+                                                </div>
+                                                <div class="list-cont ">
+                                                    <ul class="two-list">
+                                                        <li class="two-list" :class="second.active?'active':''" v-for="(second,s) in first.children">
+                                                            <div class="two-top-bar c-gray">
+                                                                <i class="icon" @click="secondToggle(key,first,f,second,s)"></i>{{second.gc_name}}
+                                                                <a @click="showModal(first,f,second,s,{},0)" class="ncsc-btn ncsc-btn-orange-rim p-btn">新增三级分类</a>
+                                                            </div>
+                                                            <ul class="three-list sortable padding-0 ui-sortable" v-if="second.active">
+                                                                <draggable v-model="second.children" v-bind="dragOptions" draggable=".draggable" ghost-class="ghost" @change="itemDraggable($event,second)">
+                                                                    <div v-for="(third,t) in second.children" :key="'third'+t" class="item fs14_15" :class="third.is_system?'':'draggable'">
+                                                                        <div v-if="t < 8">
+                                                                                <li class="ui-state-disabled fs14_15" v-if="third.is_system">{{third.gc_name}}</li>
+                                                                                <li class="move-able" v-else>
+                                                                                    <i class="icon"></i>
+                                                                                    <span class="class_three "> {{third.gc_name}} </span>
+                                                                                    <div class="btn-group">
+                                                                                        <a @click="showModal(first,f,second,s,third,t)" class="btn-mini btn-orange-full ">编辑</a>
+                                                                                        <a @click="deleteClass(first,second,s,third)" class="ncsc-btn-mini ">删除</a>
+                                                                                    </div>
+                                                                                </li>
+                                                                        </div>
+                                                                        <div v-if="t >= 8 && second.showMore">
+                                                                                <li class="ui-state-disabled fs14_15" v-if="third.is_system">{{third.gc_name}}</li>
+                                                                                <li class="move-able" v-else>
+                                                                                    <i class="icon"></i>
+                                                                                    <span class="class_three "> {{third.gc_name}} </span>
+                                                                                    <div class="btn-group">
+                                                                                        <a @click="showModal(first,f,second,s,third,t)" class="btn-mini btn-orange-full ">编辑</a>
+                                                                                        <a @click="deleteClass(first,second,s,third)" class="ncsc-btn-mini ">删除</a>
+                                                                                    </div>
+                                                                                </li>
+                                                                        </div>
+                                                                    </div>
+                                                                </draggable>
+                                                            </ul>
+                                                            <div class="show-more-tips" v-if="second.children.length > 8 && second.active" @click="showMore(key,first,f,second,s)">
+                                                                <i style="margin-top: -2px" class="fa fa-angle-down" v-if="!second.showMore"></i>
+                                                                <i style="margin-top: -2px" class="fa fa-angle-up" v-if="second.showMore"></i>
+                                                                <span>{{second.showMore?'点击收起':'点击查看更多'}}</span>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                        </template>
+                                    </div>
+                                </li>
+                    </template>
+
+                </ul>
+    </template>
+  </qm-table>
+
+                <qm-dialog :dialogVisible="dialogVisible" :width="'520px'" @close="closeModal()">
+                        <template slot="title">{{curThird.gc_id==0?"新增":"编辑"}}三级分类</template>
+                        <template slot="content" >
+                            <div class="dialog-bd eject_con">
+
+                                    <dl>
+                                        <dt>一级分类：</dt>
+                                        <dd id="oneName">{{curFirst.gc_name}}</dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>二级分类：</dt>
+                                        <dd id="twoName">{{curSecond.gc_name}}</dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>三级分类名称：</dt>
+                                        <dd>
+                                            <input class="text w150" type="text" id="threeName" v-model="curThird.gc_name"><span id="gc_name_err" style="margin-left: 5px" class="ncsc-form-error"></span>
+                                            <span id="gc_name_err" style="margin-left: 5px" class="ncsc-form-error" v-if="nameEmpty">三级分类名不能为空</span>
+                                            <span id="gc_name_err" style="margin-left: 5px" class="ncsc-form-error" v-if="curThird != null && curThird.gc_name != '' && curThird.gc_name.length > 8">三级分类名不能超过8个字</span>
+                                            <span style="margin-left: 5px" class="ncsc-form-error" v-if="nameTestError">分类名称仅支持中文、英文、数字</span>
+                                            <p class="c-gray mt5 fs12">分类名称最多8个字</p>
+                                        </dd>
+                                    </dl>
+                                    <dl class="bottom">
+                                        <dt></dt>
+                                        <dd>
+                                            <label @click="submitModify()" class="submit-border"><input type="submit" class="ncsc-btn ncsc-btn-orange" value="提交"></label>
+                                        </dd>
+                                    </dl>
+                                </div>
+                        </template>
+                    </qm-dialog>
+
+                    <qm-dialog :dialogVisible="deleteDialogVisible" :width="'500px'" @close="deleteDialogVisible = false">
+                            <template slot="title">提示信息</template>
+                            <template slot="content" >
+                                <div class="dialog-bd eject_con">
+                                    <div class="dialog_message_contents comfirm"><i class="alert_info"></i>确定要删除吗?</div>
+                                    <dl class="bottom rightBtn">
+                                        <dt></dt>
+                                        <dd>
+                                            <label @click="deleteSure()" class="submit-border"><input type="submit" class="ncsc-btn ncsc-btn-orange" value="确定"></label>
+                                            <label @click="deleteCancle()" class="submit-border"><input type="submit" class="cancle" value="取消"></label>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </template>
+                        </qm-dialog>
+
+
+                    <qm-dialog :dialogVisible="successMessage" :width="'500px'" @close="successMessage = false">
+                            <template slot="title">提示信息</template>
+                            <template slot="content" >
+                                <div class="dialog-bd eject_con">
+                                    <div class="dialog_message_contents comfirm"><i class="alert_info"></i>编辑成功</div>
+                                    <dl class="bottom rightBtn">
+                                        <dt></dt>
+                                        <dd>
+                                            2秒后页面跳转
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </template>
+                        </qm-dialog>
+
+
+                        <qm-dialog :dialogVisible="deleteSuccessMessage" :width="'500px'" @close="deleteSuccessMessage = false">
+                                <template slot="title">提示信息</template>
+                                <template slot="content" >
+                                    <div class="dialog-bd eject_con">
+                                        <div class="dialog_message_contents comfirm"><i class="alert_info"></i><span id="del-error">{{error_msg}}</span></div>
+                                        <dl class="bottom rightBtn">
+                                            <dt></dt>
+                                            <dd>
+                                                2秒后页面跳转
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </template>
+                            </qm-dialog>
+
+
+
+</div>

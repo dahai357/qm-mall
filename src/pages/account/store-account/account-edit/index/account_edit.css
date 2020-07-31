@@ -1,0 +1,31 @@
+.account-edit-form{
+    margin-top: 60px;
+    width: 100%;
+}
+.account-edit .bottom{
+    margin-left: 20%;
+}
+b{
+    color: red
+}
+.account-edit-form dt{
+    font-size: 14px;
+    line-height: 30px;
+    padding: 15px 0 0 10%;
+    
+}
+.account-edit-form dd{
+    padding:15px 0 15px 0;
+    text-align: left;
+}
+.account-edit-form select{
+    width: 88px;
+}   
+.ncsc-btn:hover {
+    text-decoration: none;
+    border-color: #ff8519;
+    color:#ff8519;
+  }
+.ncsc-form-default dt{
+  width:25%;
+}

@@ -1,0 +1,14 @@
+<div class="ncsc-form-group2 industry-choose" id="industry" data-chief="17" data-sub="7349">
+        <div class="choice-item ncsc-form-s ncsc-form-inline" style="display: inline-block;">
+            <select class="chief-select w200" name="industry_id1" :value="industry_id1" @change="changeIndustry1($event)">
+                <option value="-1"> -- 请选择 -- </option>
+                <option :value="industry1.id" v-for="(industry1,i1) in industrys1">{{industry1.name}}</option>
+            </select>
+        </div>
+        <div class="choice-item ncsc-form-s ncsc-form-inline" style="display: inline-block;">
+            <select class="sub-select w200" name="industry_id2" :value="industry_id2" @change="changeIndustry2($event)" v-if="showI2">
+                <option value="-1"> -- 请选择 -- </option>
+                <option :value="industry2.id" v-for="(industry2,i2) in industrys2">{{industry2.name}}</option>
+            </select>
+        </div>
+    </div>

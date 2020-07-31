@@ -1,0 +1,45 @@
+<div class="store-store-setting-searchConfig">
+
+
+        <div class="base-item">
+            <div class="base-label">
+                <label >
+                        搜索热门推荐：
+                </label>
+            </div>
+            <div class="base-content">
+                    <input type="text" class="w200" v-model.trim="name"> <a class="distribution-node-nomargin-search" @click="add()">添加</a>
+
+                    <ul class="ncsc-list-recommend">
+                        <li v-for="(item,i) in recommendWord">
+                            <input type="hidden" :value="item" name="recommend_word[0]">{{item}}
+                            <div class="ncsc-btn-del" @click="deleteData(i)">×</div>
+                        </li>
+                    </ul>
+            </div>
+        </div>
+
+
+        <div class="bottom">
+            <label class="submit-border"><input id="store_submit" type="button" class="submit" value="提交" @click="submitRecommendWord" :disabled="btnClick.submitRecommendWordBtn"></label>
+        </div>
+
+      <!--  <qm-tips :tipsVisible="dialog1" :showCancel="false" :width="'420px'" @close="dialog1 = false"  @confirm="dialog1 = false">
+                <template slot="title">{{dialogTitle1}}</template>
+                <template slot="content">{{dialogMessage1}}</template>
+            </qm-tips>-->
+  <qm-dialog :dialogVisible="tipMessage" :width="'500px'" @close="tipMessage == false">
+    <template slot="title">提示信息</template>
+    <template slot="content" >
+      <div class="dialog-bd eject_con">
+        <div class="dialog_message_contents comfirm"><i class="alert_info"></i><span>{{errorMsg}}</span></div>
+        <dl class="bottom rightBtn">
+          <dt></dt>
+          <dd>
+            2秒后页面跳转
+          </dd>
+        </dl>
+      </div>
+    </template>
+  </qm-dialog>
+    </div>

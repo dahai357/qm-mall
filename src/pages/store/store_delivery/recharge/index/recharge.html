@@ -1,0 +1,40 @@
+<div>
+  <div class="clear"></div>
+  <div class="c-gray mb20">
+    <ul>
+      <li>本充值为调用达达的账户充值功能，官方平台不收取任何费用</li>
+    </ul>
+  </div>
+  <div class="item-publish">
+    <div class="ncsc-form-default ncsc-form-delivery">
+      <div class="ncsc-mod-section">
+        <div class="ncsc-mod-bd">
+          <a href="" target="_blank" id="nav_recharge" style="display: none;">进入充值</a>
+          <div name="frmRecharge" id="frmRecharge">
+            <input type="hidden" name="form_submit" value="ok" />
+            <dl class="image-text">
+              <dt for="apply_type">充值账户：</dt>
+              <dd>{{firstList.enterprise_name}}</dd>
+            </dl>
+            <dl class="image-text">
+              <dt for="apply_type">当前余额：</dt>
+              <dd>{{firstList.balance}}元</dd>
+            </dl>
+            <dl>
+              <dt for="amount"><i class="required">*</i>充值金额：</dt>
+              <dd>
+                <input @input="changeAmount()" type="text" id="amount" class="w200" name="amount" value="" autocomplete="off" placeholder="请输入充值金额" v-model="subData.amount"/> 元
+                <span class="ncsc-form-error error-amount" v-show="validData.amount">请输入充值金额</span>
+              </dd>
+            </dl>
+            <div class="bottom">
+              <label class="submit-border">
+                <div class="submit" id="btnRecharge" @click="formData()">下一步</div>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

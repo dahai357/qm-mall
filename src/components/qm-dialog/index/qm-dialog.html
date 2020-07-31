@@ -1,0 +1,24 @@
+<div>
+        <el-dialog
+        :visible.sync="dialogVisible"
+        :width="width"
+        :before-close="handleClose"
+        :lock-scroll="modalAppendToBody"
+        :close-on-click-modal = "closeOnClickModal"
+        :customClass="customClass"
+        :show-close="showClose"
+        v-dialogDrag
+        >
+
+        <div slot="title" class="phone-bind-title">
+            <slot name="title"></slot>
+        </div>
+        <div>
+            <slot name="content"></slot>
+        </div>
+
+        <span slot="footer" class="dialog-footer">
+                <slot name="footer"></slot>
+        </span>
+    </el-dialog>
+</div>

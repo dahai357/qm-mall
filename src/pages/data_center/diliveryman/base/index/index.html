@@ -1,0 +1,197 @@
+<div>
+  <div class="menu-more"><a @click="showAdd()" class="ncsc-btn ncsc-btn-orange">添加配送员</a></div>
+  <div class="clear"></div>
+  <div class="tab-style qm-store-class-base">
+  <div class="qm-store-class-record">
+    <span class="ncsc-form-tit">配送员：</span>
+    <select name="state" class="w120 mr20" id="true_name" @change="search()">
+      <option value="0">姓名</option>
+      <option v-for="(titem) in trueNameList" :value="titem.id">{{titem.true_name}}</option>
+    </select>
+    <span class="ncsc-form-tit">配送时间：</span>
+    <input name="start_time" id="start_time" type="text" class="input-add-on w100" :value="pageParams.beginTime" readonly="readonly">
+    <label class="add-on"><i class="fa fa-calendar" aria-hidden="true"></i></label>
+    <span class="ncsc-sep">-</span>
+    <input name="end_time" id="end_time" type="text" class="input-add-on w100" :value="pageParams.endTime" readonly="readonly">
+    <label class="add-on mr5"><i class="fa fa-calendar icon-calendar"></i></label>
+    <span class="ncsc-form-tit">最近：</span>
+    <div class="quick-time js-quick-time">
+      <a href="javascript:;" @click="setTime('week')" class="mr5" id="weekBtn" :class="timeType == 'week'?'active':''">一周</a>
+      <a href="javascript:;" @click="setTime('month')" class="mr5" id="monthBtn" :class="timeType == 'month'?'active':''">一个月</a>
+      <a href="javascript:;" @click="setTime('year')" class="mr5" id="yearBtn" :class="timeType == 'year'?'active':''">一年</a>
+    </div>
+  </div>
+<!--统计数据展示-开始-->
+  <div class="summary-box summary-diliveryman mb20">
+    <ul class="list-summary">
+      <li>
+        <p class="name">订单共收取配送费(元)</p>
+        <p class="num c-blue"><span v-if="totalList.shipping_fee == 0">0.00</span><span v-else>{{totalList.shipping_fee}}</span></p>
+      </li>
+      <li>
+        <p class="name">支付给配送员费用(元)</p>
+        <p class="num c-orange"><span v-if="totalList.distributionAndDadaFee == 0">0.00</span><span v-else>{{totalList.distributionAndDadaFee}}</span></p>
+      </li>
+    </ul>
+  </div>
+  <!--统计数据展示-结束-->
+  <qm-table :pageParams="pageParams">
+    <template slot="table">
+        <table class="ncsc-table">
+            <thead>
+                <tr>
+                  <th style="width:23%;">配送员名称</th>
+                  <th style="width:15%;">联系电话</th>
+                  <th style="width:17%;">添加时间</th>
+                  <th style="width:15%;">配送费</th>
+                  <th style="width:10%;">状态</th>
+                  <th style="width:15%;">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(item) in list">
+           <td>
+                <div class="info-box info-box-man">
+                  <div class="pic">
+                    <img v-if="item.source == 0" :src="item.member_avatar" width="60" height="60" class="br100p">
+                    <img v-else src="@/assets/seller/images/seller/dada.png" width="60" height="60" class="br100p">
+                  </div>
+                  <div class="detail">
+                    <p>{{item.true_name}}</p>
+                    <a @click="showEdit(item)" v-if="item.source==0" class="c-orange">[修改姓名]</a>
+                  </div>
+                </div>
+              </td>
+           <td><span v-if="item.source==0">{{item.mobile}}</span><span v-else>-</span></td>
+              <td class="c-gray">{{item.add_time}}</td>
+              <td>
+                <span v-if="item.source==0">{{item.shipping_fee}}</span>
+                <span v-else>{{dadaFee}}</span>
+              </td>
+              <td><span v-if="item.is_del == 1">解除</span><span v-else>正常</span></td>
+              <td class="handle">
+                <p><a class="ncsc-btn" @click="showDeatailView(item.source,item.member_avatar,item.true_name,item.id)">查看</a></p>
+                <p v-if="item.source==0" @click="doDelDiliveryman(item.id)"><a class="ncsc-btn"><span v-if="item.is_del == 1">续期</span><span v-else>解除</span></a></p>
+                <p v-else><a class="ncsc-btn disabled"><span>解除</span></a></p>
+              </td>
+            </tr>
+            </tbody>
+        </table>
+    </template>
+  </qm-table>
+  </div>
+    <qm-dialog :dialogVisible="showViewDialog" :width="'750px'" @close="showViewDialog = false">
+    <template slot="title">查看配送员信息</template>
+    <template slot="content">
+        <table class="ncsc-table-spec ncsc-table">
+          <thead>
+          <tr>
+            <th style="width:18%" class="col1">配送员名称</th>
+            <th style="width:25%">订单号</th>
+            <th style="width:10%">类型</th>
+            <th style="width:13%">收取费用</th>
+            <th style="width:14%">支付费用</th>
+            <th style="width:15%">操作</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-if="viewList.length > 0" v-for="(item) in viewList">
+            <td class="col1">
+              <div class="info-box info-box-man">
+                <div class="pic">
+                  <img v-if="viewData.source == 0" :src="viewData.memberAvatarPath" width="30" height="30" class="br100p">
+                  <img v-else src="@/assets/seller/images/seller/dada.png" width="30" height="30" class="br100p">
+                </div>
+                <div class="detail">
+                <p>{{viewData.trueName}}</p>
+                </div>
+              </div>
+            </td>
+            <td><a @click="openOrder(item.order_sn)">{{item.order_sn}}</a></td>
+            <td>{{item.type_text}}</td>
+            <td>¥{{item.shipping_fee}}</td>
+            <td>¥{{item.pay_total|f2y}}</td>
+            <td>
+              <span @click="showEditFee(item)" :class="(item.delivery_state == 30 || item.order_state == 40 || item.order_state == 0)?'c-gray':'update-blue'">修改配送费用</span>
+            </td>
+          </tr>
+          <tr v-if="viewList.length <= 0 || viewList.length == '' || viewList.length == null || viewList.length== undefined">
+            <td colspan="20" class="norecord"><div class="warning-option"><span>暂无符合条件的数据记录</span></div></td>
+          </tr>
+          </tbody>
+        </table>
+        <qm-pagination :pageParams="viewParams" @changeIndex="changeIndex($event)"></qm-pagination>
+    </template>
+    </qm-dialog>
+  <qm-tips :tipsVisible="showAddDialog" :width="'450px'" @update:tipsVisible="showAddDialog = $event" :showCancel="false" @close="showAddDialog = false"  @confirm="doAddDiliveryman()">
+    <template slot="title">添加配送员</template>
+    <template slot="content">
+      <form style="text-align: left">
+        <dl>
+          <dt>姓名：</dt>
+          <dd>
+            <input maxlength="20" type="text" value="" id="add-true-name"  class="text w200">
+            <p class="error-p"><label class="error" style="font-size:14px;">请输入姓名</label></p>
+          </dd>
+        </dl>
+        <dl>
+          <dt>手机号：</dt>
+          <dd>
+            <input type="text" value="" id="add-mobile" class="text w200">
+            <p class="error-p"><label class="error" style="font-size:14px;">请输入手机号</label></p>
+          </dd>
+        </dl>
+      </form>
+    </template>
+  </qm-tips>
+  <!--修改配送员姓名弹窗-->
+  <qm-tips :tipsVisible="showEditDialog" :width="'450px'" :showCancel="false" @close="showEditDialog = false"  @confirm="updateDiliveryman()">
+    <template slot="title">修改配送员姓名</template>
+    <template slot="content">
+      <form style="text-align: left" class="edit-dialog">
+        <dl>
+          <dt class="f14">配送员手机号：</dt>
+          <dd><span>{{currentItem.mobile}}</span></dd>
+        </dl>
+        <dl>
+          <dt>原配送员姓名：</dt>
+          <dd><span>{{currentItem.true_name}}</span></dd>
+        </dl>
+        <dl>
+          <dt>修改后配送员姓名：</dt>
+          <dd>
+            <input maxlength="20" type="text" value="" class="text w200" v-model.trim="updateName">
+            <p v-show="editError"><label class="error" style="font-size:12px;">请填写配送员姓名</label></p>
+          </dd>
+        </dl>
+      </form>
+    </template>
+  </qm-tips>
+  <!--修改配送费弹窗-->
+  <qm-tips :tipsVisible="showEditOrderDialog" :width="'450px'" :showCancel="false" @close="showEditOrderDialog = false"  @confirm="updateDiliverymanFee()">
+    <template slot="title">修改配送费</template>
+    <template slot="content">
+      <form style="text-align: left" class="edit-dialog">
+        <dl>
+          <dt class="f14">订单号：</dt>
+          <dd><span>{{itemOrder.order_sn}}</span></dd>
+        </dl>
+        <dl>
+        <dt>订单收取配送费：</dt>
+        <dd><span>{{itemOrder.shipping_fee}}</span></dd>
+      </dl>
+        <dl>
+          <dt>原支付配送员费用：</dt>
+          <dd><span>{{itemOrder.pay_total|f2y}}</span></dd>
+        </dl>
+        <dl>
+          <dt>修改后配送员费用：</dt>
+          <dd>
+            <input type="text" value="" class="text w200" v-model.trim="updateFee" @keyup ="onlyNumber()">
+            <p v-show="editFeeError"><label class="error" style="font-size:12px;">{{editFeeErrorText}}</label></p>
+          </dd>
+        </dl>
+      </form>
+    </template>
+  </qm-tips>
+    </div>

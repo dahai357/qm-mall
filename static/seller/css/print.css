@@ -1,0 +1,31 @@
+body{ background: #fff; line-height: 1.5; font-size:8pt;}
+body, div, p{ margin:0; padding: 0;}
+.print-layout{ position: relative;  margin:0 auto;}
+.print-btn{ color:#000; border:1px solid #b4b4b4; border-radius:.9em; position: absolute; right: 20px; top: 30px; padding: 0 1em; background: #fff; line-height: 1.8; font-size: 16px;}
+.print-btn:hover{ color: #ff8519; border-color:#ff8519; cursor: pointer;}
+.print-tip{ position: absolute; right: 0; top: 70px; color:#ff8519; font-size: 14px;}
+.orderprint {padding-top: 10px; background: #FFF; color:#000000; word-break: break-all;}
+.orderprint .top .shop-name{ font-size:16pt; padding:2pt 0;}
+.buyer-info { font-size: 12pt; margin-top: 5pt; padding: 5pt 0;  margin-bottom: 2pt; border-top:dotted 1px #000; border-bottom:dotted 1px #000;}
+.buyer-info p{ padding-bottom:3pt;}
+.buyer-info .time, .buyer-info .dilivery-man{ font-size:8pt;}
+.buyer-info .message{ margin-top: 2pt; padding-top:5pt; border-top:dotted 1px #000;}
+.orderprint table { line-height:1.2; width:100%; }
+.order-info th, .order-info td{ padding:3pt 0; font-size:8pt; text-align: left; vertical-align: top; font-weight: normal;}
+.order-info th{ padding:4pt 2pt;}
+.order-info .title{ padding-bottom: 0; padding-top: 5pt; }
+.order-info .name{ font-size:12pt}
+.order-info thead th { border-bottom: dotted 1px #000; white-space: nowrap;}
+.order-info tfoot th { padding-bottom: 0; white-space: nowrap;}
+.order-info .total th{ border-top: dotted 1px #000;}
+.order-info .intro{ padding-top: 3pt;}
+.order-info .sum td{ padding-bottom: 5pt; padding-top: 0;}
+.order-info .attr{ padding-top:3pt; padding-bottom: 3px;}
+.max210{ max-width: 210mm;}
+
+@media print{
+  .print-btn, .print-tip{ display:none}
+  .print-layout{ max-width: none;  padding-right: 10px}
+}
+
+

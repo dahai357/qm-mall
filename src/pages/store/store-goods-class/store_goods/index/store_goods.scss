@@ -1,0 +1,293 @@
+@import '../../../../../assets/scss/style.scss';
+
+.ncsc-default-table {
+    width: 100%;
+    border-collapse: collapse;
+    line-height: 1.5;
+}
+table td, table th {
+    word-break: break-all;
+}
+
+.ncsc-default-table th, .ncsc-default-table td {
+    vertical-align: top;
+    font-size: 14px;
+    height: 20px;
+}
+
+.ncsc-default-table th {
+    background: #f9f9f9;
+    padding: 10px;
+    text-align: left;
+    font-style: normal;
+    font-weight: normal;
+}
+
+.ncsc-default-table td {
+    border-bottom: 1px solid #eee;
+    padding: 20px 10px;
+}
+
+i.required {
+    font: 12px/16px Tahoma;
+    color: #F30;
+    vertical-align: middle;
+    margin-right: 4px;
+}
+
+span.error {
+    font-size: 12px;
+    color: red;
+}
+
+.qm-store-class-base{
+    padding-top: 30px;
+ }
+
+ .ncsc-form-default dl {
+    line-height: 20px;
+    display: table;
+    width: 100%;
+}
+
+
+.ncsc-form-default dt {
+    font-size: 14px;
+    line-height: 30px;
+    vertical-align: top;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-align: right;
+    display: table-cell;
+    width: 19%;
+    padding: 15px 1% 15px 0;
+    margin: 0;
+}
+
+.ncsc-form-goods dl dt {
+    width: 15.5%;
+}
+
+.ncsc-form-default dd {
+    font-size: 14px;
+    line-height: 30px;
+    vertical-align: top;
+    letter-spacing: normal;
+    word-spacing: normal;
+    display: table-cell;
+    width: 79%;
+    padding: 15px 0;
+}
+
+.ncsc-form-goods dl dd {
+    width: 82.5%;
+    padding: 15px 0 15px 1%;
+}
+
+.ncsc-default-table {
+    width: 100%;
+    border-collapse: collapse;
+    line-height: 1.5;
+}
+
+
+.ncsc-default-table th, .ncsc-default-table td ,td{
+    vertical-align: top;
+    font-size: 14px;
+    height: 20px;
+}
+
+.ncsc-default-table th {
+    background: #f9f9f9;
+    padding: 10px;
+    text-align: left;
+}
+
+
+.ncsc-default-table td,td {
+    border-bottom: 1px solid #eee;
+    padding: 20px 10px;
+}
+
+.bd-line td {
+    border-bottom: solid 1px #eee;
+}
+
+.info-box {
+    display: table;
+}
+
+.info-box .pic, .info-box .detail {
+    display: table-cell;
+    vertical-align: top;
+}
+.info-box .pic {
+    padding-right: 15px;
+    position: relative;
+}
+.info-box .detail {
+    word-break: break-all;
+}
+.ncsc-default-table tr.gray td ,tr.gray td{
+    background: #f5f5f5;
+    color: #757575;
+}
+
+.detail a:hover{
+    color:$orange
+}
+
+.div-goods-select-box {
+    position: relative;
+    max-width: 742px;
+}
+
+
+.div-goods-select .close, .div-goods-select-box .close {
+    font: lighter 18px/18px SimSun;
+    color: #757575;
+    background-color: #FFF;
+    text-align: center;
+    display: block;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #bbb;
+    border-radius: 20px;
+    position: absolute;
+    z-index: 1;
+    top: -11px;
+    right: -11px;
+    cursor: pointer;
+    right: -10px;
+}
+
+.div-goods-select {
+    position: relative;
+    margin-bottom: 20px;
+    border: solid 1px #eee;
+    padding: 20px 10px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    width: 742px;
+}
+
+
+.ncsc-search-form {
+    color: #757575;
+    font-size: 12px;
+    padding-bottom: 20px;
+}
+.div-goods-select .ncsc-search-form {
+    margin-left: 10px;
+}
+
+.ncsc-search-form .ncsc-form-tit, .ncsc-search-form input, .ncsc-search-form textarea, .ncsc-search-form select, .ncsc-search-form .ncsc-form-category-search, .ncsc-search-form .ncsc-btn {
+    font-size: 12px;
+}
+.ncsc-btn-orange-rim:hover{
+    color:white;
+}
+
+.div-goods-select .search-result .goods-list {
+    overflow: hidden;
+    margin-top: -20px;
+}
+
+.div-goods-select .search-result .goods-list li {
+    float: left;
+    margin: 0 10px;
+    width: 160px;
+    padding-top: 20px;
+    box-sizing: border-box;
+    line-height: 1.5;
+}
+.div-goods-select .search-result .goods-list .goods-item {
+    border: 1px solid #eee;
+    box-sizing: border-box;
+    padding: 10px;
+    border-radius: 5px;
+}
+.div-goods-select .search-result .goods-list .goods-item:hover {
+    border: 1px solid $orange;
+    box-sizing: border-box;
+    padding: 10px;
+    border-radius: 5px;
+}
+.div-goods-select .search-result .goods-thumb {
+    width: 100px;
+    margin: 0 auto;
+    display: table;
+    table-layout: fixed;
+}
+.div-goods-select .search-result .goods-info {
+    margin-bottom: 5px;
+    margin-top: 10px;
+    line-height: 20px;
+}
+.tc {
+    text-align: center !important;
+}
+
+.div-goods-select .search-result .goods-thumb-in {
+    display: table-cell;
+    width: 100%;
+    height: 100px;
+    vertical-align: middle;
+    text-align: center;
+}
+.div-goods-select .search-result .goods-thumb img {
+    max-width: 100px;
+    max-height: 100px;
+}
+.div-goods-select .search-result .goods-info .goods-tit {
+    text-align: left;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.ncsc-form-default dd p {
+    clear: both;
+}
+.div-goods-select .search-result .goods-info p {
+    font-size: 12px;
+}
+// .c-gray {
+//     color: #757575;
+// }
+
+.ncsc-btn-mini {
+    font-size: 12px;
+    line-height: 22px;
+    color: #212121;
+    text-align: center;
+    vertical-align: middle;
+    display: inline-block;
+    height: 24px;
+    padding: 0 10px;
+    margin-right: 2px;
+    border: none;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #fff;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.close:hover{
+    background-color: $orange;
+    color: #fff;
+    text-decoration: none;
+    border:none;
+}
+
+.ghost{
+    border: dotted 1px #ff8519;
+    box-shadow: 2px 2px 2px rgba(153, 153, 153, 0.25);
+    filter: alpha(opacity=75);
+    -moz-opacity: 0.75;
+    opacity: .75;
+    cursor: ns-resize;
+    background-color: #ffeddd;
+  }

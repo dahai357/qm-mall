@@ -1,0 +1,627 @@
+<div class="qm-store-class-base">
+    <qm-step :steps="steps" :stepIndex="stepIndex"></qm-step>
+
+
+    <div class="item-publish" v-show="stepIndex == 1">
+            <!--<div class="msg-check mb20" v-if="info.status > 0">-->
+                <!--<div class="msg-in">-->
+                    <!--<div class="msg-tit"><b>审核意见：</b></div>-->
+                    <!--<div class="msg-txt" v-if="info.status == 1">已开通</div>-->
+                        <!--<div class="msg-txt" v-if="info.status == 2">已拒绝：{{info.return_reason}}</div>-->
+                        <!--<div class="msg-txt" v-else>支付已关闭</div>-->
+                <!--</div>-->
+            <!--</div>-->
+
+        <form name="frmstep1" id="frmstep1">
+        <input type="hidden" name="step" value="1">
+        <div class="ncsc-form-default ncsc-form-wxpay">
+            <div class="ncsc-mod-section">
+                <div class="ncsc-mod-hd" onselectstart="return false;">
+                    <div class="ncsc-title">基本信息</div>
+                </div>
+                <div class="ncsc-mod-bd">
+                    <dl class="image-text">
+                        <dt>法人姓名：</dt>
+                        <dd>{{info.legal_person}}</dd>
+                    </dl>
+                    <dl class="image-text">
+                        <dt>手机号码：</dt>
+                        <dd>
+                            {{info.contacts_phone}}
+                            <!-- <input type="hidden" name="tel" value="19959175787"> -->
+                        </dd>
+                    </dl>
+                    <dl v-if="info.state != 4">
+                        <dt><i class="required">*</i>手机验证码：</dt>
+                        <dd>
+                            <div class="mobile-code">
+                                <input type="text" id="valid_code" class="w300" name="valid_code" v-model="valid_code" autocomplete="off" placeholder="请输入验证码">
+                                <label class="submit-border get-code"  @click="getChangeCode()"><input type="button" id="getCode" class="btn":value="getNewCodeSecond"></label>
+                                <input type="hidden" id="second" value="1">
+                            </div>
+                            <span class="ncsc-form-error" v-if="error.valid_code_error"><label for="business_licence_photo1" class="error"><i class="fa fa-exclamation-circle"></i>请输入验证码</label></span>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt><i class="required">*</i>身份证号码：</dt>
+                        <dd>
+                            <template v-if="info.state == 4">
+                                {{info.idcard}}
+                            </template>
+                            <template v-else>
+                                <input name="idcard" type="text" class="text w300" v-model="info.idcard" maxlength="36" autocomplete="off" placeholder="请输入法人身份证号码">
+                                <span class="ncsc-form-error" v-if="error.idcard_error"><label for="business_licence_photo1" class="error"><i class="fa fa-exclamation-circle"></i>请输入法人身份证号</label></span>
+                                <span class="ncsc-form-error" v-if="error.idcard_format_error"><label for="business_licence_photo1" class="error"><i class="fa fa-exclamation-circle"></i>身份证号格式不正确</label></span>
+                            </template>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt><i class="required">*</i>身份证有效期：</dt>
+                        <dd>
+                            <template v-if="info.state == 4">
+                                {{info.legal_card_deadline}}
+                            </template>
+                            <template v-else>
+                                <qm-checkbox-frame :text="'长期'" class="ncsc-form-custom-checkbox ncsc-form-custom-checkbox-s mr10" v-model='legal_card_deadline_long' @valueChage="showDeadLine"></qm-checkbox-frame>
+                                <input type="text" class="input-add-on w200" name="legal_card_deadline" id="id_validity"
+                                       v-model="info.legal_card_deadline"  readonly="readonly">
+                                <label class="add-on"><i class="fa fa-calendar"></i></label>
+                                <span class="ncsc-form-error" v-if="error.legal_card_deadline_error"><label for="business_licence_photo1" class="error"><i class="fa fa-exclamation-circle"></i>请输入身份证有效期</label></span>
+                            </template>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt><i class="required">*</i>身份证正面照片：</dt>
+                        <dd>
+                            <div class="ncsc-upload-img-item ib-vm">
+                                <input nctype="idcard_front" name="idcard_front1" type="hidden" value="2019/04/20/06091069807237433.jpg">
+                                <div class="ncsc-upload-btn" v-if="!info.idcard_front">
+                                    <a href="javascript:void(0);">
+                                        <input type="file" class="input-file" name="idcard_front" id="idcard_front" @change="localImgLoad($event,'idcard_front')">
+                                        <p><i class="ico-upload"></i>图片上传</p>
+                                    </a>
+                                </div>
+                                <div class="ncsc-upload-img-box" v-if="info.idcard_front">
+                                    <div class="ncsc-upload-avatar js-tips-img">
+                                        <a >
+
+                                                  <img nctype="idcard_front" :src="ImageIp+imagePathConfig.Register+info.idcard_front"  @click="showImg(ImageIp+imagePathConfig.Register+info.idcard_front)"/>
+
+                                    </a>
+                                    </div>
+                                    <div v-if="info.state != 4" class="image-delete" @click="deleteImage('idcard_front')">×</div>
+                                </div>
+                            </div>
+                            <span class="ncsc-form-error" v-if="error.idcard_front_error"><label for="business_licence_photo1" class="error"><i class="fa fa-exclamation-circle"></i>法人身份证正面不能为空</label></span>
+                            <p class="hint">图片不能大于2M</p>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt><i class="required">*</i>身份证反面照片：</dt>
+                        <dd>
+                        <div class="ncsc-upload-img-item ib-vm">
+                                <input nctype="idcard_reverse" name="idcard_reverse1" type="hidden" value="2018/11/20/05960232809669557.jpg">
+                                <div class="ncsc-upload-btn" v-if="!info.idcard_reverse">
+                                    <a href="javascript:void(0);">
+                                        <input type="file" class="input-file" name="idcard_reverse" id="idcard_reverse" @change="localImgLoad($event,'idcard_reverse')">
+                                        <p><i class="ico-upload"></i>图片上传</p>
+                                    </a>
+                                </div>
+                                <div class="ncsc-upload-img-box" v-if="info.idcard_reverse">
+                                    <div class="ncsc-upload-avatar js-tips-img">
+                                 
+                                        <a>
+
+                                                          <img nctype="idcard_reverse" :src="ImageIp+imagePathConfig.Register+info.idcard_reverse" width="138" height="138" @click="showImg(ImageIp+imagePathConfig.Register+info.idcard_reverse)"/>
+
+                                            </a>
+                                    </div>
+                                <div v-if="info.state != 4" class="image-delete" @click="deleteImage('idcard_reverse')">×</div>
+                            </div>
+                            </div>
+                            <span class="ncsc-form-error" v-if="error.idcard_reverse_error"><label for="business_licence_photo1" class="error"><i class="fa fa-exclamation-circle"></i>法人身份证反面不能为空</label></span>
+                            <p class="hint">图片不能大于2M</p>
+                        </dd>
+                    </dl>
+
+                    <dl v-if="info.state != 4">
+                        <dt></dt>
+                        <dd>
+                            <input type="checkbox" v-model="isReadChecked" id="isRead" />
+                            <label class="isReadLabel">
+                                <div>
+                                  <p>
+                                      <span>请您认真阅览后并勾选同意</span>
+                                      <a @click="dialogVisible = true">《银联开通知情同意书》</a>
+                                  </p>
+                                </div>
+                              </label>
+                        </dd>
+                    </dl>
+
+                </div>
+            </div>
+            <div class="bottom">
+                <label class="submit-border">
+                        <div v-if="info.state == 4" class="submit" @click="stepIndex = 2">下一步</div>
+                        <div v-else :class="['submit',isReadChecked ? '':'disabled']" id="goToStep2" @click="submitStep1()">保存并下一步</div>
+                </label>
+            </div>
+        </div>
+    </form>
+    </div>
+
+    <div class="item-publish" v-if="stepIndex == 2">
+            <form name="frmstep2" id="frmstep2" method="post">
+                <input type="hidden" name="step" value="2">
+                <input type="hidden" name="form_submit" value="ok">
+                <div class="ncsc-form-default ncsc-form-wxpay">
+                    <div class="ncsc-mod-section">
+                        <div class="ncsc-mod-hd" onselectstart="return false;">
+                            <div class="ncsc-title">经营信息</div>
+                        </div>
+                        <div class="ncsc-mod-bd">
+                            <dl class="image-text">
+                                <dt>营业名称：</dt>
+                                <dd>{{info.company_name}}</dd>
+                            </dl>
+                            <dl>
+                                <dt><i class="required">*</i>营业地址：</dt>
+                                <dd v-if="info.state == 4">
+                                    {{info.city1Txt}}
+                                </dd>
+                                <dd v-else>
+                                        <qm-json-city  :province_id="info.province_id+''" :city_id="info.city_id+''" :region_id="info.region_id+''" @valueChange="valueChange($event)"></qm-json-city>
+                                        <span class="ncsc-form-error" v-if="error.province_id_error || error.city_id_error || error.region_id_error"><label for="business_licence_photo1" class="error"><i class="fa fa-exclamation-circle"></i>请选择营业地址省市区</label></span>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt><i class="required">*</i>详细地址：</dt>
+                                <dd>
+                                    <template v-if="info.state == 4">
+                                        {{info.road}}{{info.No}}
+                                    </template>
+                                    <template v-else>
+                                        <input name="road" type="text" class="text w200 mr10" v-model="info.road" maxlength="10" placeholder="例：展进巷">道/路
+                                        <input name="No" type="text" class="text w200 mr10 ml20" v-model="info.No" maxlength="6" placeholder="例：60">号/弄
+                                        <input type="hidden" name="license_address_detail">
+                                        <span class="ncsc-form-error" v-if="error.road_error || error.No_error"><label for="business_licence_photo1" class="error"><i class="fa fa-exclamation-circle"></i>请输入详细地址</label></span>
+                                    </template>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>补充地址：</dt>
+                                <dd>
+                                        <template v-if="info.state == 4">{{info.more_address}}</template>
+                                        <input v-else name="more_address" type="text" class="text w400" v-model="info.more_address" maxlength="40" placeholder="可填写地址剩余说明部分">
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt><i class="required">*</i>所属行业：</dt>
+                                <dd v-if="info.state == 4">
+                                    {{info.instudryTxt}}
+                                </dd>
+                                <dd v-else>
+                                        <qm-json-industry :industry_id1="info.instudry1+''" :industry_id2="info.instudry2+''" @valueChange="industryValueChange($event)"></qm-json-industry>
+                                        <input type="hidden" name="instudry">
+                                        <span class="ncsc-form-error" v-if="error.instudry1_error || error.instudry2_error"><label for="business_licence_photo1" class="error"><i class="fa fa-exclamation-circle"></i>请选择所属行业</label></span>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt><i class="required">*</i>营业执照：</dt>
+                                <dd>
+                                    <div class="ncsc-upload-img-item ib-vm">
+                                        <input nctype="business_licence_photo" name="business_licence_photo1" type="hidden" value="2018/11/20/05960232921226717.jpg">
+                                        <div class="ncsc-upload-btn" v-if="!info.business_licence_photo">
+                                            <a href="javascript:void(0);">
+                                                <input type="file" class="input-file" name="business_licence_photo" id="business_licence_photo" @change="localImgLoad($event,'business_licence_photo')">
+                                                <p><i class="ico-upload"></i>图片上传</p>
+                                            </a>
+                                        </div>
+                                        <div class="ncsc-upload-img-box" v-if="info.business_licence_photo">
+                                            <div class="ncsc-upload-avatar js-tips-img">
+                                                <a >
+
+                                                              <img nctype="idcard_front" :src="ImageIp+imagePathConfig.Register+info.business_licence_photo" @click="showImg(ImageIp+imagePathConfig.Register+info.business_licence_photo)" />
+
+                                                </a>
+                                            </div>
+                                        <div v-if="info.state != 4" class="image-delete" @click="deleteImage('business_licence_photo')">×</div>
+                                </div>
+                                    </div>
+                                    <span class="ncsc-form-error" v-if="error.business_licence_photo1_error"><label for="business_licence_photo1" class="error"><i class="fa fa-exclamation-circle"></i>营业执照不能为空</label></span>
+                                    <p class="hint">图片不能大于2M</p>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt><i class="required">*</i>店外照片：</dt>
+                                <dd>
+                                    <div class="ncsc-upload-img-item ib-vm">
+                                        <input nctype="shop_front_photo" name="shop_front_photo1" type="hidden" value="2019/04/20/06091073933167624.jpg">
+                                        <div class="ncsc-upload-btn" v-if="!info.shop_front_photo">
+                                            <a href="javascript:void(0);">
+                                                <input type="file" class="input-file" name="shop_front_photo" id="shop_front_photo"  @change="localImgLoad($event,'shop_front_photo')">
+                                                <p><i class="ico-upload"></i>图片上传</p>
+                                            </a>
+                                        </div>
+                                        <div class="ncsc-upload-img-box" v-if="info.shop_front_photo">
+                                            <div class="ncsc-upload-avatar js-tips-img">
+                                                <a >
+
+                                                              <img nctype="idcard_front" :src="ImageIp+imagePathConfig.Register+info.shop_front_photo"  @click="showImg(ImageIp+imagePathConfig.Register+info.shop_front_photo)" />
+
+                                                </a>
+                                            </div>
+                                            <div v-if="info.state != 4" class="image-delete" @click="deleteImage('shop_front_photo')">×</div>
+                                        </div>
+                                    </div>
+                                    <span class="ncsc-form-error" v-if="error.shop_front_photo1_error"><label for="business_licence_photo1" class="error"><i class="fa fa-exclamation-circle"></i>店外照片不能为空</label></span>
+                                    <p class="hint">图片不能大于2M</p>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt><i class="required">*</i>店内照片：</dt>
+                                <dd>
+                                    <div class="ncsc-upload-img-item ib-vm">
+                                        <input nctype="shop_photo" name="shop_photo1" type="hidden" value="2018/11/20/05960230732538829.jpg">
+                                        <div class="ncsc-upload-btn" v-if="!info.shop_photo">
+                                            <a href="javascript:void(0);">
+                                                <input type="file" class="input-file" name="shop_photo" id="shop_photo" @change="localImgLoad($event,'shop_photo')">
+                                                <p><i class="ico-upload"></i>图片上传</p>
+                                            </a>
+                                        </div>
+                                        <div class="ncsc-upload-img-box" v-if="info.shop_photo">
+                                            <div class="ncsc-upload-avatar js-tips-img">
+                                                <a >
+
+                                                              <img nctype="idcard_front" :src="ImageIp+imagePathConfig.Register+info.shop_photo"  @click="showImg(ImageIp+imagePathConfig.Register+info.shop_photo)"/>
+
+                                                </a>
+                                            </div>
+                                        <div v-if="info.state != 4" class="image-delete"  @click="deleteImage('shop_photo')">×</div>
+                                    </div>
+                                    </div>
+                                    <span class="ncsc-form-error" v-if="error.shop_photo1_error"><label for="business_licence_photo1" class="error"><i class="fa fa-exclamation-circle"></i>店内照片不能为空</label></span>
+                                    <p class="hint">图片不能大于2M</p>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="bottom">
+                        <label class="submit-border">
+                            <div class="back" @click="back()">上一步</div>
+                            <div v-if="info.state == 4" class="submit"  @click="stepIndex = 3">下一步</div>
+                            <div v-else class="submit" id="goToStep3" @click="submitStep2()">保存并下一步</div>
+                    </label>
+                    </div>
+                </div>
+            </form>
+    </div>
+
+    <div class="item-publish " v-if="stepIndex == 3">
+            <form name="frmstep3" id="frmstep3" method="post">
+                <input type="hidden" id="bank_acct_type" value="0">
+                <input type="hidden" name="step" value="3">
+                <div class="ncsc-form-default ncsc-form-wxpay">
+                    <div class="ncsc-mod-section">
+                        <div class="ncsc-mod-hd" onselectstart="return false;">
+                            <div class="ncsc-title">账户信息</div>
+                            <div class="more">
+                                <a href="javascript:;" class="c-orange fs12" id="modifyMsg" :style="{display:info.state != 2 ? 'none' : 'block'}">信息填写有误，修改账户信息</a>
+                            </div>
+                        </div>
+                        <div class="ncsc-mod-bd">
+                        <p class="c-red fs20">请谨慎填写资料信息，同一个账户4个小时内只能认证一次，且最多只能认证5次!!!</p>
+                        <p class="c-gray fs12 mt5">所提供的银行账户必须为借记账户，同时该账户也作为业务开拓之后银联商户向开户费清算资金入账的结算账户。</p>
+                            <dl>
+                                <dt><i class="required">*</i>账户类型：</dt>
+                                <dd>{{info.personal?'个人账户':'公司账户'}}</dd>
+                            </dl>
+                            <dl class="account-type2-relate" v-if="!info.personal">
+                                <dt><i class="required">*</i>开户名称：</dt>
+                                <dd>
+                                    <template v-if="info.state == 4">
+                                        {{info.open_name}}
+                                    </template>
+                                    <template v-else>
+                                        <input name="open_name" type="text" class="text w300" v-model="info.open_name" maxlength="60" autocomplete="off" placeholder="对外经营名称或招牌名称">
+                                        <span class="ncsc-form-error" v-if="error.open_name_error"><label for="business_licence_photo1" class="error"><i class="fa fa-exclamation-circle"></i>请输入开户姓名</label></span>
+                                    </template>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt><i class="required">*</i>银行帐号：</dt>
+                                <dd>
+                                    <template v-if="info.state == 4">
+                                        {{info.bank_account}}
+                                    </template>
+                                    <template v-else>
+                                        <input name="bank_account" type="text" class="text w300" v-model="info.bank_account" maxlength="40"
+                                               placeholder="请输入与“开户名称”同名的银行账号">
+                                        <span class="ncsc-form-error" v-if="error.bank_account_error"><label for="business_licence_photo1" class="error"><i class="fa fa-exclamation-circle"></i>请填写银行账号</label></span>
+                                        <p class="hint">此银行卡号须为法人代表所持</p>
+                                    </template>
+                                </dd>
+                            </dl>
+                            <dl v-if="info.state != 4">
+                                <dt><i class="required">*</i>再次输入银行帐号：</dt>
+                                <dd>
+                                    <input name="bank_account_again" type="text" class="text w300" v-model="info.bank_account_again" maxlength="40"
+                                        placeholder="请再次输入与“开户名称”同名的银行账号" oncopy="return false" onpaste="return false">
+                                    <span class="ncsc-form-error" v-if="error.bank_account_again_error"><label for="business_licence_photo1" class="error"><i class="fa fa-exclamation-circle"></i>请再次输入银行帐号</label></span>
+                                    <span class="ncsc-form-error" v-if="!error.bank_account_again_error && error.bank_account_unequal_error"><label for="business_licence_photo1" class="error"><i class="fa fa-exclamation-circle"></i>两次银行账号不一致</label></span>
+                                </dd>
+                            </dl>
+                                                    <dl>
+                                <dt><i class="required">*</i>开户所在地：</dt>
+                                <dd v-if="info.state == 4">
+                                    {{info.city2Txt}}
+                                </dd>
+                                <dd v-else>
+                                        <qm-json-city  :province_id="info.open_province_id+''" :city_id="info.open_city_id+''" :region_id="-1+''" :isShowRegion="false" @valueChange="openValueChange($event)"></qm-json-city>
+                                        <input type="hidden" name="open_address">
+                                        <span class="ncsc-form-error" v-if="error.open_province_id_error || error.open_city_id_error"><label for="business_licence_photo1" class="error"><i class="fa fa-exclamation-circle"></i>请选择开户所在地</label></span>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt><i class="required">*</i>所属支行：</dt>
+                                <dd>
+                                    <div class="bank-search">
+                                        <template v-if="info.state == 4">
+                                            {{info.sub_branch}}
+                                        </template>
+                                        <template v-else>
+                                            <input name="sub_branch" type="text" class="text w400 mr5" v-model="info.sub_branch" autocomplete="off">
+                                            <a id="btn_search_bank" class="ncsc-btn btn-search" @click="searchBank()">搜索</a>
+                                            <input type="hidden" name="bank_code" value="">
+                                            <div class="search-tip w300" v-if="showBankList">
+                                                <ul class="list-result">
+                                                    <li :data-code="bank.code" v-for="(bank,b) in branchBankLists" @click="setBackCode(bank)">{{bank.bankBranchName}}</li>
+                                                </ul>
+                                            </div>
+
+                                            <el-tooltip placement="right-start" effect="light" popper-class="atooltip" class="mt3">
+                                                <div slot="content" class="toolTipCont">
+                                                    <div class="tip-doubt-con">
+                                                        <div class="tip-txt fs12">
+                                                            <p>可拨打对应银行客服电话，进入人工服务咨询。</p>
+                                                            <br>
+                                                            <p class="c-gray">
+                                                            <div class="c-gray">农业银行	95599 &nbsp;&nbsp;中国银行 95566 </div>
+                                                            <br>
+                                                            <div class="c-gray">工商银行	95588 &nbsp;&nbsp;招商银行 95555 </div>
+                                                            <br>
+                                                            <div class="c-gray">邮政银行	95580 &nbsp;&nbsp;交通银行 95559 </div>
+                                                            <br>
+                                                            <div class="c-gray">建设银行	95533 &nbsp;&nbsp;光大银行 95595 </div>
+                                                            <br>
+                                                            <div class="c-gray">广发银行	95508 &nbsp;&nbsp;民生银行 95568 </div>
+                                                            <br>
+                                                            <div class="c-gray">华夏银行	95577 &nbsp;&nbsp;兴业银行 95561 </div>
+                                                            <br>
+                                                            <div class="c-gray">中信银行	95558 &nbsp;&nbsp;上海浦东发展银行 95528</div>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <p class="lightBlue">
+                                                    <i class="fa fa-question-circle" aria-hidden="true"></i>提示
+                                                </p>
+                                            </el-tooltip>
+
+                                            <span class="ncsc-form-error"  v-if="error.sub_branch_error"><label for="business_licence_photo1" class="error"><i class="fa fa-exclamation-circle"></i>请选择所属支行</label></span>
+                                            <p class="hint">通过搜索有效关键字快速定位支行信息，如“中国招商银行上海东方支行”，通过“东方”有效关键字快速定位支行</p>
+                                        </template>
+                                    </div>
+                                </dd>
+                            </dl>
+                            <dl class="account-type1-relate" v-if="info.personal">
+                                <dt><i class="required">*</i>银行预留手机号：</dt>
+                                <dd v-if="info.state == 4">
+                                    {{info.reserved_tel}}
+                                </dd>
+                                <dd v-else>
+                                        <input name="reserved_tel" type="text" class="text w200" v-model="info.reserved_tel" maxlength="30" placeholder="请填写银行预留手机号" autocomplete="off">
+                                        <span class="ncsc-form-error" v-if="error.reserved_tel_error"><label for="business_licence_photo1" class="error"><i class="fa fa-exclamation-circle"></i>请填写银行预留手机号</label></span>
+                                </dd>
+                            </dl>
+                            <dl class="account-type1-relate" v-if="info.personal">
+                                <dt><i class="required">*</i>法人手持证件照：</dt>
+                                <dd>
+                                    <div class="ncsc-upload-img-item ib-vm">
+                                        <input nctype="bank_photo" name="bank_photo" type="hidden" >
+                                        <div class="ncsc-upload-btn" v-if="!info.bank_photo || info.bank_photo == ''">
+                                            <a >
+                                                <input type="file" class="input-file" name="bank_photo" id="bank_photo"  @change="localImgLoad($event,'bank_photo')">
+                                                <p><i class="ico-upload"></i>图片上传</p>
+                                            </a>
+                                        </div>
+                                        <div class="ncsc-upload-img-box" v-if="info.bank_photo && info.bank_photo != ''">
+                                            <div class="ncsc-upload-avatar js-tips-img">
+                                                <a><img nctype="bank_photo" :src="ImageIp+imagePathConfig.Register+info.bank_photo" @click="showImg(ImageIp+imagePathConfig.Register+info.bank_photo)"></a>
+                                            </div>
+                                            <div v-if="info.state != 4" class="image-delete" @click="deleteImage('bank_photo')">×</div>
+                                        </div>
+                                    </div>
+                                    <span class="ncsc-form-error" v-if="error.bank_photo_error"><label for="business_licence_photo1" class="error"><i class="fa fa-exclamation-circle"></i>请上传一张法人手持身份证自拍照</label></span>
+                                        <div class="hint" v-if="info.state != 4">请上传一张法人手持身份证的自拍照，需清晰可见，图片不能大于2M
+                                            <el-tooltip placement="right-start" effect="light" popper-class="atooltip" class="mt3">
+                                                <div slot="content" class="toolTipCont">
+                                                        <img src="@/assets/seller/images/seller/example/identity3.jpg" alt="" >
+                                                </div>
+
+                                                <p class="lightBlue">
+                                                <i class="fa fa-question-circle" aria-hidden="true"></i>示例
+                                                </p>
+                                            </el-tooltip>
+                                        </div>
+                                    </dd>
+                            </dl>
+                            <dl class="account-type2-relate" v-if="!info.personal">
+                                <dt><i class="required">*</i>开户许可证：</dt>
+                                <dd>
+                                    <div class="ncsc-upload-img-item ib-vm">
+                                        <input name="account_permit1" type="hidden" value="2019/04/20/06091074332005400.jpg">
+                                        <div class="ncsc-upload-btn" v-if="!info.bank_photo">
+                                            <a href="javascript:void(0);">
+                                                <input type="file" class="input-file" name="account_permit" id="account_permit" @change="localImgLoad($event,'bank_photo')">
+                                                <p><i class="ico-upload"></i>图片上传</p>
+                                            </a>
+                                        </div>
+                                        <div class="ncsc-upload-img-box" v-if="info.bank_photo">
+                                            <div class="ncsc-upload-avatar js-tips-img">
+                                                <a >
+
+                                                              <img  :src="ImageIp+imagePathConfig.Register+info.bank_photo"  @click="showImg(ImageIp+imagePathConfig.Register+info.bank_photo)"/>
+
+                                                </a>
+                                            </div>
+                                            <div v-if="info.state != 4" class="image-delete" @click="deleteImage('bank_photo')">×</div>
+                                    </div>
+                                    </div>
+                                    <span class="ncsc-form-error" v-if="error.account_permit_error"><label for="business_licence_photo1" class="error"><i class="fa fa-exclamation-circle"></i>请上传开户许可证</label></span>
+                                <p class="hint" v-if="info.state != 4">请上传一张开户许可证，图片不能大于2M</p>
+                            </dd>
+                            </dl>
+                            <dl class="account-type2-relate" v-if="!info.personal">
+                                <dt><i class="required">*</i>对公账户认证：</dt>
+                                <dd>
+                                    <a v-if="info.state == 0 && !showValidate" href="javascript:;" class="ncsc-btn minw200" id="beginVerify" @click="submitStep3()">开始认证</a>
+
+                                        <div class="ncsc-form-sub-box verify-box" v-if="showValidate || info.state == 1">
+                                            <dl class="ncsc-form-sub">
+                                                <dt><i class="required">*</i>收到的金额：</dt>
+                                                <dd>
+                                                    <input name="verify_money" type="text" class="text w300  verify-input" v-model="info.verify_money" placeholder="请输入收到的打款金额">
+                                                    <span class="ncsc-form-error" v-if="error.verify_money_error"><label for="business_licence_photo1" class="error"><i class="fa fa-exclamation-circle"></i>请输入收到的打款金额</label></span>
+                                                </dd>
+                                            </dl>
+                                            <dl class="ncsc-form-sub">
+                                                <dt><i class="required">*</i>验证码：</dt>
+                                                <dd>
+                                                    <input name="verify_code" type="text" class="text w300  verify-input" v-model="info.verify_code" placeholder="请输入收到的验证码">
+                                                    <span class="ncsc-form-error" v-if="error.verify_code_error"><label for="business_licence_photo1" class="error"><i class="fa fa-exclamation-circle"></i>请输入收到的验证码</label></span>
+                                                    <p class="hint">未收到验证款项及验证码？<a class="c-orange" id="btn_company_again" @click="reauthentication()">重新认证</a></p>
+                                                </dd>
+                                            </dl>
+                                        </div>
+                                        <p class="c-orange "  v-if="info.state >= 2">已认证</p>
+                                  <p class="hint">我们将在您的对公账户打一笔随机金额和验证码用于验证（届时请登录网银进行查收确认）<span class="c-orange ml5">注意：非查看手机短信</span></p>
+                                  <p class="c-red fs12">请核实资料信息填写无误，再进行对公账户认证，一个用户仅支持进行5次对公认证</p>
+                                    </dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="bottom">
+                        <label class="submit-border">
+                            <div class="back" @click="back()">上一步</div>
+                            <template v-if="info.state != 4">
+                                <div class="submit" id="saveBtn" @click="vidateCompany() " v-if="!info.personal">保存并下一步</div>
+                                <div class="submit" id="saveBtn" @click="submitStep3() " v-if="info.personal">保存并下一步</div>
+                            </template>
+                        </label>
+                    </div>
+                </div>
+            </form>
+    </div>
+    <template v-if="stepIndex == 4">
+            <!--  -->
+        <div class="item-publish " v-if="info.state == 4">
+            <div class="alert-hint">
+                <!-- <img :src="getImage('state_4')"> -->
+                <i class="ico-success"></i>
+                <p class="mt30 S6 c-gray" v-if="info.is_first_open_onlinepay">恭喜，您的线上支付已通过审核</p>
+                <p class="mt30 S6 c-gray" v-if="!info.is_first_open_onlinepay">恭喜，您的线上支付申请审核已通过一审</p>
+                <p class="mt5 c-gray" v-if="!info.is_first_open_onlinepay">待人工复审后即可开启线上支付，请耐心等待</p>
+                <div class="msg mt20" v-if="info.is_first_open_onlinepay">商户号：{{info.mer_no}}</div>
+                <p class="mt15">
+                    <a href="javascript:;" @click="stepIndex=1" class="c-orange">查看申请信息 &raquo;</a>
+                </p>
+            </div>
+        </div>
+        <div class="item-publish " v-else-if="info.state == 5">
+            <div class="alert-hint">
+                <img :src="getImage('state_5')">
+                <p class="mt30 S6">您的线上支付申请，审核失败</p>
+                <p class="mt5">审核失败原因：{{info.fail_reason}}</p>
+                <p class="mt30"><a @click="stepIndex=1">修改申请资料，重新申请&gt;&gt;</a></p>
+
+            </div>
+        </div>
+        <div class="item-publish " v-else>
+            <div class="alert-hint">
+                <img :src="getImage('state_0')">
+                <p class="mt30" v-if="info.state != 3">若您未签订协议，可复制该地址打开进行协议签订<br>链接地址：<a :href="agreeMentSignUrl" target="_blank" @click="openUrl()">点击打开</a></p>
+                <p class="mt30">如您已签订协议，请等待审核，待审核通过即可使用线上支付<br>审核结果将以短信通知您，请您耐心等待</p>
+            </div>
+        </div>
+    </template>
+
+    <qm-tips :tipsVisible="dialog1" :showCancel="false" :width="'420px'" @close="dialog1 = false"  @confirm="dialog1 = false">
+        <template slot="title">{{dialogTitle1}}</template>
+        <template slot="content">{{dialogMessage1}}</template>
+    </qm-tips>
+
+  <qm-dialog :dialogVisible="dialogVisible" :width="'583px'" @close="dialogVisible =false">
+    <template slot="title">银联开通知情同意书</template>
+    <template slot="content">
+      <div  class="text" >
+        <p><span>平台线上支付由银联监管，银联对每笔线上交易订单收取手续费，手续费</span></p>
+        <p><span>具体如下：</span></p>
+        <p><span>&nbsp;&nbsp; &nbsp; 微信手续费：0.3%(从{{newWxpayRateBeginDate}}起微信支付服务费汇率从0.63%调整为0.3%)</span></p>
+        <p><span>&nbsp;&nbsp; &nbsp; 支付宝手续费：0.6%</span></p>
+        <p><span>&nbsp;&nbsp; &nbsp; 微信小程序：0.3%</span></p>
+        <p><span>总额在T+1工作日后内到账（预计16：30左右）。交易当日的退款将原路</span></p>
+        <p><span>退回，银行不办理非交易当日的退款业务。&nbsp; </span></p>
+      </div>
+      <div id="isAddSuccess" class="text">
+        <input type="checkbox" v-model="isReadChecked" class="isAddSuccess">
+        <label for="isAddSuccess" @click="isReadChecked = !isReadChecked">
+          <span>我已知晓并同意以上内容</span>
+        </label>
+      </div>
+      <div class="successDiv" >
+        <button class="successBtn" :class="isReadChecked?'active':''" @click="agree()">同意</button>
+      </div>
+    </template>
+  </qm-dialog>
+
+        <el-dialog
+        :visible.sync="dialogVisibleImage"
+        :lock-scroll="modalAppendToBody"
+        :width="imgWidth + 20 + 'px'"
+        :close-on-click-modal = "closeOnClickModal"
+        customClass="show-image"
+        v-dialogDrag>
+            <template v-if="hasImage">
+                <img :src="imgUrl" style="max-width: 1000px;"/>
+                <div class="closeDiv">
+                    <div id="lightbox-container-image-data">
+                        <div id="lightbox-image-details">
+                            <span id="lightbox-image-details-caption" style="display: none;"></span>
+                            <span id="lightbox-image-details-currentNumber" style="display: none;"></span>
+                        </div>
+                        <div id="lightbox-secNav">
+                            <a id="lightbox-secNav-btnClose" @click="dialogVisibleImage = false">
+                                <img src="//static.shenbd.com/lib/js/lightbox/img/lightbox-btn-close.gif">
+                            </a>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            
+        </el-dialog>
+
+        <el-dialog
+        :visible.sync="dialogVisibleImageFalse"
+        :lock-scroll="modalAppendToBody"
+        width="250px"
+        customClass="show-image">
+            
+            <div class="loader">
+                    <img src="//static.shenbd.com/lib/js/lightbox/img/lightbox-ico-loading.gif">
+            </div>
+        </el-dialog>
+</div>

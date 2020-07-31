@@ -1,0 +1,13 @@
+<div class="qm-store-class-index">
+    <qm-tabs :tabs="tabs" :blod="false" class="store-tabs" :marginRight="20" @routerData="routerData($event)">
+    </qm-tabs>
+
+    <div class="menu-more">
+        <a class="ncsc-btn ncsc-btn-orange" @click="addAdvertis" v-if="showAddBtn">添加广告</a>
+        <a class="ncsc-btn ncsc-btn-orange-rim" v-else  @click="back()">返回</a>
+    </div>
+    <div class="clear"></div>
+
+    
+    <router-view />
+</div>

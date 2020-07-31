@@ -1,0 +1,100 @@
+
+.list-summary{font-size: 0;}
+.list-summary li{ display: inline-block; padding: 0 20px; vertical-align: top; font-size: 14px;}
+.list-summary .num{ font-size: 26px; margin-top: 5px;}
+.list-summary .name{ color:#757575;}
+.list-summary .count{ margin-top: 10px;}
+.list-summary .tip-doubt{ margin-bottom: 3px;}
+.fs14{@extend .S7;}
+.tip-doubt{position: relative; display: inline-block; vertical-align: middle; margin:0 5px;}
+.tip-doubt .tip-tit{font-size: 12px; color:#0093fa; line-height: 18px;}
+.tip-doubt .ico-doubt{display: inline-block; vertical-align: middle; width: 13px; height: 13px; background: url(~@/assets/seller/images/seller/ncsc_bg_img.png) -160px -460px no-repeat; margin-right: 4px; margin-bottom: 3px;}
+.tip-doubt .tip-doubt-con{position: absolute; display: none; left: 50px; z-index: 500;}
+.tip-doubt:hover{cursor: pointer;}
+.tip-doubt:hover .tip-doubt-con{display: block;}
+.tip-doubt-img .tip-doubt-con{top:-7px; background: #fff; padding:10px; border:1px solid #0093fa; border-radius:5px; }
+.tip-doubt-img .tip-doubt-con:before, .tip-doubt-img .tip-doubt-con:after{content:''; display:block;overflow:hidden;position:absolute;width:0;height:0;font-size:0;border-bottom:6px dashed transparent;border-left:6px dashed transparent;border-top:6px dashed transparent;border-right-style:solid;border-right-width:6px; top: 9px;}
+.tip-doubt-img .tip-doubt-con:before{left:-12px;color:#0093fa}
+.tip-doubt-img .tip-doubt-con:after{z-index:2;left:-11px;color:#fff}
+.tip-doubt-word .tip-doubt-con{width: 200px; top:-7px; text-align: left; word-break: break-all;}
+.tip-doubt-word .tip-doubt-con .tip-txt{padding:5px 10px; display: inline-block; position: relative; border-radius:5px; background: #fff; border:1px solid #0093fa}
+.tip-doubt-word .tip-doubt-con .tip-txt:before, .tip-doubt-word .tip-doubt-con .tip-txt:after{content:''; display:block;overflow:hidden;position:absolute;width:0;height:0;font-size:0;border-bottom:6px dashed transparent;border-left:6px dashed transparent;border-top:6px dashed transparent;border-right-style:solid;border-right-width:6px; top: 9px;}
+.tip-doubt-word .tip-doubt-con .tip-txt:before{left:-12px;color:#eee; color:#0093fa}
+.tip-doubt-word .tip-doubt-con .tip-txt:after{z-index:2;left:-11px;color:#fff}
+.tip-doubt-word.tip-notit .tip-doubt-con{ left: 25px;}
+.tip-doubt.tip-l .tip-doubt-con{ width: 600px;}
+.tip-doubt-form-pay .tip-doubt-con{top: -23px;}
+.tip-doubt-form-rates{margin-left: 5px; margin-right: 5px;}
+.tip-doubt-form-rates .tip-doubt-con{left: -235px; top: -205px;}
+.tip-doubt-word .tip-doubt-con{width: 200px; top:-7px; text-align: left; word-break: break-all;}
+.tip-doubt-word .tip-doubt-con .tip-txt{padding:5px 10px; display: inline-block; position: relative; border-radius:5px; background: #fff; border:1px solid #0093fa}
+.tip-doubt-word .tip-doubt-con .tip-txt:before, .tip-doubt-word .tip-doubt-con .tip-txt:after{content:''; display:block;overflow:hidden;position:absolute;width:0;height:0;font-size:0;border-bottom:6px dashed transparent;border-left:6px dashed transparent;border-top:6px dashed transparent;border-right-style:solid;border-right-width:6px; top: 9px;}
+.tip-doubt-word .tip-doubt-con .tip-txt:before{left:-12px;color:#eee; color:#0093fa}
+.tip-doubt-word .tip-doubt-con .tip-txt:after{z-index:2;left:-11px;color:#fff}
+.tip-doubt-word.tip-notit .tip-doubt-con{ left: 25px;}
+.tip-doubt.tip-l .tip-doubt-con{ width: 600px;}
+.tip-doubt-word.tip-notit .tip-doubt-con{ left: 25px;}
+.tip-doubt .tip-tit{font-size: 12px; color:#0093fa; line-height: 18px;}
+.tip-doubt .ico-doubt{display: inline-block; vertical-align: middle; width: 13px; height: 13px; background: url(~@/assets/seller/images/seller/ncsc_bg_img.png) -160px -460px no-repeat; margin-right: 4px; margin-bottom: 3px;}
+.tip-doubt .tip-doubt-con{position: absolute; display: none; left: 50px; z-index: 500;}
+.tip-doubt:hover{cursor: pointer;}
+.tip-doubt:hover .tip-doubt-con{display: block;}
+.tip-doubt-img .tip-doubt-con{top:-7px; background: #fff; padding:10px; border:1px solid #0093fa; border-radius:5px; }
+.tip-doubt-img .tip-doubt-con:before, .tip-doubt-img .tip-doubt-con:after{content:''; display:block;overflow:hidden;position:absolute;width:0;height:0;font-size:0;border-bottom:6px dashed transparent;border-left:6px dashed transparent;border-top:6px dashed transparent;border-right-style:solid;border-right-width:6px; top: 9px;}
+.tip-doubt-img .tip-doubt-con:before{left:-12px;color:#0093fa}
+.tip-doubt-img .tip-doubt-con:after{z-index:2;left:-11px;color:#fff}
+.tip-doubt-word .tip-doubt-con{width: 200px; top:-7px; text-align: left; word-break: break-all;}
+.tip-doubt-word .tip-doubt-con .tip-txt{padding:5px 10px; display: inline-block; position: relative; border-radius:5px; background: #fff; border:1px solid #0093fa}
+.tip-doubt-word .tip-doubt-con .tip-txt:before, .tip-doubt-word .tip-doubt-con .tip-txt:after{content:''; display:block;overflow:hidden;position:absolute;width:0;height:0;font-size:0;border-bottom:6px dashed transparent;border-left:6px dashed transparent;border-top:6px dashed transparent;border-right-style:solid;border-right-width:6px; top: 9px;}
+.tip-doubt-word .tip-doubt-con .tip-txt:before{left:-12px;color:#eee; color:#0093fa}
+.tip-doubt-word .tip-doubt-con .tip-txt:after{z-index:2;left:-11px;color:#fff}
+.tip-doubt-word.tip-notit .tip-doubt-con{ left: 25px;}
+.tip-doubt.tip-l .tip-doubt-con{ width: 600px;}
+.tip-doubt-form-pay .tip-doubt-con{top: -23px;}
+.tip-doubt-form-rates{margin-left: 5px; margin-right: 5px;}
+.tip-doubt-form-rates .tip-doubt-con{left: -235px; top: -205px;}
+.tip-doubt-word .tip-doubt-con .tip-txt{padding:5px 10px; display: inline-block; position: relative; border-radius:5px; background: #fff; border:1px solid #0093fa}
+.tip-doubt-word .tip-doubt-con .tip-txt:before, .tip-doubt-word .tip-doubt-con .tip-txt:after{content:''; display:block;overflow:hidden;position:absolute;width:0;height:0;font-size:0;border-bottom:6px dashed transparent;border-left:6px dashed transparent;border-top:6px dashed transparent;border-right-style:solid;border-right-width:6px; top: 9px;}
+.tip-doubt-word .tip-doubt-con .tip-txt:before{left:-12px;color:#eee; color:#0093fa}
+.tip-doubt-word .tip-doubt-con .tip-txt:after{z-index:2;left:-11px;color:#fff}
+.c-gray{color:#757575}
+.fs12{@extend .S8}
+.table-transaction-online thead th{ white-space: nowrap;}
+.table-transaction-online th, .table-transaction-online td{ font-size: 12px;}
+.table-transaction-online td{ padding:10px;}
+.summary-box{ padding:15px 0; box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);text-align:center;}
+.ncsc-btn-orange-rim{border-color:#ff8519; color:#ff8519}
+.ncsc-btn-orange-rim:hover{background: #ff8519; color:#fff;}
+.summary-diliveryman .list-summary {text-align: center;}
+.info-box .pic, .info-box .detail{display: table-cell; vertical-align: top;}
+.info-box .pic{padding-right: 15px; position: relative;}
+.sort{display: inline-block; position: relative; padding-right: 15px;}
+.sort:hover{text-decoration: none;}
+.sort .ico-top, .sort .ico-bottom{width: 10px; height: 5px; position: absolute; right: 0; top: 50%; background: url(~@/assets/seller/images/seller/ncsc_bg_img.png) -165px -490px no-repeat;}
+.sort .ico-top{margin-top: -6px;}
+.sort .ico-bottom{margin-top: 1px; background-position: -165px -500px;}
+.sort.sort-up, .sort.sort-down{color:#ff8519;}
+.sort.sort-up .ico-top{background-position: -180px -490px;}
+.sort.sort-down .ico-bottom{background-position: -180px -500px;}
+.ncsc-btn-orange{background-color: #ff8519; border-color:#ff8519; color:#fff;}
+.ncsc-btn-orange:hover{background-color: #ef7101; border-color:#ef7101; color:#fff;}
+.comfirm {
+  padding-bottom: 20px;
+  font-size: 16px;
+  text-align: center;
+  max-width: 500px;
+  word-break: break-all;
+}
+.cancle{
+  margin: 0 10px;
+  min-width: 90px;
+  border-radius: 15px;
+}
+.qm-store-class-base{
+  width: 960px!important;
+}
+.txt-hide-nowrap {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

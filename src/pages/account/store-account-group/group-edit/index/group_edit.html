@@ -1,0 +1,45 @@
+<div class="ncsc-form-default">
+    <form>
+        <dl>
+            <dt>
+                <i class="required">*</i>组名称：
+            </dt>
+            <dd>
+                <input type="text" class="w200 groupName"  v-model="GroupInfo.group_name" @keyup.enter='submit' @keyup="showChange" />
+                <input type="text" style="display: none">
+                <span></span>
+                <label class="error" :hidden="Show"><i class="fa fa-exclamation-circle"></i>{{errorMsg}}</label>
+                <p class="hint">设定权限组名称，方便区分权限类型。</p>
+            </dd>
+        </dl>
+        <dl>
+            <dt>
+                <i class="required">*</i>权限:
+            </dt>
+            <dd>
+                <div class="ncsc-account-all">
+                    <input type="checkbox" id="btn_select_all" v-model='checkboxAll' class="checkbox"    @change='checkedAll()' >
+                    <label for="btn_select_all">全选</label>
+                    <label for="seller_group_name" class="error" :hidden="PowerShow">请选择权限</label>
+                </div>
+                <div class="ncsc-account-container" v-for='(item,m,i) in getMetaData' :key='i'>
+                    <h4>
+                        <input type="checkbox" :id="m" class="checkbox "  :checked="item.Checked1"  ref="checkboxListH4"  nctype="btn_select_module" @change="PowerCheckedAll($event,item,m)">
+                        <label :for="m">{{item.name}}</label>
+                    </h4>
+                    <ul class="ncsc-account-container-list">
+                        <li style="width: 33%" v-for='(item2,m2) in item.child'>
+                            <input type="checkbox"  class="checkbox  " ref="checkboxList" :checked="item2.Checked2" :value="item2.act" :id="item2.act" @change='PowerList($event,item2,item,m)'>
+                            <label :for="item2.act">{{item2.name}}</label>
+                        </li>
+                    </ul>
+                </div>
+            </dd>
+        </dl>
+        <div class="bottom">
+            <label class="submit-border">
+                <input type="button" class="submit" value="提交设置" @click='submit'>
+            </label>
+        </div>
+    </form>
+</div>

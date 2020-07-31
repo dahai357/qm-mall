@@ -1,0 +1,149 @@
+input[type="text"], input[type="password"], input[type="tel"], input[type="time"], input[type="date"], input[type="number"] {
+  line-height: 30px;
+  color: #212121;
+  background-color: #FFF;
+  vertical-align: middle;
+  display: inline-block;
+  height: 30px;
+  padding: 0 10px;
+  border: solid 1px #ddd;
+  outline: 0 none;
+  box-sizing: border-box;
+}
+.w300 {
+  width: 300px !important;
+}
+input {
+  font-size: 14px;
+  border-radius: 5px;
+}
+.mobile-code .get-code {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  margin-top: -10px;
+  line-height: 1;
+  font-size: 12px;
+  border-radius: 5px;
+  color: #757575;
+}
+.mobile-code .get-code input {
+  background: none;
+  border: none;
+  line-height: 20px;
+  height: 20px;
+  font-size: 12px;
+  display: block;
+  padding: 0 5px;
+  background-color: #ddd;
+}
+.mobile-code {
+  position: relative;
+  display: inline-block;
+}
+.tabmenu {
+  width: 100%;
+  height: 40px;
+  display: block;
+  position: relative;
+  z-index: 99;
+  margin-bottom: 30px;
+}
+.summary-box {
+  padding: 15px 0;
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+  position: relative;
+}
+.list-summary .num {
+  font-size: 26px;
+  margin-top: 5px;
+}
+.c-orange {
+  color: #ff8519;
+}
+.list-summary .name {
+  color: #757575;
+}
+.summary-box .dada-recharge {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  margin-top: -15px;
+  border-radius: 0;
+  padding: 0 15px;
+}
+.red {
+  color: #DD5A43 !important;
+}
+.c-gray {
+  color: #757575;
+}
+.green {
+  color: #69AA46 !important;
+}
+.ncsc-btn-orange-rim:hover{
+  color:#fff;
+}
+#goRecharge:hover{
+  color:#fff;
+}
+.dialog-dada-notice .info {
+  max-height: 500px;
+  overflow-y: auto;
+}
+.dialog-agreement { position: fixed; z-index: 9999; left: 0; right: 0; top: 0; bottom: 0; display: none;}
+.dialog-agreement .dialog-in { position: absolute; width: 700px; background: #fff; left: 50%; margin-left: -310px; top: 50%; }
+.dialog-agreement .dialog-con { padding: 20px; border: 2px solid #eee; border-top-color: #ff8519; }
+.dialog-agreement .dialog-hd .dialog-tit { font-size: 16px; font-weight: bold; }
+.dialog-agreement .dialog-hd .dialog-close { font: lighter 24px/24px Verdana; color: #999; text-align: center; width: 24px; height: 24px; position: absolute; right: 15px; top: 10px; cursor: pointer; }
+.dialog-agreement .dialog-hd .dialog-close:hover { color: #ff8519; }
+.dialog-agreement .dialog-hd .dialog-close.disabled { cursor: default; }
+.dialog-agreement .dialog-hd .dialog-close.disabled:hover { color: #999; }
+.dialog-agreement .dialog-bd { padding: 0 5px; }
+.dialog-agreement .dialog-bd p { margin-top: 10px; }
+.dialog-agreement .btn-agree { display: block; background: #ff8519; width: 200px; text-align: center; font-size: 16px; line-height: 36px; color: #fff; border-radius: 5px; margin: 0 auto;}
+.dialog-agreement .btn-agree:hover { background: #ef7101; text-decoration: none; }
+.dialog-agreement .btn-agree .tip{ display: none;}
+.dialog-agreement .btn-agree.disabled { background: #ddd; cursor: default; }
+.dialog-agreement .btn-agree.disabled:hover { background: #ddd; }
+.dialog-dada-notice .dialog-mask{ content:' '; position: absolute; left: 0; right: 0; top: 0; bottom: 0; background: #000; opacity: .5; filter: alpha(opacity = 50); z-index: -1;}
+.dialog-dada-notice .dialog-in{ margin-top: -284px;}
+.dialog-dada-notice .dialog-hd{ margin-bottom: 10px;}
+.dialog-dada-notice .info{ max-height: 500px; overflow-y:auto;}
+.ncsc-form-error{
+  color:red;
+  font-size:12px;
+  margin-left: 5px;
+}
+.industry-choose{
+  display:inline-block;
+}
+#before_apply{
+  text-align: center;
+  margin-top:120px;
+}
+.summary-box{
+  margin-top: 30px;
+}
+.list-summary li {
+  display: inline-block;
+  padding: 0 20px;
+  vertical-align: top;
+  font-size: 14px;
+}
+.alert-hint .msg {
+  background: #fff3e7;
+  display: inline-block;
+  width: 40%;
+  padding: 15px;
+}
+.el-dialog,.phone-bind{
+  margin-top:25vh!important;
+}
+.norecord .norecord-txt {
+  margin-top: 30px;
+  color: #757575;
+}
+#goRecharge{
+  font-size:14px;
+}

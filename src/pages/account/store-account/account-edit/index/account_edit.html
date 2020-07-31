@@ -1,0 +1,34 @@
+<div class="ncsc-form-default">
+    <div>
+        <form class="account-edit-form">
+          <dl>
+            <dt>
+              <b>*</b><span>店员姓名：</span>
+            </dt>
+            <dd>
+              <input type="text" maxlength="8" class="w250 boxtext" v-model.trim='sellerMark'/>
+              <label class="error" :hidden='sellerMarkShow'><i class="fa fa-exclamation-circle"></i>请填写店员姓名</label>
+            </dd>
+          </dl>
+            <dl>
+                <dt>
+                    <b>*</b><span>app登录手机号码：</span>
+                </dt>
+                <dd><span>{{name}}</span></dd>
+            </dl>
+            <dl>
+                <dt><b>*</b><span>账号组：</span></dt>
+                <dd> <select name="" id="" @change="changeSelected($event)">
+                        <option v-for="item in GroupList" :value="item.group_id"
+                            :selected='groupId==item.group_id?true:false'>{{item.group_name}}</option>
+                    </select></dd>
+            </dl>
+
+            
+        </form>
+        <div class="bottom">
+            <label class="submit-border"><input id="submit_button" @click="submit" type="button" value="提交"
+                    class="submit"></label>
+        </div>
+    </div>
+</div>

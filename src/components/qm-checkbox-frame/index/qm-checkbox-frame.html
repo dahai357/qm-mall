@@ -1,0 +1,14 @@
+<div>
+        <template v-if="!disabled && size == 'normal'">
+                <div :class="value?'checkbox-frame-select':'checkbox-frame'" @click="changeSelect($event)"></div>
+                <label @click="changeSelect">{{text}}</label>
+        </template>
+        <template v-if="!disabled && size == 'large'">
+                <div :class="value?'checkbox-frame-select-large':'checkbox-frame-large'" @click="changeSelect($event)" id="large"></div>
+                <label @click="changeSelect" class="large-label">{{text}}</label>
+        </template>
+        <template v-if="disabled">
+                <div :class="value?'checkbox-frame-select-disabled':'checkbox-frame-disabled'" id="disabled"></div>
+                <label @click="changeSelect" class="large-label">{{text}}</label>
+        </template >
+</div>

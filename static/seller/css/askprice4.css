@@ -1,0 +1,334 @@
+.ncsc-album-intro .album-covers {
+    background-color: #fff;
+    border: 1px solid #e6e6e6;
+    display: table-cell;
+    height: 48px;
+    left: 0;
+    line-height: 0;
+    overflow: hidden;
+    position: absolute;
+    text-align: center;
+    top: 12px;
+    vertical-align: middle;
+    width: 48px;
+    z-index: 1;
+}
+.ncsc-album-intro .album-covers img {
+    max-height: 48px;
+    max-width: 48px;
+}
+.ncsc-album-intro .album-covers i {
+    color: #ddd;
+    font-size: 24px;
+    line-height: 48px;
+}
+.ncsc-album-intro .album-name {
+    color: #27a9e3;
+    font: bold 14px/20px "microsoft yahei";
+    height: 20px;
+    margin-bottom: 2px;
+    width: 75%;
+}
+.ncsc-album-intro .album-info {
+    color: #999;
+    font: 12px/16px "microsoft yahei";
+    height: 32px;
+    overflow: hidden;
+    width: 75%;
+}
+.ncsc-album, .ncsc-picture-list {
+    overflow: hidden;
+    text-align: left;
+}
+.ncsc-album ul, .ncsc-picture-list ul {
+    clear: both;
+    font-size: 0;
+    margin: 0 0 -1px -1px;
+    width: 100%;
+}
+.ncsc-album li, .ncsc-picture-list li {
+    border-color: #e6e6e6;
+    border-style: solid;
+    border-width: 0 0 1px 1px;
+    display: inline-block;
+    height: 320px;
+    letter-spacing: normal;
+    position: relative;
+    vertical-align: top;
+    width: 190px;
+    word-spacing: normal;
+    margin-left: 35px;
+    margin-top: 35px;
+    z-index: 1;
+}
+.ncsc-album li, .ncsc-picture-list li {
+}
+.ncsc-album li.hover, .ncsc-picture-list li.hover {
+    z-index: 2;
+}
+.ncsc-album li dl, .ncsc-picture-list li dl {
+    font-size: 12px;
+    height: 320px;
+    left: 0;
+    padding: 14px;
+    position: absolute;
+    top: 0;
+    width: 162px;
+    z-index: 1;
+}
+.ncsc-album li.hover dl, .ncsc-picture-list li.hover dl {
+    background-color: #e6e6e6;
+    border: 1px solid #ccc;
+    left: -1px;
+    top: -1px;
+}
+.ncsc-album li dl dt, .ncsc-picture-list li dl dt {
+    height: 185px;
+    width: 160px;
+}
+.ncsc-album li dl dt .covers, .ncsc-picture-list li dl dt .picture {
+    border: 1px solid #fafafa;
+    height: 160px;
+    width: 160px;
+}
+.ncsc-album li dl dt .covers a, .ncsc-picture-list li dl dt .picture a {
+    background-color: #fff;
+    display: table-cell;
+    height: 160px;
+    line-height: 0;
+    overflow: hidden;
+    text-align: center;
+    vertical-align: middle;
+    width: 160px;
+}
+.ncsc-album li dl dt .covers a img, .ncsc-picture-list li dl dt .picture a img {
+    max-height: 160px;
+    max-width: 160px;
+}
+.ncsc-album li dl dt .covers a i {
+    color: #aaa;
+    font-size: 64px;
+    text-decoration: none;
+}
+.ncsc-album li dl dt .covers a:hover i {
+    color: #27a9e3;
+}
+.ncsc-album li dl dt h3 {
+    color: #555;
+    font-size: 14px;
+    font-weight: lighter;
+    height: 20px;
+    line-height: 20px;
+    margin: 5px auto;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 150px;
+}
+.ncsc-album li dl dt h3 a {
+    color: #27a9e3;
+}
+.ncsc-picture-list li dl dt .editInput1 {
+    background-color: transparent;
+    border: 0 none;
+    color: #555;
+    font-size: 12px;
+    font-weight: bold;
+    height: 20px;
+    left: 15px;
+    line-height: 20px;
+    position: absolute;
+    top: 180px;
+    width: 140px;
+    z-index: 1;
+}
+.ncsc-picture-list li dl dt .editInput2 {
+    border: 1px solid #75b9f0;
+    box-shadow: 0 0 0 2px rgba(82, 168, 236, 0.15);
+    color: #333;
+    font-size: 12px;
+    height: 18px;
+    left: 15px;
+    line-height: 18px;
+    outline: 0 none;
+    padding: 1px 3px;
+    position: absolute;
+    top: 180px;
+    width: 152px;
+    z-index: 2;
+}
+.ncsc-picture-list li dl dt .checkbox {
+    left: 15px;
+    position: absolute;
+    top: 15px;
+    z-index: 2;
+}
+.ncsc-picture-list li dl dt span {
+    font-size: 12px;
+    height: 16px;
+    line-height: 16px;
+    position: absolute;
+    right: 17px;
+    text-align: center;
+    top: 182px;
+    vertical-align: middle;
+    width: 16px;
+    z-index: 2;
+}
+.ncsc-album li dl dd.date, .ncsc-picture-list li dl dd.date {
+    color: #999;
+    font-size: 12px;
+    height: 60px;
+    left: 8px;
+    line-height: 18px;
+    padding: 0 0 0 8px;
+    position: absolute;
+    top: 204px;
+    width: 160px;
+    z-index: 3;
+}
+.ncsc-album li dl dd.date {
+    height: 22px;
+    left: 12px;
+}
+.ncsc-picture-list li.hover dl dd.date {
+    display: none;
+}
+.ncsc-album li dl dd.buttons, .ncsc-picture-list li dl dd.buttons {
+    display: none;
+    font-size: 0;
+    height: 50px;
+    left: 12px;
+    padding: 0;
+    position: absolute;
+    top: 205px;
+    width: 170px;
+    z-index: 3;
+}
+.ncsc-album li dl dd.buttons {
+    height: 30px;
+    top: 228px;
+}
+.ncsc-album li.hover dl dd.buttons, .ncsc-picture-list li.hover dl dd.buttons {
+    display: block;
+}
+.ncsc-picture-list li dl dd.buttons .upload-btn {
+    display: inline-block;
+    height: 25px;
+    width: 85px;
+}
+.ncsc-picture-list li dl dd.buttons .upload-btn span {
+    cursor: pointer;
+    height: 20px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 80px;
+    z-index: 2;
+}
+.ncsc-picture-list li dl dd.buttons .upload-btn .input-file {
+    cursor: pointer;
+    height: 20px;
+    opacity: 0;
+    width: 80px;
+}
+.ncsc-picture-list li dl dd.buttons .upload-btn .upload-button {
+    font-size: 12px;
+    height: 16px;
+    left: 0;
+    line-height: 20px;
+    padding: 2px 6px;
+    position: absolute;
+    top: 0;
+    width: 68px;
+    z-index: 1;
+}
+.ncsc-album li dl dd.buttons a, .ncsc-picture-list li dl dd.buttons a {
+    background-color: #fff;
+    border-radius: 2px;
+    color: #999;
+    display: inline-block;
+    font-size: 12px;
+    height: 16px;
+    letter-spacing: normal;
+    line-height: 16px;
+    margin: 0 5px 5px 0;
+    padding: 2px 6px;
+    vertical-align: top;
+    width: 68px;
+    word-spacing: normal;
+}
+.ncsc-album li dl dd.buttons a i, .ncsc-picture-list li dl dd.buttons a i {
+    margin-right: 4px;
+}
+.ncsc-album li dl dd a:hover, .ncsc-picture-list li dl dd a:hover {
+    box-shadow: 0 0 4px rgba(153, 153, 153, 0.75);
+    color: #27a9e3;
+    text-decoration: none;
+}
+.dialog_wrapper {
+    border-radius: 0 !important;
+    box-shadow: 0 0 0 2px rgba(153, 153, 153, 0.25) !important;
+    padding: 0 !important;
+}
+.eject_con {
+    background-color: #fff;
+    overflow: hidden;
+}
+
+.eject_con dl {
+    clear: both;
+    display: block;
+    font-size: 0;
+    line-height: 20px;
+    overflow: hidden;
+}
+.bottom .submit {
+    font: 14px/36px "microsoft yahei";
+    height: 36px;
+    min-width: 100px;
+    text-align: center;
+}
+
+input[type="submit"]{
+    background-color: #5bb75b;
+    border: 0 none;
+    color: #fff;
+    cursor: pointer;
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+    height: 30px;
+    padding: 0 20px 2px;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+.search-form td {
+    padding: 8px 0;
+    text-align: left;
+}
+a.ncsc-btn-mini {
+    margin-left:9px;
+    background-color: #f5f5f5;
+    border-color: #dcdcdc #dcdcdc #b3b3b3;
+    border-style: solid;
+    border-width: 1px;
+    color: #777;
+    cursor: pointer;
+    display: inline-block;
+    font: 12px/20px arial;
+    height: 20px;
+    margin-right: 2px;
+    padding: 0 10px;
+    text-align: center;
+    vertical-align: middle;
+}
+a.ncsc-btn-green{
+    background-color: #5bb75b;
+}
+#arealist ul li{
+    float: left;
+}
+.sticky .tabmenu { width: 100%; padding-top: 10px; padding-bottom: 10px; position: fixed; top: 0; }
+.tabmenu {
+    background-color: #fff;
+    z-index: 99;
+}

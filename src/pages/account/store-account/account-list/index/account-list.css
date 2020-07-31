@@ -1,0 +1,16 @@
+.account-list-content{
+  padding-top: 60px;
+  min-height: calc(640px - 41px);
+}
+.ncsc-default-table .btn-del{
+    margin-top: 8px;
+}
+.ncsc-btn:hover {
+    text-decoration: none;
+    border-color: #ff8519;
+    color:#ff8519;
+  }
+.store_account_group{
+    border: 1px solid #fff;
+    
+  }

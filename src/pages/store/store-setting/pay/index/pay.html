@@ -1,0 +1,196 @@
+<div class="store-store-setting-pay">
+        
+        
+        <div class="base-item">
+            <div class="base-label">
+                <label >
+                        <p class="ncsc-form-hint p0"><span class="bold">平台线上支付功能由银联监管，</span>订单金额从卖家直接对接您的结算认证账户。</p>
+                        <p class="ncsc-form-hint p0 mb10">平台除了会介入用户投诉退款外，不参任何交易过程。</p>
+                        <qm-checkbox-frame v-model="isPayOnline" :text="'开启线上支付（目前支持微信、支付宝）'" :size="'large'" :disabled="!basicStore.unionMerid || basicStore.unionMerid == ''|| basicStore.onlinepayFlag == 0"></qm-checkbox-frame>
+                        <div class="ncsc-form-online-pay" v-if="!basicStore.unionMerid || basicStore.unionMerid == ''">
+                                <p>请先前往  <router-link to="/store/store_payment/wxpay"><a target="_blank" class="c-blue">支付配置</a></router-link> 页面提交信息，由平台代您进行前期申请。<br>后期授权由您自行决定。</p>
+                            </div>
+                </label>
+            </div>
+            <div class="base-content">    
+                    <hr class="hr"/>
+            </div>
+        </div>
+    
+        <div class="base-item">
+            <div class="base-label">
+                <label >
+                        <p class="ncsc-form-hint p0"><span class="bold">线下支付</span>方式为用户根据店铺提供的收款方式进行转账，<span class="bold">由店家自行确认及负责收款。</span></p>
+                        <qm-checkbox-frame v-model="isPayOutline" :text="'开启线下支付'" :size="'large'" ></qm-checkbox-frame>
+                </label>
+            </div>
+            <div class="base-content">    
+                    <div class="outline" v-if="isPayOutline">
+                            <div class="base-item">
+                                <div class="base-label">
+                                    <label >
+                                            <i class="require">*</i>
+                                            线下收款方式说明
+                                            <el-tooltip placement="right-start" effect="light" popper-class="atooltip-none" >
+                                                <div slot="content" class="toolTipCont">
+                                                        <img src="@/assets/seller/images/seller/example/banner-xxzf.png" alt="">
+
+                                                </div>
+                                                             
+                                                <p class="lightBlue">
+                                                <i class="fa fa-question-circle" aria-hidden="true"></i>示例
+                                                </p>
+                                            </el-tooltip>
+                                    </label>
+                                </div>
+                                <div class="base-content" id="offlinePayway">    
+                                        <textarea name="store_intro" rows="3" class="textarea ncsc-form-control w500 valid" id="store_intro" placeholder="线下收款方式说明" v-model="offlinePayway" style="display: inline-block"></textarea>
+                                        <label class="error fs12" style="display: inline-block" v-if="isPayOutline && !offlinePayway || offlinePayway == ''" ><i class="fa fa-exclamation-circle"></i>线下支付内容不能为空</label>
+                                    </div>
+                            </div>
+                            <div class="base-item mt-20">
+                                    <div class="base-label">
+                                        <label >二维码图片:</label>
+                                    </div>
+                                    <div class="base-content">
+                                      <draggable v-model="payImage" v-bind="dragOptions" draggable=".draggable" ghost-class="ghost" @change="itemDraggable(payImage)">
+                                        <div v-for="(file,idx) in payImage" class="content-code-img" :class="file?'draggable':''">
+                                          <div v-if="file" class="fl">
+                                            <div class="zhifubao-code">
+                                              <img :src="file"  @click="showImg(file)">
+                                              <div class="image-delete" @click="offlinepayDelete(idx)">×</div>
+                                            </div>
+                                          </div>
+                                          <div v-else  class="fl">
+                                            <div class="ncsc-upload-btn">
+                                              <a href="javascript:void(0);">
+                                                <input type="file" name="multipleImg" class="input-file" accept="image/gif, image/jpeg, image/png, image/bmp" @change="multipleUploadReader($event)" multiple="">
+                                                <p><i class="ico-upload"></i>图片上传</p>
+                                              </a>
+                                            </div>
+                                          </div>
+                                          <div class="clear"></div>
+                                        </div>
+                                      </draggable>
+                                         <!--  <div class="content-code">
+                                               <div v-if="isZhifubaoCode" class="fl">
+                                                    <div class="zhifubao-code">
+                                                            <img :src="offlinePayImage1"  @click="showImg(offlinePayImage1)">
+                                                            <div class="image-delete" @click="offlinepayDelete('offlinePayImage1')">×</div>
+                                                    </div>
+                                               </div>
+                                               <div v-else class="fl">
+                                                <div class="ncsc-upload-btn">
+                                                    <a href="javascript:void(0);">
+                                                        <input type="file" class="input-file" data-id="offlinepay_imageurl1" @change="offlinepayUpload($event,'offlinePayImage1')" name="offlinepay_image1">
+                                                        <p><i class="ico-upload"></i>图片上传</p>
+                                                    </a>
+                                                </div>
+                                               </div>
+                                               <div v-if="isWechatCode" class="fl ml10">
+                                                    <div class="zhifubao-code">
+                                                                </viewer>
+                                                        <img :src="offlinePayImage2"  @click="showImg(offlinePayImage2)">
+                                                        <div class="image-delete" @click="offlinepayDelete('offlinePayImage2')">×</div>
+                                                    </div>
+                                               </div>
+                                               <div v-else class="fl ml10">
+                                                    <div class="ncsc-upload-btn">
+                                                            <a href="javascript:void(0);">
+                                                                <input type="file" class="input-file" data-id="offlinepay_imageurl2" @change="offlinepayUpload($event,'offlinePayImage2')" name="offlinepay_image2">
+                                                                <p><i class="ico-upload"></i>图片上传</p>
+                                                            </a>
+                                                        </div>
+                                               </div>
+                                               <div class="clear"></div>
+                                           </div>-->
+                                       <!--    <div class="ncsc-btn btn-multiple-upload-img mt15 " v-if="!(this.offlinePayImage1 != '' && this.offlinePayImage2 != '')">
+                                               <input type="file" name="multipleImg" class="multiple-upload-img ignore" :disabled="this.offlinePayImage1 != '' && this.offlinePayImage2 != ''" accept="image/gif, image/jpeg, image/png, image/bmp" multiple="" @change="multipleUploadReader($event)">
+                                               批量上传
+                                         </div>
+                                         <div class="ncsc-btn btn-multiple-upload-img mt15 c-gray" v-else >
+                                                <input type="button" name="multipleImg" @click="multipleUploadClick($event)"  class="multiple-upload-img ignore" >
+                                                批量上传
+                                          </div>-->
+                                    </div>
+                                </div>
+                    </div>
+                    <hr class="hr"/>
+            </div>
+        </div>
+        <div class="base-item">
+            <div class="base-label">
+                <label >
+                        <p class="ncsc-form-hint p0">货到付款，由店家自行确认及负责收款。</p>
+                        <qm-checkbox-frame v-model="isCashDelivery" :text="'开启货到付款'" :size="'large'" ></qm-checkbox-frame>
+                </label>
+            </div>
+            <div class="base-content" v-if="!isCashDelivery && !isPayOutline && !isPayOnline">    
+                    <p class="ncsc-form-error block mt10 fs12"><label for="aog_pay" class="error"><i class="fa fa-exclamation-circle"></i>至少需要选择一种支付方式</label></p>
+            </div>
+        </div>
+        
+            
+    
+        <div class="bottom">
+            <label class="submit-border"><input id="store_submit" type="button" class="submit" value="提交" @click="paySetSubmit"></label>
+        </div>
+    
+        <!--<qm-tips :tipsVisible="dialog1" :showCancel="false" :width="'420px'" @close="dialog1 = false"  @confirm="dialog1 = false">
+            <template slot="title">{{dialogTitle1}}</template>
+            <template slot="content">{{dialogMessage1}}</template>
+        </qm-tips>-->
+  <qm-dialog :dialogVisible="tipMessage" :width="'500px'" @close="tipMessage == false">
+    <template slot="title">提示信息</template>
+    <template slot="content" >
+      <div class="dialog-bd eject_con">
+        <div class="dialog_message_contents comfirm"><i class="alert_info"></i><span>{{errorMsg}}</span></div>
+        <dl class="bottom rightBtn">
+          <dt></dt>
+          <dd>
+            2秒后页面跳转
+          </dd>
+        </dl>
+      </div>
+    </template>
+  </qm-dialog>
+
+  <el-dialog
+  :visible.sync="dialogVisible"
+  :lock-scroll="modalAppendToBody"
+  :close-on-click-modal = "closeOnClickModal"
+  :width="imgWidth + 20 + 'px'"
+  customClass="show-image"
+  v-dialogDrag>
+      <template v-if="hasImage">
+          <img :src="imgUrl" style="max-width: 1000px;"/>
+          <div class="closeDiv">
+              <div id="lightbox-container-image-data">
+                  <div id="lightbox-image-details">
+                      <span id="lightbox-image-details-caption" style="display: none;"></span>
+                      <span id="lightbox-image-details-currentNumber" style="display: none;"></span>
+                  </div>
+                  <div id="lightbox-secNav">
+                      <a id="lightbox-secNav-btnClose" @click="dialogVisible = false">
+                          <img src="//static.shenbd.com/lib/js/lightbox/img/lightbox-btn-close.gif">
+                      </a>
+                      <div class="clear"></div>
+                  </div>
+              </div>
+          </div>
+      </template>
+      
+  </el-dialog>
+
+  <el-dialog
+  :visible.sync="dialogVisibleFalse"
+  :lock-scroll="modalAppendToBody"
+  width="250px"
+  customClass="show-image">
+      
+      <div class="loader">
+              <img src="//static.shenbd.com/lib/js/lightbox/img/lightbox-ico-loading.gif">
+      </div>
+  </el-dialog>
+
+    </div>

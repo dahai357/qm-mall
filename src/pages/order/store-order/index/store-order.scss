@@ -1,0 +1,10 @@
+
+@import '@/assets/scss/style.scss';
+
+.menu-more {
+    margin-top: 10px;
+}
+.menu-more:hover a{
+    color:$orange;
+    text-decoration:underline;
+}

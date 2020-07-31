@@ -1,0 +1,33 @@
+<div class="account-list-content">
+    <qm-table :pageParams="pageParams">
+    </qm-table>
+    <table class="ncsc-table" v-show="list.length>0">
+        <thead>
+            <tr>
+                <th>姓名</th>
+                <th>手机号</th>
+                <th>账号组</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody class="ncsc-default-table">
+            <tr v-for="(item,i) in list" :key="i">
+                <td>
+                  <span v-if="item.seller_mark">{{item.seller_mark}}</span>
+                  <span class="c-gray" v-else>未设置姓名</span>
+                </td>
+                <td>{{item.seller_name}}</td>
+                <td>{{item.group_name}}</td>
+                <td>
+                    <p><a @click="edit(item)" class="ncsc-btn">编辑</a></p>
+                    <p><a @click="delOne(item)" class="ncsc-btn btn-del">删除</a></p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <qm-tips :tipsVisible="delDialog" :width="'420px'" @update:tipsVisible="delDialog = $event"
+        @close="delDialog = false" @confirm="confirmDel()">
+        <template slot="title">提示信息</template>
+        <template slot="content">你确定要删除吗?</template>
+    </qm-tips>
+</div>

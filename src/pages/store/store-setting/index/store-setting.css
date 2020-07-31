@@ -1,0 +1,684 @@
+.enter-guide{
+  
+        float: right;
+        right: 0;
+        top: 0;
+        display: block;
+        font-size: 14px;
+        line-height: 2;
+        border: 1px solid #ff8519;
+        padding: 0 8px;
+        border-radius: 1em;
+        color: #ff8519;
+}
+
+.enter-guide:hover{
+  color:white
+}
+
+.store-tabs{
+    padding: 0 20px 0 0; 
+    float: left;
+  }
+
+  .store{
+    /* border: 1px solid #d7dde4; */
+    background: #fff;
+    padding: 10px 20px 30px;
+  /*  width: 1000px;*/
+  }
+
+ .ico-newbie-guide {
+    content: '';
+    display: inline-block;
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+    /* background: url(../images/seller/ncsc_bg_img.png) -105px -460px no-repeat; */
+    background: url(../../../../assets/seller/images/seller/ncsc_bg_img.png) -105px -460px no-repeat;
+    margin: 0 0 2px 5px;
+}
+
+.ico-newbie-guide-hover {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  width: 16px;
+  height: 16px;
+  margin: 0 0 2px 5px;
+  background: url(../../../../assets/seller/images/seller/ncsc_bg_img.png) -125px -460px no-repeat;
+}
+
+.bottom .submit:hover{
+  background:rgb(239,113,1);
+}
+
+.dialog-footer .submit{
+  text-align: center;
+  min-width: 90px;
+  font-size: 14px;
+  height: 30px;
+  line-height: 30px;
+  background: #ff8519;
+  color: #fff;
+  border: none;
+  padding: 0 10px;
+  display: inline-block;
+  border-radius: 5px;
+  box-sizing: border-box;
+  text-align: center;
+}
+.dialog-footer .submit:hover{
+  background:rgb(239,113,1);
+}
+
+.phone-bind-content{
+
+}
+
+.guide-left{
+  width: 230px;
+    float: left;
+    position: relative;
+    height: 700px;
+    background: url(../../../../assets/seller/images/seller/newbie-guide/bg-ng.jpg);
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+.guide-left:before {
+  content: '';
+  position: absolute;
+  width: 83px;
+  height: 12px;
+  left: 30%;
+  background: url(../../../../assets/seller/images/seller/newbie-guide/sprite-ng.png) -25px 0 no-repeat;
+  top: -12px;
+}
+.guide-left::after{
+  content: '';
+  width: 2px;
+  background: #ffb423;
+  position: absolute;
+  min-height: 220px;
+  height: calc((100% - 700px)/2);
+  left: 46%;
+  top: -220px;
+}
+
+.guide-right{
+  width: 720px;
+  padding-top: 20px;
+  box-sizing: border-box;
+  max-height: 600px;
+  overflow: auto;
+}
+
+.ng-title{
+    color: #fff;
+    font-size: 30px;
+    text-align: center;
+    padding: 25px 0 30px;
+}
+.ng-list-tab {
+  margin-left: 80px;
+}
+.ng-list-tab li {
+  overflow: hidden;
+  line-height: 32px;
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+  padding: 9px 7px;
+  margin-bottom: 10px;
+  font-size: 20px;
+  color: #fff;
+  background: #ffd890;
+  background: rgba(255, 255, 255, 0.5);
+}
+.ng-list-tab .active {
+  background: #fff;
+  color: #ff8518;
+}
+
+.ng-list-tab .ng-num {
+  float: left;
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  border-radius: 100%;
+  text-align: center;
+  margin-right: 9px;
+  font-style: italic;
+  background: #fae7c3;
+  background: rgba(245, 245, 245, 0.5);
+}
+.ng-list-tab .ng-tit {
+  overflow: hidden;
+}
+.ng-list-tab .active .ng-tit {
+  color: #ff8518;
+}
+.ng-close {
+  position: absolute;
+  color: #fff;
+  font-size: 16px;
+  left: 34px;
+  bottom: 30px;
+  cursor: pointer;
+}
+.ng-close:after {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  background: url(../../../../assets/seller/images/seller/newbie-guide/sprite-ng.png) 0 -20px no-repeat;
+  width: 17px;
+  height: 14px;
+  margin: 0 0 3px 6px;
+  cursor: pointer;
+}
+.guide-bottom{
+  position: absolute;
+  width: 83px;
+  height: 12px;
+  right: 140px;
+  bottom: 70px;
+}
+
+.submit{
+  text-align: center;
+  /* min-width: 200px; */
+  font-size: 20px;
+  height: 46px;
+  line-height: 46px;
+  background: #ff8519;
+  color: #fff;
+  border: none;
+  padding: 0 30px;
+  display: inline-block;
+  border-radius: 10px;
+  margin: 0 5px;
+  box-sizing: border-box;
+}
+.submit:hover{
+  background:rgb(239,113,1);
+}
+
+.store-store-setting-base{
+
+  padding: 10px 0 0;
+}
+.ncsc-form-shop{
+
+}
+
+
+
+.ncsc-form-shop-c1 {
+  float: left;
+  width: 140px;
+}
+.ncsc-form-shop-c2 {
+  float: left;
+  width: 500px;
+  margin-left: 20px;
+}
+.ncsc-form-shop .hint {
+  margin-top: 5px;
+  color:#ff8518;
+}
+.hint {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #757575;
+  text-align: left;
+}
+.ncsc-form-error.block {
+  display: block;
+}
+.ncsc-form-error {
+  display: inline-block;
+  vertical-align: middle;
+  color: red;
+  margin: 0;
+  font-size: 12px;
+}
+.ncsc-upload-img-item .ncsc-upload-img-box {
+  width: 140px;
+  height: 140px;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  position: relative;
+  border-radius: 5px;
+}
+.ncsc-upload-btn{
+  display: block;
+  width: 140px;
+  height: 140px;
+  position: relative;
+  border: 1px dashed #ddd;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+.ncsc-upload-img-item .ncsc-upload-avatar {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+}
+
+.ncsc-upload-img-item .ncsc-upload-avatar input {
+  font-size: 14px;
+  border-radius: 5px;
+  outline: none;
+}
+
+.ncsc-upload-btn-small {
+  display: block;
+  width: 120px;
+  height: 120px;
+  position: relative;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+  border-radius: 15px;
+  background: #f5f5f5;
+}
+.ncsc-upload-btn-small .input-file {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  font-size: 100px;
+}
+.ncsc-upload-btn-small a {
+  display: block;
+}
+
+.ncsc-upload-btn-small p {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 15%;
+  font-size: 12px;
+  line-height: 20px;
+  color: #757575;
+  text-align: center;
+  z-index: 1;
+  margin: 0;
+}
+.ncsc-upload-btn-small p i {
+  vertical-align: middle;
+  display: block;
+  margin: 0 auto 20px;
+}
+.tip-doubt {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 5px;
+}
+.atooltip {
+  border: solid 1px rgb(0,147,250) !important;
+}
+
+.tip-doubt-con {
+  top: -7px;
+  background: #fff;
+  padding: 10px;
+  border: 1px solid #0093fa;
+  border-radius: 5px;
+}
+
+.store-store-setting-base label{
+  font-size: 16px;
+}
+.bussiness-time{
+  margin-top: 10px;
+}
+.bussiness-time div{
+  display:inline;   
+}
+
+.layui-layer-demo{
+  
+}
+#imagesname img{
+  width:138px;
+  height: 138px;
+}
+
+
+/* 支付部分 */
+.store-store-setting-pay{
+  padding: 10px 0 0;
+  width:100%;
+}
+
+.outline{
+  margin-left: 35px;
+  margin-top: 20px;
+}
+
+.content-code{
+  /* overflow: hidden;` */
+}
+
+.zhifubao-code{
+  width: 120px;
+  height: 120px;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  position: relative;
+  border-radius: 5px;
+}
+
+.zhifubao-code img{
+  width: 120px;
+  height: 120px;
+}
+
+.bottom .submit:hover{
+  background:rgb(239,113,1);
+}
+
+.btn-multiple-upload-img {
+
+  line-height: 30px;
+  text-decoration: none;
+  color: #212121;
+  text-align: center;
+  vertical-align: middle;
+  display: inline-block;
+  height: 30px;
+  padding: 0 10px;
+  border: solid 1px #ddd;
+  cursor: pointer;
+  box-sizing: border-box;
+  background: none;
+  border-radius: 5px;
+  font-size: 14px;
+  position: relative;
+  width: 100px;
+  overflow: hidden;
+}
+.btn-multiple-upload-img .multiple-upload-img {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  font-size: 100px;
+  line-height: 20px;
+  background-color: #FBFBFB;
+  border-radius: 5px;
+}
+
+.hr {
+  margin: 20px 0;
+}
+.base-item {
+  margin-bottom: 20px;
+}
+.base-item-other {
+  margin-top: 30px;
+}
+.base-content textarea {
+  resize: none;
+  line-height: 30px;
+  padding: 5px 10px;
+  height: 70px;
+  font-size: 16px;
+}
+.base-label-small {
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+
+/* 配送部分 */
+.store-store-setting-distribution{
+
+  padding: 10px 0 0;
+  min-height: 650px;
+}
+
+.outline{
+  margin-left: 35px;
+  margin-top: 20px;
+}
+
+.bussiness-time{
+  margin-top: 10px;
+}
+.bussiness-time div{
+  display:inline;   
+}
+
+.distribution-node {
+  font-size: 12px;
+  color: #ff8518;
+  margin:0 0 0 15px;
+  cursor: pointer;
+}
+.distribution-node-nomargin {
+  font-size: 12px;
+  color: #ff8518;
+  cursor: pointer;
+}
+a:link, a:visited, a:active, a:hover{
+  color: #ff8518;
+}
+
+.distribution-add-module {
+  border: solid 0.5px #ff8519;
+  color: #ff8519;
+  border-radius: 3px;
+  background: #fff;
+  padding: 0px 10px;
+  outline:none;
+  font-size: 12px;
+  height: 20px;
+  line-height: 20px;
+  margin-left: 15px;
+}
+
+.distribution-add-module:hover {
+  border: solid 0.5px #ff8519;
+  color: #fff;
+  background-color: #ff8519;
+  outline:none;
+}
+.distribution-table{
+  border-collapse: separate;
+  border: 1px solid #dbdbdb;
+  border-radius: 5px;
+  margin-top: 8px;
+  box-sizing: border-box;
+  font-size: 12px;
+  width: 96%;
+  border-spacing: 0;
+  border-right: none;
+}
+
+.distribution-table td{
+  text-align: center;
+  vertical-align: middle;
+  border-right: 1px solid #dbdbdb;
+  border-top: 1px solid #dbdbdb;
+  padding: 10px 0;
+  min-height: 50px;
+}
+
+.distribution-table th{
+  padding: 10px 0;
+  width: 100px;
+  border-right: 1px solid #dbdbdb;
+}
+.distribution-table th p{
+  color: #757575;
+}
+td p{
+  color: #ff8518;
+}
+.set-send-fei,.set-send-fei span{
+  font-size: 14px;
+  color:#000;
+}
+
+.set-send-fei-input{
+  width: 100px !important;
+  height: 30px !important;
+}
+
+.bottom .submit:hover{
+  background:rgb(239,113,1);
+}
+
+.distribution-table td input{
+  display: block;
+  width: 100%;
+  border: none;
+  background: none;
+  outline: none;
+  text-align: center;
+  padding: 0 10px;
+  box-sizing: border-box;
+  height: 20px;
+  margin: 0 auto;
+  font-size: 12px;
+}
+
+/* 最后一页 */
+
+.ng-con {
+  padding: 0 110px 0 30px;
+}
+.ng-con6 {
+  text-align: center;
+  padding-top: 50px;
+  padding-right: 30px;
+}
+.ng-ico-success {
+  width: 166px;
+  height: 166px;
+  display: inline-block;
+  background: #fff3e7;
+  border-radius: 100%;
+  text-align: center;
+  line-height: 166px;
+  vertical-align: middle;
+}
+.ng-ico-success:before {
+  content: '';
+  display: inline-block;
+  width: 88px;
+  height: 102px;
+  background: url(../../../../assets/seller/images/seller/newbie-guide/sprite-ng.png) 0 -40px no-repeat;
+  vertical-align: middle;
+  margin-bottom: 3px;
+}
+.ng-con6-t1 {
+  font-size: 30px;
+  color: #ff8518;
+  margin-top: 10px;
+}
+.ng-con6-t2 {
+  font-size: 20px;
+  margin-top: 10px;
+}
+.ng-con6 .ng-link-box {
+  font-size: 0;
+  margin-top: 40px;
+}
+.ng-con6 .ng-link-box a {
+  min-width: 180px;
+  margin: 0 10px;
+  vertical-align: middle;
+  padding: 0 20px;
+}
+.ng-btn {
+  display: inline-block;
+  background: #ff8518;
+  border: none;
+  color: #f5f5f5;
+  text-align: center;
+  font-size: 20px;
+  line-height: 2.5;
+  padding: 0 30px;
+  height: 50px;
+  outline: none;
+  border-radius: 10px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+.ng-btn:hover {
+  background: rgb(219, 113, 1);
+  color: #f5f5f5;
+}
+.ng-btn2 {
+  display: inline-block;
+  border: 1px solid #ff8518;
+  color: #ff8518;
+  text-align: center;
+  font-size: 20px;
+  line-height: 2.5;
+  padding: 0 20px;
+  height: 50px;
+  outline: none;
+  border-radius: 10px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+.ng-btn2:hover{
+  color: white;
+  background: #ff8518;
+}
+.ng-con6-t3 {
+  font-size: 16px;
+  margin-top: 20px;
+}
+.ng-orange {
+  color: #ff8518;
+}
+.ncsc-form-online-pay {
+  font-size: 14px;
+  margin-left: 35px;
+  margin-top: 10px;
+}
+.ncsc-form-online-pay p {
+  margin-top: 5px;
+}
+
+/* .disn { display: none; } */
+/* .lqw{background: #fff;padding:10px;text-align: center;position: fixed;bottom:0;left: 0;width: 100%;z-index: 11;} */
+/* .lwe{text-align: right;margin-top: 10px;margin-right: 10px;} */
+/* .ll-fhj{
+  background: rgba(0,0,0,.6);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 11;
+} */
+.lwe i{font-size: 20px;color: 666;}
+.lrt{font-weight: normal;font-size: 16px;color: #333;margin-top: 10px;margin-bottom: 15px;}
+.lty{font-size:14px;color: #666;margin-top: 10px; text-align: left;margin-left: 10px;margin-bottom: 10px;margin-right: 10px;}
+.lty span{margin-left: 2px;}
+.lty i{font-size: 20px;color: #e60012;vertical-align: top;display: inline-block;}

@@ -1,0 +1,36 @@
+.pn-login{ background:url('../images/seller/style2018/bg-login.jpg') repeat-x;  
+    .pn-in{ position: relative; height: 760px;}
+    .scene{ position: absolute; left: -118px; top: 206px;}
+    .build{ display: block; width: 747px; height: 240px; background:url('../images/seller/style2018/build.png'); position: absolute; top: 110px; left: -32px; animation:fadein 1s both;}
+    .cloud{ width: 1585px; height: 297px; background:url('../images/seller/style2018/cloud.png'); position: absolute; left: -190px; top: 26px; animation:fadeinup 1s both;}
+    .welcome{ display: block; width: 649px; height:195px; background:url('../images/seller/style2018/welcome.png'); animation:fadeinup 1s both 1s, toup 1s alternate infinite 3.5s;}
+    .cart1{ width: 118px; height:42px; background:url('../images/seller/style2018/cart1.png'); position: absolute; left: -50px; top: 291px; animation:fadeinleft 1s both 2.1s;}
+    .cart2{ width: 197px; height:96px; background:url('../images/seller/style2018/cart2.png'); position: absolute; left: 447px; top: 290px; animation:fadeinleft 1s both 1.5s;}
+    .person{ width: 135px; height:113px; background:url('../images/seller/style2018/person.png'); position: absolute;  left: 70px;   top: 270px; animation:fadeinleft 1s both 1.8s;}
+    .slogan{ width: 224px; height:54px; background:url('../images/seller/style2018/slogan.png'); position: absolute; left: 216px; top: 380px; animation:zoomin .7s both 2.3s;}
+    .mod-login{ width: 420px; background: #fff; padding: 33px 40px 15px; position: absolute; top: 100px; right: 0; border-radius:20px;
+        .mod-hd{ line-height: 1.6;
+            .tit{ color:#060606; font-size: 26px;}
+            .txt{ color:#9e9e9e; font-size: 13px;}
+        }
+        .form-list{ margin-top: 30px;
+            .form-box{ width: 420px;}
+            .form-icon{ margin-right: 0;}            
+            .form-verification{
+                .form-icon{ width: 300px; margin-right: 10px;}
+            }   
+            .btn-login{ margin-top: 10px;}    
+        }        
+        .link-box{ @extend %clearfix; margin-top: 10px;
+            a{ display: block; float: right; color:$dominant-color; font-size: 17px; line-height: 1.2;  border-bottom:1px solid transparent;
+                &:first-child{ float: left;}
+                &:hover{ border-color:$dominant-color;}
+            }
+        }        
+    }
+}
+
+.page-index{ background: #fff;
+    .content{ background: none;}
+}
+

@@ -1,0 +1,23 @@
+@import '../../../assets/scss/style.scss';
+
+.ncsc-form-group2 {
+    display: inline-block;
+    vertical-align: middle;
+}
+.city-choose .ncsc-form-inline {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 1;
+    margin-right: 15px;
+}
+select {
+    font-size: 14px;
+    display: inline-block;
+    color: #212121;
+    background-color: #FFF;
+    height: 30px;
+    vertical-align: middle;
+    padding: 4px;
+    border: solid 1px #ddd;
+    border-radius: 5px;
+}

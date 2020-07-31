@@ -1,0 +1,33 @@
+.pn-help{
+  .pn-in{ padding:20px 50px;}
+  .pn-hd{
+    .title{ font-size: 32px; margin-bottom: 20px;}
+  }  
+  .mod{ margin-top: 40px;}
+  .mod-newbie{
+    .mod-bd{ display: table; width: 100%; table-layout: fixed;}
+    .list-help{ display: table-cell; padding: 20px 10px 0; text-align: center; position: relative;
+      &:before{ content:''; position: absolute; width: 1px; height: 50%; top: 25%; left: 0; background: #ddd;}
+      &:first-child{
+        &:before{ display: none;}
+      }
+      li{ padding: 8px 0;}
+      .tit{ font-size: 16px; font-weight: bold;}
+      .con{ color:#757575;
+        &:hover{ color:$dominant-color}
+      }
+    }
+  }
+  .ncsc-article{ word-break: break-all;}
+  .ncsc-article .ncsc-article-hd{ border-bottom:1px dashed #eee; line-height: 2; padding-bottom:10px; position: relative;}
+  .ncsc-article .ncsc-article-hd .title{ font-size: 20px; position: relative; padding-left: 15px;
+    &:before{ content:''; position: absolute; width:.2em; height:1em; background: $dominant-color; left: 0; top:.5em;}
+  }
+  .ncsc-article .ncsc-article-hd .time{ color:#757575; margin-left: 15px; font-size: 12px;}
+  .ncsc-article .ncsc-article-hd .btn-back{ position: absolute; right: 15px; bottom: 10px; color:$blue; font-size: 12px;}
+  .ncsc-article .ncsc-article-bd{ padding: 20px 15px; line-height: 1.8; font-size: 14px;}
+  .ncsc-article .ncsc-article-bd img{ max-width:100%; vertical-align: bottom; margin:5px 0;}
+  .ncsc-article a{ color:#333;
+    &:hover{ color:$dominant-color;}
+  }
+}

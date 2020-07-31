@@ -1,0 +1,381 @@
+.basic-info{
+    padding: 20px;
+    height: 120px;
+}
+#imgHref img{
+    width: 90px;
+}
+.basic-left{
+    float: left;
+    width:75%;
+    border-right: dotted 0.5px rgb(221, 221, 221)
+}
+.basic-left-div{
+    width:50%;
+    float: left;
+}
+.basic-left-sub-div{
+    width: 100%;
+    line-height: 30px;
+    overflow: hidden;
+    padding-top: 5px;
+}
+.basic-button{
+    font-size: 12px;
+    line-height: 22px;
+    text-align: center;
+    vertical-align: middle;
+    display: inline-block;
+    height: 24px;
+    padding: 0 10px;
+    margin-right: 2px;
+    border: none;
+    cursor: pointer;
+    border: 1px solid #ff8519;
+    border-radius: 5px;
+    background: #fff;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+.seller-tit,.seller-detail{
+    line-height: 30px;
+    font-size: 14px;
+    padding-top: 5px;
+    color: #757575;
+}
+.basic-right{
+    float: right;
+    width:25%;
+    padding-left: 20px;
+}
+#imgWC{
+    margin-left: 10px;
+}
+#imgWC img{
+    width: 90px;
+    height: 90px;
+}
+.basic-name{
+    float: left;
+    max-width: 8em;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 20px;
+    color: #333;
+    margin-right: 30px;
+}
+.home-content{
+    border: solid 0.5px rgb(221, 221, 221);
+    font-size: 12px;
+    display: inline-block;
+    vertical-align: top;
+    width: 460px;
+    padding: 10px 20px 20px;
+    border: 1px solid #eee;
+    box-sizing: border-box;
+    margin: 0 10px 20px;
+    min-height: 130px;
+    width: 940px;
+}
+.content-title{
+    overflow: hidden;
+    line-height: 40px;
+    margin-bottom: 10px;
+}
+.content-title h3{
+    font-size: 18px;
+    font-weight: bold;
+}
+.content-title h3 span{
+    font-size: 13px;
+    margin: -5px 0px 0px 10px;
+    color: red;
+    font-family: 'Arial Normal', 'Arial';
+    font-weight: 400;
+    font-style: normal;
+}
+.marginT5{
+    margin-top: 5px;
+}
+#all{
+    vertical-align: middle;
+    display: inline-block;
+    margin-right: 3px;
+    margin-bottom: 3px;
+}
+
+
+  .atooltip {
+    border: solid 1px rgb(0,147,250) !important;
+    /* width: 590px; */
+  }
+  .tooltipBig{
+    border: solid 1px rgb(0,147,250) !important;
+    width: 590px;
+  }
+
+  .toolTipCont p{
+    margin: 2px;
+  }
+  .toolTipCont p span{
+    font-weight:bold
+  }
+
+  .lightBlue{
+      position: relative;
+      display: inline-block;
+      vertical-align: middle;
+      margin: 0 5px;
+      font-size: 12px;
+      color: #0093fa;
+      line-height: 18px;
+      margin-bottom: 5px;
+  }
+
+  .operate-bar{
+    /* margin-left: 12px; */
+  }
+
+  #fygl{
+    width: 100%;
+    word-break: break-all;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  #fygl thead tr td,#fygl tbody tr td{
+    text-align: left;
+    padding: 10px;
+    height: 20px;
+    vertical-align: top;
+    word-break: break-all;
+  }
+  #fygl tbody tr{
+      border-bottom: solid 0.5px rgba(221, 221, 221,0.5);
+  }
+
+.count{
+    margin-top: -20px;
+}
+.shop-tip qm-button-tip{
+    margin-right: 20px;
+}
+
+.shop-table{
+    font-size: 12px;
+    margin-top: 20px;
+}
+.table-item{
+    margin-top: 10px;
+}
+#fygl tbody tr td{
+    height: 50px;
+}
+#fygl thead{
+    background: rgb(249, 249, 249);
+}
+.detail:hover{
+    color:#ff8519;
+}
+.ncsc-btn {
+   height: 24px;
+   line-height: 24px;
+
+}
+.ncsc-btn:hover {
+    color:white;
+}
+
+.ncsc-table-spec {
+    border: 1px solid #dbdbdb;
+    border-collapse: separate;
+    box-sizing: border-box;
+    width: 100%;
+    border-radius: 5px;
+    /* border-bottom: none; */
+}
+.ncsc-table-spec td, .ncsc-table-spec th {
+    border-bottom: 1px solid #dbdbdb;
+    border-left: 1px solid #dbdbdb;
+    text-align: left;
+    height: 20px;
+    vertical-align: top;
+    padding: 10px;
+}
+.ncsc-table-spec th {
+    font-weight: bold;
+    color: #757575;
+    background: none;
+}
+.ncsc-table-spec .col1 {
+    border-left: none;
+}
+.eject_con .bottom {
+    text-align: right;
+    margin: 20px -10px 0;
+}
+
+.bottom .ncsc-btn {
+    margin: 0 10px;
+    min-width: 90px;
+}
+.bottom .ncsc-btn:hover {
+    background: rgb(239, 133, 1);
+    color:white;
+}
+
+.eject_con_class_fee .store-class-pay {
+    text-align: center;
+}
+
+
+.eject_con {
+    font-size: 14px;
+}
+
+.ncsc-table-spec2 {
+    font-size: 1em;
+    font-style: normal;
+    font-weight: normal;
+
+    border-spacing: 0;
+
+    border: 1px solid #dbdbdb;
+    border-collapse: separate;
+    box-sizing: border-box;
+    width: 100%;
+    border-radius: 5px;
+    
+}
+
+.ncsc-table-spec2 td, .ncsc-table-spec2 th {
+    border-top: 1px solid #dbdbdb;
+    border-left: 1px solid #dbdbdb;
+    text-align: left;
+    padding: 10px;
+    font-size: 14px;
+    vertical-align: top;
+}
+.ncsc-table-spec2 th {
+    font-weight: bold;
+    color: #757575;
+    width: 15%;
+}
+.ncsc-table-spec2 tr:first-child th, .ncsc-table-spec2 tr:first-child td {
+    border-top: none;
+}
+
+.ncsc-table-spec2 tr th:first-child {
+    border-left: none;
+}
+
+.ncsc-table-spec2 td {
+    width: 35%;
+}
+
+
+.amap-demo {
+    height: 200px;
+  }
+  
+  .detail{
+      cursor: pointer;
+  }
+  .ncsc-btn-orange-unfilled{
+      font-size: 12px;
+  }
+  .h30{
+      height: 30px;
+  }
+
+  .c_orange{
+      color:#ff8519;
+  }
+#wxqrcode{
+    display: inline-block;
+}
+#lightbox-container-image-data {
+    padding: 0 10px;
+    color: #666;
+}
+#lightbox-secNav-btnClose {
+    width: 66px;
+    float: right;
+    /* padding-bottom: 0.7em; */
+    margin-top: 10px;
+}
+.loader{
+    height: 230px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 230px;
+}
+
+
+
+
+
+.tip-doubt {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 5px;
+}
+.tip-doubt .tip-tit {
+    font-size: 12px;
+    color: #0093fa;
+    line-height: 18px;
+}
+.tip-doubt .ico-doubt{ display: inline-block; vertical-align: middle; width: 13px; height: 13px;  background: url(../../../assets/seller/images/seller/sprite.png) -65px -70px no-repeat; margin-right: 3px; margin-bottom: 2px;}
+.tip-doubt .tip-doubt-con{ position: absolute;  display: none; left: 50px;  z-index: 500;}
+.tip-doubt:hover{ cursor: pointer;}
+.tip-doubt:hover .tip-doubt-con{ display: block;}
+
+.tip-doubt-word .tip-doubt-con {
+    width: 200px;
+    top: -7px;
+    text-align: left;
+    word-break: break-all;
+}
+.tip-doubt .tip-doubt-con {
+    position: absolute;
+    display: none;
+    left: 50px;
+    z-index: 500;
+}
+.tip-doubt { position: relative; display: inline-block; vertical-align: middle; margin-left: 5px; margin-right: 5px; font-size: 12px; }
+
+.tip-doubt .tip-tit { color: #0093fa; line-height: 18px; }
+
+.tip-doubt .ico-doubt { display: inline-block; vertical-align: middle; width: 13px; height: 13px; background: url(../../../assets/seller/images/seller/sprite.png) -65px -70px no-repeat; margin-right: 3px; margin-bottom: 2px; }
+
+.tip-doubt .tip-doubt-con { position: absolute; display: none; left: 50px; z-index: 500; }
+
+.tip-doubt:hover { cursor: pointer; }
+
+.tip-doubt:hover .tip-doubt-con { display: block; }
+
+.tip-doubt-img .tip-doubt-con { top: -5px; background: #fff; padding: 10px; border: 1px solid #eee; border-radius: 5px; }
+
+.tip-doubt-img .tip-doubt-con:before, .tip-doubt-img .tip-doubt-con:after { content: ''; display: block; overflow: hidden; position: absolute; width: 0; height: 0; font-size: 0; border-bottom: 6px dashed transparent; border-left: 6px dashed transparent; border-top: 6px dashed transparent; border-right-style: solid; border-right-width: 6px; top: 9px; }
+
+.tip-doubt-img .tip-doubt-con:before { left: -12px; color: #eee; }
+
+.tip-doubt-img .tip-doubt-con:after { z-index: 2; left: -11px; color: #fff; }
+
+.tip-doubt-word .tip-doubt-con { width: 200px; top: -5px; text-align: left; word-break: break-all; }
+
+.tip-doubt-word .tip-doubt-con .tip-txt { background: #fff; padding: 5px 10px; display: inline-block; border: 1px solid #0093fa; position: relative; border-radius: 5px; color: #757575; }
+
+.tip-doubt-word .tip-doubt-con .tip-txt:before, .tip-doubt-word .tip-doubt-con .tip-txt:after { content: ''; display: block; overflow: hidden; position: absolute; width: 0; height: 0; font-size: 0; border-bottom: 6px dashed transparent; border-left: 6px dashed transparent; border-top: 6px dashed transparent; border-right-style: solid; border-right-width: 6px; top: 9px; }
+
+.tip-doubt-word .tip-doubt-con .tip-txt:before { left: -12px; color: #0093fa; }
+
+.tip-doubt-word .tip-doubt-con .tip-txt:after { z-index: 2; left: -11px; color: #fff; }
+
+.tip-doubt.tip-l .tip-doubt-con { width: 600px; }
+
+.dis-btn,.dis-btn:hover{
+    background:grey !important;
+    border-color: gray;
+}

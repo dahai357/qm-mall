@@ -1,0 +1,129 @@
+.ncsc-table {
+    width: 100%;
+    word-break: break-all;
+}
+.ncsc-table td, .ncsc-table th {
+    text-align: left;
+    padding: 10px;
+    height: 20px;
+    vertical-align: top;
+    word-break: break-all;
+    /* font-size: 1em; */
+    font-style: normal;
+    font-weight: normal;
+}
+.ncsc-table th {
+    background: #f9f9f9;
+}
+.ncsc-table td {
+    border-bottom: 1px solid #eee;
+    line-height: 20px;
+}
+
+.ncsc-table-spec {
+    border: 1px solid #dbdbdb;
+    border-collapse: separate;
+    box-sizing: border-box;
+    width: 100%;
+    border-radius: 5px;
+}
+.ncsc-table-spec th {
+    font-weight: bold;
+    color: #757575;
+    background: none;
+}
+.ncsc-table-spec .col1 {
+    border-left: none;
+}
+.ncsc-table-spec td, .ncsc-table-spec th {
+    border-bottom: 1px solid #dbdbdb;
+    border-left: 1px solid #dbdbdb;
+    text-align: left;
+    height: 20px;
+    vertical-align: top;
+    padding: 10px;
+}
+.ncsc-table-spec tr:last-child td {
+    border-bottom: none;
+}
+
+.layui-laypage, .layui-laypage em {
+    border-radius: 5px !important;
+    margin-right: 5px !important;;
+}
+.add-on {
+    zoom: 1;
+}
+.add-on {
+    line-height: 30px;
+    background-color: #f3f3f3;
+    vertical-align: middle;
+    display: inline-block;
+    text-align: center;
+    width: 30px;
+    height: 30px;
+    border: solid #ddd;
+    border-width: 1px 1px 1px 0;
+    box-sizing: border-box;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    margin-left: -5px;
+    color: #757575;
+}
+.input-add-on {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    line-height: 30px;
+    color: #212121;
+    background-color: #FFF;
+    vertical-align: middle;
+    display: inline-block;
+    height: 30px;
+    padding: 0 10px;
+    border: solid 1px #ddd;
+    outline: 0 none;
+    box-sizing: border-box;
+    font-size: 12px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    color: #757575;
+}
+.qm-store-class-record{
+    margin-top: 30px;
+    padding-bottom: 20px;
+}
+.ncsc-form-tit {
+    line-height: 2.25;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 12px;
+    margin-left: 5px;
+    color: #757575;
+    font: 14px/1.5 "Microsoft Yahei", "PingFang SC", "ST Heiti", SimHei, sans-serif, "Helvetica Neue", Tahoma, SimSun, "PingFang SC", "ST Heiti", sans-serif;
+}
+
+.quick-time {
+    display: inline-block;
+    vertical-align: middle;
+    color: #757575;
+    font-size: 12px;
+}
+a:hover{
+    color: #ff8519;
+}
+a.active {
+    text-decoration: none;
+    color: #ff8519;
+}
+.ncsc-btn{
+    font-size: 12px;
+}
+
+.ncsc-btn:hover {
+    text-decoration: none;
+    border-color: #ff8519;
+    color: #ff8519;
+}
+.qm-store-class-base{
+    padding: 0;
+}

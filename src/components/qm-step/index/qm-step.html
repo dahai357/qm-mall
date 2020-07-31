@@ -1,0 +1,10 @@
+<ul class="add-goods-step">
+        <li :class="(stepIndex-1) == s?'current':''" v-for="(step,s) in steps">
+            <img v-if="step.icon" :src="(stepIndex-1) == s?getActiveImage(step.icon):getIamge(step.icon)" class="fl stepIcon">
+            <div class="fl">
+                    <h6>{{step.title}}</h6>
+                    <h2>{{step.text}}</h2>
+                    <i v-if="s != steps.length -1" class="fa fa-angle-right arrow"></i>
+            </div>
+         </li>
+    </ul>

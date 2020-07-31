@@ -1,0 +1,283 @@
+<div class="qm-store-class-index">
+    <qm-tabs :tabs="tabs" :blod="false" class="store-tabs" :marginRight="20" @routerData="routerData($event)">
+   </qm-tabs>
+
+    <div class="menu-more" v-if="url == 'class_invoice_log'">
+         <template v-if="basicStore.totalPaidFee - basicStore.appliedPaidFee <= 0|| !basicStore.canAddInvoice ">
+            <a class="ncsc-btn disabled" @click="disabledInvoice()">申请开票</a>
+        </template>
+         <template v-else>
+            <a class="ncsc-btn ncsc-btn-orange" @click="addInvoice()">申请开票</a>
+         </template>
+    </div>
+    <div class="menu-more" v-if="url == 'index'">
+        <a class="ncsc-btn ncsc-btn-orange" @click="applyNewClassVisibleOpen">申请新分类</a>
+    </div>
+    <div class="clear"></div>
+
+    <router-view />
+
+
+    <qm-dialog :dialogVisible="dialogVisible" :width="'800px'" @close="dialogVisible = false">
+                    <template slot="title">申请开票</template>
+                    <template slot="content" >
+                        <div class="eject_con">
+                          <input type="hidden" name="form_submit" value="ok" >
+                          <p class="c-orange mb10">请认真核查提交的开票信息，一经财务确认开票后则无法修改</p>
+                          <dl>
+                              <dt>开票金额:</dt>
+                              <dd>
+                                  <input type="number" min="0" class="ncsc-form-control w300" id="amount" name="amount" v-model="dataParams.amount" placeholder="">
+                                  <p><label for="amount" class="error arrmountError" v-if="valiData.amount || parseFloat(valiData.amount) <= 0" >开票金额不能为空</label></p>
+                              </dd>
+                          </dl>
+                          <dl>
+                              <dt></dt>
+                              <dd class="c-orange">
+                                  剩余可开票金额：<span id="leftAmount">{{basicStore.leftPaidFee}}</span>元
+                              </dd>
+                          </dl>
+                          <dl>
+                              <dt>开票类型:</dt>
+                              <dd>
+                                  <div class="ncsc-form-custom-radio-group">
+                                      <div :class="dataParams.type == 1 ? 'ncsc-form-custom-radio checked':'ncsc-form-custom-radio'" @click="dataParams.type = 1">
+                                          <div class="ncsc-custom-radio-frame">
+                                              <input type="radio" name="type" value="1" id="type_1" class="ncsc-custom-radio">
+                                          </div>
+                                          <label for="type_1" class="ncsc-custom-txt">
+                                              <span class="name">增值税普通发票</span>
+                                          </label>
+                                      </div>
+                                      <div :class="dataParams.type == 2 ? 'ncsc-form-custom-radio checked':'ncsc-form-custom-radio'" @click="dataParams.type = 2">
+
+                                          <div class="ncsc-custom-radio-frame">
+                                              <input type="radio" name="type" value="2" id="type_2" class="ncsc-custom-radio" checked="checked">
+                                          </div>
+                                          <label for="goods_new_1" class="ncsc-custom-txt">
+                                              <span class="name">增值税电子普通发票</span>
+                                          </label>
+                                      </div>
+                                  </div>
+
+                                  <p></p>
+                              </dd>
+                          </dl>
+
+                          <dl>
+                              <dt>开票信息:</dt>
+                              <dd></dd>
+                          </dl>
+                          <div class="ml50">
+                              <dl>
+                                  <dt>开票公司名称:</dt>
+                                  <dd>
+                                      <input type="text" class="ncsc-form-control w300" id="company" name="company" v-model="dataParams.company">
+                                      <p><label for="receive_email" class="error" v-if="valiData.company">
+                                            开票公司名称不能为空</label></p>
+                                  </dd>
+                              </dl>
+                              <dl>
+                                  <dt>统一信用代码:</dt>
+                                  <dd>
+                                      <input @blur="checkCode()" type="text" class="ncsc-form-control w300" id="company_code" name="company_code" v-model="dataParams.company_code">
+                                      <p><label for="receive_email" class="error error-code" v-if="valiData.company_code">{{errorText.error_code}}</label></p>
+                                  </dd>
+                              </dl>
+                          </div>
+                          <div id="type1" v-show="dataParams.type == 1">
+                              <dl>
+                                  <dt>票据收货信息:</dt>
+                                  <dd></dd>
+                              </dl>
+                              <div class="ml50">
+                                  <dl>
+                                      <dt>收货地址:</dt>
+                                      <dd>
+                                      <!-- <span class="choice-item form-select form-s">
+                                          <select id="provinceSelect" name="province" class="province-select" @change="search($event,'province')">
+                                          </select>
+                                      </span>
+                                          <span class="choice-item form-select form-s" style="display:none">
+                                          <select id="citySelect" name="city" class="city-select" @change="search($event,'city')">
+                                          </select>
+                                      </span>
+                                          <span class="choice-item form-select form-s" style="display:none">
+                                          <select id="districtSelect" name="district" class="area-select" @change="search($event,'district')">
+                                          </select>
+                                      </span>
+                                          <p></p> -->
+                                          <qm-area :province="dataParams.province" :city="dataParams.city" :district="dataParams.district" @valueChange="areaValueChange($event)"></qm-area>
+                                      </dd>
+                                  </dl>
+                                  <dl>
+                                      <dt></dt>
+                                      <dd>
+                                          <textarea class="ncsc-form-control w300" id="address" name="address">{{dataParams.address}}</textarea>
+                                          <p><label for="receive_email" class="error" v-if="valiData.address">开票类型为增值税普通发票时地址不能为空</label></p>
+                                      </dd>
+                                  </dl>
+                                  <dl>
+                                      <dt>收货人:</dt>
+                                      <dd>
+                                          <input type="text" class="ncsc-form-control w300" id="receiver" name="receiver" v-model="dataParams.receiver">
+                                          <p><label for="receive_email" class="error" v-if="valiData.receiver">
+                                                开票类型为增值税普通发票时收货人不能为空</label></p>
+                                      </dd>
+                                  </dl>
+                                  <dl>
+                                      <dt>收货电话:</dt>
+                                      <dd>
+                                          <input type="text" class="ncsc-form-control w300" id="receive_phone" name="receive_phone" v-model="dataParams.receive_phone">
+                                          <p><label for="receive_email" class="error" v-if="valiData.receive_phone">开票类型为增值税普通发票时收货人电话不能为空</label></p>
+                                      </dd>
+                                  </dl>
+                              </div>
+                          </div>
+                          <div id="type2" class="ml50" v-show="dataParams.type != 1">
+                              <dl>
+                                  <dt>票据收件邮箱:</dt>
+                                  <dd>
+                                      <input type="text" @blur="checkEmail()" class="ncsc-form-control w300" id="receive_email" name="receive_email" v-model="dataParams.receive_email">
+                                      <p><label for="receive_email" class="error error-email" v-if="valiData.receive_email"></label></p>
+                                  </dd>
+                              </dl>
+                          </div>
+
+                          <dl>
+                              <dt></dt>
+                              <dd id="warning">
+
+                              </dd>
+                          </dl>
+                          <dl class="bottom">
+                              <dt>&nbsp;</dt>
+                              <dd>
+                                  <input type="button" class="submit" id="confirm_button" value="确定" @click="invoiceSubmit" >
+                              </dd>
+                          </dl>
+                      </div>
+                      
+                    </template>
+                </qm-dialog>
+
+
+
+                <qm-dialog :dialogVisible="applyNewClassVisible" :width="'800px'" @close="applyNewClassVisible = false">
+                    <template slot="title">申请新分类</template>
+                    <template slot="content" >
+                        <div class="eject_con eject_store_class">
+                            <form id="form_register" action="index.php?c=qm_store_class&amp;a=classApply" method="post" onsubmit="return false">
+                            <input type="hidden" name="form_submit" value="ok">
+                            <input type="hidden" id="radio-index" value="1">
+                            <div class="form-list">
+                                <p class="fs12 mb10 c-gray"><b>经营分类添加个数要求：</b>签约分类<b class="c-black"> 不少于一个 </b>，普通分类数量不限。</p>
+                                <div class="form-category-con js-category">
+                                        <div class="form-category-item ncsc-form-table" v-for="(list,l) in classList" :key="l" >
+                                            <div class="ncsc-form-item ncsc-form-s" :ref="'list'+l" @mouseenter="enterHover(list)" @mouseleave="leaveHover(list)">
+                                                <div class="item-c1">
+                                                    经营分类 
+                                                </div>
+                                                <div class="item-c2" > 
+                                                    <div class="choose-category" v-clickout="list">                                     
+                                                        <div class="category-name" @click="showSearch(list,l)">
+                                                            <p class="category-name-txt">{{list.choose}}</p>
+                                                            <div class="category-sign"><i class="fa fa-angle-down" aria-hidden="true"></i><p class="btn-clear"></p></div>
+                                                        </div>
+                                                        <a class="btn-add js-add-category" title="添加经营分类" @click="addCategory" v-if="l == classList.length-1"></a><a v-if="list.hover && (l !=0 || classList.length > 1)" @click="deleteCategory(list,l)" class="btn-del js-del-category" title="删除经营分类"></a>
+                                                        <p class="category-error" style="display: none;"></p>
+                                                        <div class="pop-search-category" v-if="list.showSearch">
+                                                            <div class="search-category-box">
+                                                                <input type="text" @keyup.enter="searchCategory(list,l)" class="search-category-key" autocomplete="off" placeholder="请输入分类名称进行搜索，例如：蛋糕" v-model="list.categoryName"><a class="btn-search-category" @click="searchCategory(list,l)">搜索</a>
+                                                            </div>
+                                                            <!-- <p class="loading-tip loading" v-if="list.showLoad">加载中</p> -->
+                                                            <ul class="list-category2" v-if="list.categoryList.length>0">
+                                                                <li v-for="(item,i) in list.categoryList" @click="choose(list,l,item,i)">{{item.gc_name}}</li>
+                                                            </ul>
+                                                        </div>
+                                                        <input type="hidden" name="class[]" data-type="gc-id-2" class="category-id" value="">
+                                                    </div> 
+                                                </div>
+                                            </div>
+                                            <div class="ncsc-form-item">
+                                                <div class="item-c1">
+                                                    签约类型
+                                                    <el-tooltip placement="right-start" effect="light" popper-class="atooltip" class="mt3">
+                                                        <div slot="content" class="toolTipCont">
+                                                          <p>
+                                                            <span>签约分类：</span> 由商家自主申请的在协议签订区域范围 <span>享有独家推荐权</span> 的付费（签约技术服务费）销售分类。
+                                                            </p>
+                                                          <p>
+                                                          （部分签约分类需在提交国家规定的相关资质后方可申请）。
+                                                          </p>
+                                                          <br />
+                                                          <p>
+                                                            普通分类：由您自主申请的除签约分类之外的免费（签约技术服务费）销售分类。
+                                                            </p>
+                                                          <p>
+                                                          （部分普通分类需在提交国家规定的相关资质后方可申请）。
+                                                          </p>                
+                                                          </div>
+                                                        <p class="lightBlue">
+                                                          <i class="fa fa-question-circle" aria-hidden="true"></i>说明
+                                                        </p>
+                                                      </el-tooltip>
+                                                </div>
+                                                <div class="item-c2">
+                                                    <div class="ncsc-form-custom-radio-group">
+                                                        <div class="ncsc-form-custom-radio" :class="list.type == 2 ? 'checked':''">
+                                                            <div class="ncsc-custom-radio-frame">
+                                                                <input type="radio" :name="'type'+l" value="2" v-model="list.type"  class="ncsc-custom-radio js-hint-radio">
+                                                            </div>
+                                                            <label for="sign1" class="ncsc-custom-txt" @click="clickRadioLabel(list,2)">
+                                                                <span class="name">签约</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="ncsc-form-custom-radio" :class="list.type == 1 ? 'checked':''">
+                                                            <div class="ncsc-custom-radio-frame">
+                                                                <input type="radio"  value="1"  :name="'type'+l" v-model="list.type"  class="ncsc-custom-radio">
+                                                            </div>
+                                                            <label for="sign2" class="ncsc-custom-txt" @click="clickRadioLabel(list,1)">
+                                                                <span class="name">普通</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="fs12 js-hint-type" v-if="list.type == 2">
+                                                        <p class="mt5 c-orange">签约分类享有独家推荐权</p>
+                                                        <p class="mt5 type-info" >签约技术服务费：<b>¥ <span data-type="ts-fee">{{list.curCategory.service_fee}}</span></b> / 月 （正式入驻后可按月、季度、年缴纳）</p>
+                                                        <p class="mt5 type-info" >保证金：<b>¥ <span data-type="pledge-fee">{{list.curCategory.deposit}}</span></b> （商户合同签订后五个工作日内一次性缴齐，若有多个销售分类则按最高保证金缴纳）</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="ncsc-form-item need-file" v-if="list.curCategory && list.curCategory.need_file" v-for="(file,f) in list.curCategory.need_file">
+                                                <div class="item-c1">
+                                                        {{file.name}}                                       
+                                                </div>                                        
+                                                <div class="item-c2">                                            
+                                                    <p class="c-gray mb10">{{file.remark}}</p>                                            
+                                                    <div class="upload-file-item">                                                
+                                                        <div class="btn-upload-file" v-if="!file.intelligence">                                                    
+                                                        <input type="file" name="intelligence_1148_0" id="intelligence_1148_0" class="file-upload" @change="logoLoad($event,list,list.curCategory,file,f)">
+                                                            <p class="upload-txt">上传文件</p>                                                
+                                                        </div>                                                
+                                                        <a v-else :href="file.intelligence" target="_blank" class="upload-link" data-type="intelligence_1148_0">
+                                                                {{file.intelligence.replace(ImageIp+imagePathConfig.Register,'')}}
+                                                                <p class="btn-del-file" @click="deleteIntelligence($event,list,list.curCategory,file,f)">×</p></a>                                                
+                                                        <input type="hidden" name="intelligence_1148_0">                                            
+                                                    </div>                                        
+                                                </div>                                    
+                                            </div>
+                                        </div>
+                                </div>
+                                <div id="warning"></div>
+                                <div class="bottom">
+                                    <input type="button" id="register" value="确定" class="ncsc-btn ncsc-btn-orange fr" @click="submitData()" :disabled="btnClick.submitDataBtn">
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                        </form>
+                        </div>
+                    </template>
+                </qm-dialog>
+</div>

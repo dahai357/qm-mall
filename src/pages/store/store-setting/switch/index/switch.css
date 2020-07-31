@@ -1,0 +1,71 @@
+.store-store-setting-switch{
+
+    padding: 0 100px 0 100px;
+    min-height: 650px;
+    border-top: 1px solid #eee;
+    padding-top: 30px;
+}
+
+.settings{
+    width: 80%;
+    border: 1px solid #eee;
+    border-radius: 5px;
+}
+.setting-item{
+    overflow: hidden;
+    font-size: 16px;
+    line-height: 3;
+    border-top: 1px solid #eee;
+}
+
+.setting-item:first-child {
+    border: none;
+}
+
+.setting-item div{
+    font-weight: bold;
+    padding: 0 30px;
+    color: #757575;
+}
+
+.setting-icon-success{
+
+    display: inline-block;
+    vertical-align: middle;
+    overflow: hidden;
+    background: url(../../../../../assets/seller/images/seller/ncsc_bg_img.png) -182px -459px no-repeat;
+
+    width: 20px;
+    height: 12px;
+    background-position: -235px -460px;
+    /* background: url(../../../../../assets/seller/images/seller/ncsc_bg_img.png) -182px -459px no-repeat; */
+}
+.setting-icon{
+    float: left;
+    width: 20%;
+    border-right: 1px solid #eee;
+    text-align: center;
+}
+
+.setting-title {
+    overflow: hidden;
+    padding-left: 20px;
+}
+
+.bottom .submit:hover{
+    background:rgb(239,113,1);
+}
+
+
+.ico-unset{
+    
+    display: inline-block; vertical-align: middle; overflow: hidden; background: url(../../../../../assets/seller/images/seller/ncsc_bg_img.png) no-repeat;
+    width: 15px; height: 15px; background-position: -75px -490px;
+}
+.comfirm {
+  padding-bottom: 20px;
+  font-size: 16px;
+  text-align: center;
+  max-width: 500px;
+  word-break: break-all;
+}

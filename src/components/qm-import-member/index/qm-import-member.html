@@ -1,0 +1,60 @@
+<div class="phone-bind-content">
+  <div class="phone-bind-title">提示</div>
+  <div style="padding:10px;">
+  <p>以下数据为当前已有的会员数据，勾选需要合并的数据：</p>
+    <p class="c-red ml20 mb10 mt5">注：合并操作为两边数据对比合并，若存在两边都有数据，则取当前导入的数据为准覆盖原信息</p>
+  <qm-table :pageParams="pageParams">
+    <template slot="table">
+      <table class="ncsc-table table-transaction-online">
+        <thead>
+        <tr nc_type="table_header">
+          <th class="w100">
+            <input type="checkbox" id="allchecked" class="checkall" v-model="checkAllState"  @click="checkall"><label for="allchecked" class="mr10">全部全选</label>
+          </th>
+          <th class="w120">新/旧会员</th>
+          <th class="w120">会员手机号</th>
+          <th class="w150">会员更多信息</th>
+        </tr>
+        </thead>
+        <tbody>
+        <template v-for="(item) in list">
+          <tr>
+            <td  rowspan="2"><input type="checkbox" class="checkitem" :value="item[0]" v-model="checkState"></td>
+            <td>原会员信息</td>
+            <td>{{item[0]}}</td>
+            <td>{{item.yuan_mark}}</td>
+          </tr>
+          <tr>
+            <td>新导入会员信息</td>
+            <td>{{item[0]}}</td>
+            <td>{{item[1]}}</td>
+          </tr>
+        </template>
+        </tbody>
+      </table>
+    </template>
+  </qm-table>
+  <qm-pagination :pageParams="pageParams" @changeIndex="changeIndex($event)"></qm-pagination>
+    <div class="menu-more mr10 ml10" @click="unMergeImport()">
+      <input class="ncsc-btn ncsc-btn-orange-rim" value="不合并数据" readonly/>
+    </div>
+    <div class="checked-btn ncsc-btn-import-div" @click="MergeImport">
+      <a style="width:100%;display: inline-block;" class="ncsc-btn-import" :class="checkState.length > 0 ? 'ncsc-btn-orange':''">确定合并<span v-show="checkState.length>0" class="fs12 ml5">(已选{{checkState.length}}条)</span></a>
+    </div>
+    <div class="clear"></div>
+    <qm-tips :tipsVisible="importResultDialog" :width="'500px'" :showCancel="false" @confirm="hideImportDialog()" :showButton='true' @close="importResultDialog=false">
+      <template slot="title">导入结果</template>
+      <template slot="content">
+        <div class="eject_con tl_con">
+          <form>
+            <dl>
+              <span v-if="susNum > 0">本次成功导入<span class="c-red fb">{{susNum}}</span>条数据</span>
+              <span v-if="susNum > 0 && errorNum > 0">,</span>
+              <span v-if="errorNum > 0">导入失败数据<span class="c-red fb">{{errorNum}}</span>条</span>
+            </dl>
+          </form>
+        </div>
+      </template>
+    </qm-tips>
+  </div>
+</div>

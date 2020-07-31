@@ -1,0 +1,20 @@
+<div class="ncsc-form-group2 city-choose" id="city1">
+    <div class="choice-item ncsc-form-s ncsc-form-inline">
+        <select class="province-select w150" name="province_id" :value="province_id" @change="changeProvince($event)">
+            <option value="-1"> -- 请选择省份 -- </option>
+            <option v-for="(province,p) in provinces" :value="province.id">{{province.name}}</option>
+        </select>
+    </div>
+    <div class="choice-item ncsc-form-s ncsc-form-inline" v-if="citys.length>0">
+        <select class="city-select w150" name="city_id" :value="city_id" @change="changeCity($event)">
+            <option value="-1"> -- 请选择城市 -- </option>
+            <option v-for="(citys,c) in citys" :value="citys.id">{{citys.name}}</option>
+        </select>
+    </div>
+    <div class="choice-item ncsc-form-s ncsc-form-inline" v-if="regions.length>0 && isShowRegion">
+        <select class="area-select w150" name="region_id" :value="region_id" @change="changeRegion($event)">
+            <option value="-1"> -- 请选择城区 -- </option>
+            <option v-for="(region,r) in regions" :value="region.id">{{region.name}}</option>
+        </select>
+    </div>
+</div>

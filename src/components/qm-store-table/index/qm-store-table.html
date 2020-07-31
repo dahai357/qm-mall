@@ -1,0 +1,897 @@
+<div>
+
+    <div class="operate-bar">
+        <label for="all" class="mr10"><input type="checkbox" id="all" @change="selectAll($event)" v-model="selectAllValue">本页全选</label>
+        <a @click="betchRenewal('betch')" class="ncsc-btn-orange-unfilled">批量缴费</a>
+      </div>
+
+      <qm-table :pageParams="pageParams">
+          <template slot="table">
+              <table id="fygl">
+                  <thead>
+                    <tr>
+                      <td class="w20"></td>
+                      <td class="w200">分类</td>
+                      <td>
+                        签约类型
+                        <el-tooltip placement="right" effect="light" popper-class="atooltip">
+                          <div slot="content" class="toolTipCont">
+                            <p>
+                              <span>签约分类：</span> 由商家自主申请的在协议签订区域范围 <span>享有独家推荐权</span> 的付费（签约技术服务费）销售分类。
+                              </p>
+                            <p>
+                            （部分签约分类需在提交国家规定的相关资质后方可申请）。
+                            </p>
+                            <br />
+                            <p>
+                              普通分类：由您自主申请的除签约分类之外的免费（签约技术服务费）销售分类。
+                              </p>
+                            <p>
+                            （部分普通分类需在提交国家规定的相关资质后方可申请）。
+                            </p>
+                            </div>
+                          <p class="lightBlue">
+                            <i class="fa fa-question-circle" aria-hidden="true"></i>说明
+                          </p>
+                        </el-tooltip>
+                      </td>
+                      <td>状态</td>
+                      <td>保证金
+                        <p class="fs12">(元/月)</p>
+                      </td>
+                      <td>技术服务费
+                        <p class="fs12">(元/月)</p>
+                      </td>
+                      <td class="w97">到期时间</td>
+                      <td class="w140">操作</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(item,i) in storeList">
+                      <td><input type="checkbox" :disabled="item.disabled" :checked="item.checked" @change="selectChange($event,i)"/>
+                      </td>
+                      <td>
+                        <a @click="showItemDetail(item,i)" class="detail">{{item.gc_parent_name}} &gt; {{item.gc_name}}</a>
+                      </td>
+                      <td>{{item.class_style==1?'普通':'签约'}}</td>
+                      <td>
+                        <div v-if="item.apply_state == 0 || item.apply_state == 2">
+                          <div v-if="item.apply_state == 0 ">待审核</div>
+                          <div v-else>
+                            <div v-if="item.new_apply_state == 2">已过期重新审核拒绝
+                              <el-tooltip placement="right" effect="light" popper-class="atooltip" v-if="item.off_reason">
+                                    <div slot="content" class="toolTipCont">
+                                      <p v-if="item.off_reason">
+                                        拒绝原因:{{item.apply_class.off_reason}}
+                                      </p>
+                                    </div>
+                                    <p class="lightBlue">
+                                      <i class="fa fa-question-circle" aria-hidden="true"></i>说明
+                                    </p>
+                                  </el-tooltip>
+                            </div>
+                            <div v-else>已拒绝<br />
+                              <el-tooltip placement="right" effect="light" popper-class="atooltip" v-if="item.off_reason">
+                                <div slot="content" class="toolTipCont">
+                                  <p>
+                                    拒绝原因：{{item.off_reason}}
+                                  </p>
+                                </div>
+                                <p class="lightBlue">
+                                  <i class="fa fa-question-circle" aria-hidden="true"></i>说明
+                                </p>
+                              </el-tooltip>
+                            </div>
+                          </div>
+                        </div>
+                        <div v-else>
+                          <div v-if="item.is_charged == 0">
+                            <div v-if="item.new_apply_state == 0">
+                              待审核
+                              <el-tooltip placement="right" effect="light" popper-class="atooltip" v-if="item.charged_reason||item.apply_class">
+                                <div slot="content" class="toolTipCont">
+                                  <p v-if="item.charged_reason">
+                                    下架原因：{{item.charged_reason}}
+                                    <p v-if="item.new_apply_state == 2 && item.apply_class.off_reason">下架重新申请,平台拒绝原因：{{item.apply_class.off_reason}}</p>
+                                  </p>
+                                </div>
+                                <p class="lightBlue">
+                                  <i class="fa fa-question-circle" aria-hidden="true"></i>说明
+                                </p>
+                              </el-tooltip>
+                              <p v-if="item.new_apply_state == 0">已下架重新申请中</p>
+                                  <p v-else-if="item.new_apply_state == 2">重新申请已拒绝</p>
+                              </div>
+                            <div v-else>已下架
+                              <el-tooltip placement="right" effect="light" popper-class="atooltip" v-if="item.charged_reason||item.apply_class">
+                                <div slot="content" class="toolTipCont">
+                                  <p v-if="item.charged_reason">
+                                    下架原因：{{item.charged_reason}}
+                                    <p v-if="item.new_apply_state == 2 && item.apply_class.off_reason">下架重新申请,平台拒绝原因：{{item.apply_class.off_reason}}</p>
+                                  </p>
+                                </div>
+                                <p class="lightBlue">
+                                  <i class="fa fa-question-circle" aria-hidden="true"></i>说明
+                                </p>
+                              </el-tooltip>
+                              <p v-if="item.new_apply_state == 0">已下架重新申请中</p>
+                                  <p v-else-if="item.new_apply_state == 2">重新申请已拒绝</p>
+                            </div>
+                          </div>
+                          <div v-else>
+                            <div v-if="item.class_style == 2">
+                              <div v-if="item.deadline">
+                                <div v-if="Date.parse(item.deadline.replace(/-/g,'/')) < Date.parse(new Date())">
+
+                                  <div v-if="item.new_apply_state == 0">
+                                    <p>待审核</p>
+                                    <p>已过期重新申请中</p>
+                                  </div>
+
+                                  <!-- <div v-if="item.new_apply_state == 0">已过期</div> -->
+                                  <div v-else>
+                                    <div v-if="item.new_apply_state == 2"> 已拒绝<br />
+                                      <el-tooltip placement="right" effect="light" popper-class="atooltip" v-if="item.apply_class && item.apply_class.off_reason">
+                                        <div slot="content" class="toolTipCont">
+                                          <p v-if="item.apply_class">
+                                            已过期重新申请,平台拒绝原因:<br/>
+                                            {{item.apply_class.off_reason}}
+                                          </p>
+                                        </div>
+                                        <p class="lightBlue">
+                                          <i class="fa fa-question-circle" aria-hidden="true"></i>说明
+                                        </p>
+                                      </el-tooltip>
+                                    </div>
+                                    <div v-else>
+                                        <template v-if="(Date.parse(item.deadline.replace(/-/g,'/'))+(basicStore.classChargeDelayDays)*1000) >= Date.parse(new Date())&&(Date.parse(item.deadline.replace(/-/g,'/'))+(basicStore.classChargeDelayDays)*1000) < Date.parse(basicStore.maxClassEndTime)">
+                                            缴费缓冲期
+                                        </template>
+                                        <template v-else>已过期</template>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div v-else>
+                                  <div v-if="Date.parse(item.deadline.replace(/-/g,'/'))  < parseInt(basicStore.storeEndTime)*1000">试用期内</div>
+                                  <div v-else>通过</div>
+                                </div>
+                              </div>
+                                <div v-else>
+                                  <div v-if="parseInt(basicStore.storeEndTime)*1000 > Date.parse(new Date())">试用期内</div>
+                                  <div v-else>
+                                    <div v-if="item.new_apply_state == 0">待审核<p>已过期重新申请中</p></div>
+                                    <div v-else>
+                                      <div v-if="item.new_apply_state == 2">已拒绝<br />
+                                        <el-tooltip placement="right" effect="light" popper-class="atooltip" v-if="item.apply_class">
+                                          <div slot="content" class="toolTipCont">
+                                            <p v-if="item.apply_class">
+                                              已过期重新申请,平台拒绝原因:<br/>
+                                              {{item.apply_class.off_reason}}
+                                            </p>
+                                          </div>
+                                          <p class="lightBlue">
+                                            <i class="fa fa-question-circle" aria-hidden="true"></i>说明
+                                          </p>
+                                        </el-tooltip>
+                                      </div>
+                                      <div v-else>
+                                          <template v-if="(basicStore.storeEndTime+basicStore.classChargeDelayDays)*1000 >= Date.parse(new Date())&&(basicStore.storeEndTime+basicStore.classChargeDelayDays)*1000 < Date.parse(basicStore.maxClassEndTime)">
+                                              缴费缓冲期
+                                          </template>
+                                          <template v-else>已过期</template>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            <div v-else>
+                              <div v-if="item.apply_class">
+                                <div v-if="item.new_apply_state==0">待审核
+                                  <p>转签约平台审核中</p>
+                                </div>
+                                <div v-else>已拒绝<br/>
+                                  <el-tooltip placement="right" effect="light" popper-class="atooltip" v-if="item.apply_class">
+                                    <div slot="content" class="toolTipCont">
+                                      <p v-if="item.apply_class">
+                                        普通分类转为签约分类,拒绝原因:{{item.apply_class.off_reason}}
+                                      </p>
+                                    </div>
+                                    <p class="lightBlue">
+                                      <i class="fa fa-question-circle" aria-hidden="true"></i>说明
+                                    </p>
+                                  </el-tooltip>
+                                </div>
+                              </div>
+                              <div v-else>通过</div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+
+                      <template v-if="item.class_style == 2">
+                          <td>{{ item.deposit>= 0 ? item.deposit : '-'}}</td>
+                          <td>{{item.service_fee>= 0 ? item.service_fee : '-'}}</td>
+                          <td>
+                              <p ><p :class="item.orangeFlag==null||item.orangeFlag==false?'':'c-orange'">{{item.time}}</p>
+                                <template  v-if="item.day!=null &&item.day>0">
+                                    <span class="fs14">{{item.day}}</span>天后到期
+                                </template>
+                            </p>
+                          </td>
+                      </template>
+                      <template v-else>
+                          <td>-</td>
+                          <td>-</td>
+                          <td>-</td>
+                      </template>
+
+                      <td>
+                        <div v-if="item.apply_state == 0 || item.apply_state == 2">
+                          <a v-if="item.apply_state == 2"  class="ncsc-btn-orange-unfilled" @click="reApplyDialog(item,i)">重新申请</a>
+                        </div>
+                        <div v-else>
+                          <div v-if="item.is_charged">
+                            <div v-if="item.class_style ==1">
+                              <a v-if="item.new_apply_state != 0" class="ncsc-btn-orange-unfilled" @click="applyDialog(item,i)">申请签约分类</a>
+                            </div>
+                            <div v-else>
+                              <div v-if="item.deadline">
+                                <div v-if="Date.parse(item.deadline.replace(/-/g,'/')) < Date.parse(new Date())">
+                                    <template v-if="(Date.parse(item.deadline)+basicStore.classChargeDelayDays*1000) >= Date.parse(new Date())&&(Date.parse(item.deadline.replace(/-/g,'/'))+basicStore.classChargeDelayDays*1000) < Date.parse(basicStore.maxClassEndTime.replace(/-/g,'/'))">
+                                        <a v-if="item.showRenew" class="ncsc-btn-orange-unfilled" @click="selectOne(item,i)">缴费</a>
+                                    </template>
+                                    <template v-else>
+                                        <a v-if="item.new_apply_state == 1 || item.new_apply_state == 2" class="ncsc-btn-orange-unfilled" @click="reApplyDialog(item,i)">重新申请</a>
+                                    </template>
+                                </div>
+                                <div v-else>
+                                  <div v-if="item.deposit <= storeInfo.cashed_deposit">
+                                    <div v-if="Date.parse(item.deadline.replace(/-/g,'/')) < storeInfo.maxClassEndTime*1000 && item.showRenew">
+                                      <a v-if="item.inArray" :class="getDeadDay(item.deadline) > 0 && 4 > getDeadDay(item.deadline)?'ncsc-btn ncsc-btn-orange-rim':'ncsc-btn-orange-unfilled'" @click="selectOne(item,i)">缴费</a>
+                                      <a v-else class="ncsc-btn-orange-unfilled" @click="selectOne(item,i)">缴费</a>
+                                      <!-- <a v-else class="ncsc-btn-orange-unfilled" @click="selectOne(item,i)">缴纳技术服务费</a> -->
+                                    </div>
+                                  </div>
+                                  <div v-else>
+                                    <div v-if="item && item.depositFlag">保证金待审核</div>
+                                    <!-- <div v-else><a class="ncsc-btn-orange-unfilled" @click="selectOne(item,i)">缴纳保证金</a></div> -->
+                                    <div v-else><a v-if="Date.parse(item.deadline.replace(/-/g,'/')) < storeInfo.maxClassEndTime*1000 && item.showRenew" :class="getDeadDay(item.deadline) > 0 && 4 > getDeadDay(item.deadline)?'ncsc-btn ncsc-btn-orange-rim':'ncsc-btn-orange-unfilled'" @click="selectOne(item,i)">缴费</a></div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div v-else>
+                                  <div v-if="Date.parse(new Date()) < parseInt(basicStore.storeEndTime)*1000">
+                                      <div v-if="item.deposit <= storeInfo.cashed_deposit">
+                                        <div v-if="basicStore.maxClassEndTime && parseInt(basicStore.storeEndTime)*1000 < Date.parse(basicStore.maxClassEndTime.replace(/-/g,'/')) && item.showRenew">
+                                          <!-- <a class="ncsc-btn-orange-unfilled" @click="selectOne(item,i)">续费</a> -->
+                                          <a v-if="item.inArray" class="ncsc-btn-orange-unfilled" @click="selectOne(item,i)">缴费</a>
+                                          <a v-else class="ncsc-btn-orange-unfilled" @click="selectOne(item,i)">缴费</a>
+                                          <!-- <a v-else class="ncsc-btn-orange-unfilled" @click="selectOne(item,i)">缴纳技术服务费</a> -->
+                                        </div>
+                                      </div>
+                                      <div v-else>
+                                        <div v-if="item.deposit <= storeInfo.cashed_deposit"></div>
+                                        <div v-else>
+                                          <div v-if="item && item.depositFlag">保证金待审核</div>
+                                          <!-- <div v-else><a href="" class="ncsc-btn-orange-unfilled">缴纳保证金</a></div> -->
+                                          <div v-else>
+                                            <a v-if="basicStore.maxClassEndTime && parseInt(basicStore.storeEndTime)*1000 < Date.parse(basicStore.maxClassEndTime.replace(/-/g,'/')) && item.showRenew" class="ncsc-btn-orange-unfilled" @click="selectOne(item,i)">缴费</a></div>
+                                        </div>
+                                      </div>
+                                  </div>
+                                  <div v-else>
+                                      <template v-if="(basicStore.storeEndTime+basicStore.classChargeDelayDays)*1000 >= Date.parse(new Date())&&(basicStore.storeEndTime+basicStore.classChargeDelayDays)*1000 < Date.parse(basicStore.maxClassEndTime.replace(/-/g,'/'))">
+                                            <div><a v-if="item.showRenew" class="ncsc-btn-orange-unfilled" @click="selectOne(item,i)">缴费</a></div>
+                                      </template>
+                                      <template v-else>
+                                          <div v-if="item.new_apply_state ==1 || item.new_apply_state ==2">
+                                              <a class="ncsc-btn-orange-unfilled" @click="reApplyDialog(item,i)">重新申请</a>
+                                          </div>
+                                      </template>
+                                  </div>
+
+                              </div>
+                            </div>
+
+                          </div>
+                          <div v-else>
+                            <a v-if="item.new_apply_state != 0" class="ncsc-btn-orange-unfilled" @click="reApplyDialog(item,i)">重新申请</a>
+                          </div>
+                        </div>
+                        </td>
+                    </tr>
+                  </tbody>
+                </table>
+          </template>
+      </qm-table>
+
+
+
+      <div class="c-gray mt10">
+          <p>1）店铺有效期以签约分类最后一个期限为准，若全部过期则平台保持随时下架店铺权利。</p>
+          <p>2）保证金若存在多个，则以单个最高金额缴纳。</p>
+          <p>3）签约分类申请当月，120小时内需完成保证金及续费缴纳，否则将自动作废。签约首月，以 本月剩余实际天数*（技术服务费/当月实际天数） 作为本月技术服务费。次月起，以每自然月方式缴纳。</p>
+      </div>
+
+
+      <qm-dialog :dialogVisible="dialogVisible1" :width="'800px'" @close="closeFee()">
+          <template slot="title">{{dialogVisibleTitle}}</template>
+          <template slot="content" >
+                <div class="dialog_content">
+                        <div class="eject_con eject_con_class_fee" xmlns="http://www.w3.org/1999/html">
+                            <div class="c-orange fs12 ml10 discount-tips" :style="{display:serviceFeeDiscount&&discountTipsFlag==1?'block':'none'}" v-if="!qrcodeUrl">
+                                <p>续费优惠政策</p>
+                                <template v-for="(value, key) in serviceFeeDiscount">
+                                一次性续费满{{key}}个月，享受{{value*10}}折优惠；
+                                </template>
+                            </div>
+                                <div class="store-class-fee" v-if="!qrcodeUrl">
+                                <dl>
+                                  <dt>统一缴费至：</dt>
+                                  <dd>
+                                      <!-- <input name="endDate" id="endDate" type="text" class="w150" v-model="endDate" @keyup="reCalcServiceFee()" autocomplete="off">（到自然月月底） -->
+                                      <input name="endDate" id="endDate" type="text" class="w150" autocomplete="off" readonly>（到自然月月底）
+                                  </dd>
+                                </dl>
+                                <dl>
+                                  <dt>费用：</dt>
+                                    <dd id="serviceFee">
+                                      <span class="c-orange fs16" >¥ {{serviceFee}}</span>
+                                      <span  id="oldServiceFee" class="c-gray td-lt" v-if="oldServiceFee!=serviceFee" >¥ {{oldServiceFee}}</span>
+                                  </dd>
+                                </dl>
+                                <dl>
+                                  <dt>支付方式：</dt>
+                                  <dd>
+                                    <div class="ncsc-form-custom-radio-group">
+                                        <div :class="payType == 1 ? 'ncsc-form-custom-radio checked':'ncsc-form-custom-radio'" @click="payType = 1">
+                                          <div class="ncsc-custom-radio-frame">
+                                              <input type="radio" name="pay_type" value="1" id="pay_type_1" class="ncsc-custom-radio" checked="checked">
+                                          </div>
+                                          <label for="pay_type_1" class="ncsc-custom-txt">
+                                              <span class="name">微信</span>
+                                          </label>
+                                      </div>
+                                      <div :class="payType == 2 ? 'ncsc-form-custom-radio checked':'ncsc-form-custom-radio'" @click="payType = 2">
+                                          <div class="ncsc-custom-radio-frame">
+                                              <input type="radio" name="pay_type" value="2" id="pay_type_2" class="ncsc-custom-radio">
+                                          </div>
+                                          <label for="pay_type_2" class="ncsc-custom-txt">
+                                              <span class="name">支付宝</span>
+                                          </label>
+                                      </div>
+                                    </div>
+                                  </dd>
+                                </dl>
+                                    <div class="ncsc-table-box">
+                                        <table class="ncsc-table-spec">
+                                            <thead>
+                                            <tr>
+                                                <th class="col1">分类</th>
+                                                <th class="w150">到期时间</th>
+                                                <th class="w150">续费时长</th>
+                                                <th class="w150">技术服务费</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-for="(item,i) in filterList">
+                                                    <td class="col1">{{item.gc_parent_name}} &gt; {{item.gc_name}}</td>
+                                                    <td class="fs12 c-orange">{{item.apply_state ==0 ?'-':getDeadDayFormat(item.deadline,item.class_style)}}</td>
+                                                    <td><span class="pre-month-fee" >{{item.timeTips}}</span><span class="c-orange pre-month-fee">{{item.discountTips}}</span></td>
+                                                    <td><span class="pre-month-fee" >¥{{item.gc_fee}}</span> <span  class="c-gray td-lt pre-month-fee"  :style="{display: item.gc_fee==item.gc_old_fee?'none':'block'}" >¥{{item.gc_old_fee}}</span></td>
+
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                              </div>
+
+                          <div class="store-class-pay" v-if="qrcodeUrl">
+                              <p class="fs16 c-orange">微信扫码支付</p>
+                              <p id="wxqrcode"></p>
+                          </div>
+
+                          <div id="warning" class="mb10"></div>
+                          <div class="bottom" v-if="!qrcodeUrl">
+                              <input type="button" id="submit" value="提交订单" class="ncsc-btn ncsc-btn-orange h30" :class="btnClick.serviceFeeSaveCommitBtn?'dis-btn':''" @click="serviceFeeSaveCommit" :disabled="btnClick.serviceFeeSaveCommitBtn">
+                              <input type="button" id="submit" value="取消" class="ncsc-btn ncsc-btn-orange-rim h30" @click="dialogVisible1 = false">
+                          </div>
+                            </div>
+                        <form id="alipayment" v-show="paySn" ref="alipayment" name="alipayment" :action="resourcesHost+'/Payment/aliPay'" method="post">
+                            <input id="WIDout_trade_no" name="WIDout_trade_no" v-model="paySn" ref="WIDout_trade_no" hidden>
+                            <input ref="aliReturn" id="aliReturn"  name="aliReturn" hidden>
+                        </form>
+                        </div>
+          </template>
+      </qm-dialog>
+
+
+
+      <qm-dialog :dialogVisible="reApplyDialogShow" :width="'800px'" @close="reApplyDialogShow = false">
+          <template slot="title">重新申请分类</template>
+          <template slot="content" >
+
+              <div class="eject_con eject_store_class">
+                  <div class="msg-check-s mb20" v-if="offReasonShowFlag">
+                    <div class="msg-tit"><b>审核意见：</b></div>
+                    <div class="msg-txt">{{offReason}}</div>
+                </div>
+              <form id="form_register" method="post" enctype="multipart/form-data" onsubmit="return false">
+                  <input type="hidden" name="form_submit" value="ok">
+                  <input type="hidden" id="radio-index" value="1">
+                  <div class="form-list">
+                      <div class="fs12 mb10 c-gray">
+                          <p><b class="c-black">签约分类：</b> 由商家自主申请的在协议签订区域范围享有独家推荐权的付费（签约技术服务费）销售分类。<br>（部分签约分类需在提交国家规定的相关资质后方可申请）。</p>
+                          <p class="mt5"><b>普通分类：</b>由您自主申请的除签约分类之外的免费（签约技术服务费）销售分类。<br>（部分普通分类需在提交国家规定的相关资质后方可申请）。</p>
+                      </div>
+                      <div class="form-category-con js-category">
+                              <div class="form-category-item ncsc-form-table">
+                                  <template v-if="reapplySignFlag">
+
+                                      <div class="ncsc-form-item">
+                                          <div class="item-c1">
+                                              经营分类
+                                          </div>
+                                          <div class="item-c2">
+                                              {{curReApplyItem.gc_parent_name}} &gt; {{curReApplyItem.gc_name}}
+
+                                              <!-- <div class="fs12 js-hint-type" v-if="!(curReApplyItem.apply_state == 0 || curReApplyItem.apply_state == 2) && curReApplyItem.is_charged != 0 && curReApplyItem.class_style == 2  && curReApplyItem.new_apply_state != 0 && curReApplyItem.new_apply_state != 2">
+                                                  <p class="mt5 c-orange">签约分类享有独家推荐权3</p>
+                                                  <p class="mt5 type-info" >签约技术服务费：<b>¥ <span data-type="ts-fee">{{curReApplyItem.service_fee}}</span></b> / 月 （试用期免费，正式入驻后可按月、季度、年缴纳）</p>
+                                                  <p class="mt5 type-info" >保证金：<b>¥ <span data-type="pledge-fee">{{curReApplyItem.deposit}}</span></b> （商户合同签订后五个工作日内一次性缴齐，若有多个销售分类则按最高保证金缴纳）</p>
+                                              </div> -->
+                                              <div class="fs12 js-hint-type">
+                                                  <p class="mt5 c-orange">签约分类享有独家推荐权</p>
+                                                  <p class="mt5 type-info" >签约技术服务费：<b>¥ <span data-type="ts-fee">{{curCategory.service_fee}}</span></b> / 月 （正式入驻后可按月、季度、年缴纳）</p>
+                                                  <p class="mt5 type-info" >保证金：<b>¥ <span data-type="pledge-fee">{{curCategory.deposit}}</span></b> （商户合同签订后五个工作日内一次性缴齐，若有多个销售分类则按最高保证金缴纳）</p>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </template>
+                                  <template v-else>
+
+                                      <div class="ncsc-form-item">
+                                          <div class="item-c1">
+                                              经营分类
+                                          </div>
+                                          <div class="item-c2">
+                                              {{curReApplyItem.gc_parent_name}} &gt; {{curReApplyItem.gc_name}}
+                                          </div>
+                                      </div>
+
+                                      <div class="ncsc-form-item">
+                                          <!-- v-if="!(!(curReApplyItem.apply_state == 0 || curReApplyItem.apply_state == 2) && curReApplyItem.is_charged != 0 && curReApplyItem.class_style == 2  && curReApplyItem.new_apply_state != 0 && curReApplyItem.new_apply_state != 2)"> -->
+                                          <div class="item-c1">签约类型
+                                              <el-tooltip placement="right-start" effect="light" popper-class="atooltip" class="mt3">
+                                                  <div slot="content" class="toolTipCont">
+                                                      <p>
+                                                          <span>签约分类：</span> 由商家自主申请的在协议签订区域范围 <span>享有独家推荐权</span> 的付费（签约技术服务费）销售分类。
+                                                      </p>
+                                                      <p>
+                                                          （部分签约分类需在提交国家规定的相关资质后方可申请）。
+                                                      </p>
+                                                      <br />
+                                                      <p>
+                                                          普通分类：由您自主申请的除签约分类之外的免费（签约技术服务费）销售分类。
+                                                      </p>
+                                                      <p>
+                                                          （部分普通分类需在提交国家规定的相关资质后方可申请）。
+                                                      </p>
+                                                  </div>
+
+                                              </el-tooltip>
+                                          </div>
+                                          <div class="item-c2">
+                                              <div class="ncsc-form-custom-radio-group">
+                                                  <div class="ncsc-form-custom-radio" :class="curReApplyItem.class_style == 2 ? 'checked':''">
+                                                      <div class="ncsc-custom-radio-frame">
+                                                          <input type="radio"  value="2" v-model="curReApplyItem.class_style"  class="ncsc-custom-radio">
+                                                      </div>
+                                                      <label class="ncsc-custom-txt" @click="clickRadioLabel(curReApplyItem,2)">
+                                                          <span class="name">签约</span>
+                                                      </label>
+                                                  </div>
+                                                  <div class="ncsc-form-custom-radio" :class="curReApplyItem.class_style == 1 ? 'checked':''">
+                                                      <div class="ncsc-custom-radio-frame">
+                                                          <input type="radio"  value="1"  v-model="curReApplyItem.class_style"  class="ncsc-custom-radio">
+                                                      </div>
+                                                      <label class="ncsc-custom-txt" @click="clickRadioLabel(curReApplyItem,1)">
+                                                          <span class="name">普通</span>
+                                                      </label>
+                                                  </div>
+                                              </div>
+                                              <div class="fs12 js-hint-type" v-if="curReApplyItem.class_style == 2">
+                                                  <p class="mt5 c-orange">签约分类享有独家推荐权</p>
+                                                  <p class="mt5 type-info" >签约技术服务费：<b>¥ <span data-type="ts-fee">{{curCategory.service_fee}}</span></b> / 月 （正式入驻后可按月、季度、年缴纳）</p>
+                                                  <p class="mt5 type-info" >保证金：<b>¥ <span data-type="pledge-fee">{{curCategory.deposit}}</span></b> （商户合同签订后五个工作日内一次性缴齐，若有多个销售分类则按最高保证金缴纳）</p>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </template>
+
+
+
+                                          <div class="ncsc-form-item need-file" v-if="curCategory && curCategory.need_file" v-for="(file,f) in curCategory.need_file">
+                                              <div class="item-c1">
+                                                      {{file.name}}
+                                              </div>
+                                              <div class="item-c2">
+                                                  <p class="c-gray mb10">{{file.remark}}</p>
+                                                  <div class="upload-file-item">
+                                                      <div class="btn-upload-file" v-if="!file.intelligence">
+                                                      <input type="file" name="intelligence_1148_0" id="intelligence_1148_0" class="file-upload" @change="logoLoad($event,curCategory,file,f)">
+                                                          <p class="upload-txt">上传文件</p>
+                                                      </div>
+                                                      <a v-else :href="file.intelligence" target="_blank" class="upload-link" data-type="intelligence_1148_0">
+                                                              {{file.intelligence.replace(ImageIp+imagePathConfig.Register,'')}}
+                                                              <p class="btn-del-file" @click="deleteIntelligence($event,curCategory,file,f)">×</p>
+                                                      </a>
+                                                      <input type="hidden" name="intelligence_1148_0">
+                                                  </div>
+                                              </div>
+                                          </div>
+                            </div>
+                      </div>
+                      <div id="warning"></div>
+                      <div class="bottom">
+                          <input type="button" id="register" value="确定" class="ncsc-btn ncsc-btn-orange fr h30" @click="reApplySubmit" :disabled="btnClick.reApplySubmitBtn">
+                          <div class="clear"></div>
+                      </div>
+                  </div>
+              </form>
+            </div>
+          </template>
+      </qm-dialog>
+
+
+      <qm-dialog :dialogVisible="applyDialogShow" :width="'800px'" @close="applyDialogShow = false">
+        <template slot="title">申请转为签约分类</template>
+        <template slot="content" >
+            <div class="eject_con eject_store_class">
+                <div class="msg-check-s mb20" v-if="curReApplyItem.apply_class && curReApplyItem.apply_class.off_reason">
+                  <div class="msg-tit"><b>审核意见：</b></div>
+                  <div class="msg-txt">{{curReApplyItem.apply_class.off_reason}}</div>
+              </div>
+            <form id="form_register" action="index.php?c=qm_store_class&amp;a=classReapply&amp;gc_id=1119" method="post" enctype="multipart/form-data" onsubmit="return false">
+                <input type="hidden" name="form_submit" value="ok">
+                <input type="hidden" id="radio-index" value="1">
+                <div class="form-list">
+                    <div class="fs12 mb10 c-gray">
+                        <p class="mb5"><b>经营分类添加个数要求：</b>签约分类<b class="c-black"> 不少于一个 </b>，普通分类数量不限。</p>
+                        <p><b class="c-black">签约分类：</b> 由商家自主申请的在协议签订区域范围享有独家推荐权的付费（签约技术服务费）销售分类。<br>（部分签约分类需在提交国家规定的相关资质后方可申请）。</p>
+                        <p class="mt5"><b>普通分类：</b>由您自主申请的除签约分类之外的免费（签约技术服务费）销售分类。<br>（部分普通分类需在提交国家规定的相关资质后方可申请）。</p>
+                    </div>
+                    <div class="form-category-con js-category">
+                            <div class="form-category-item ncsc-form-table">
+                                <div class="ncsc-form-item">
+                                    <div class="item-c1">
+                                        经营分类
+                                    </div>
+                                    <div class="item-c2">
+                                        {{curReApplyItem.gc_parent_name}} &gt; {{curReApplyItem.gc_name}}
+                                        <input type="hidden" name="class[]" value="1119">
+                                        <input type="hidden" name="type[0]" value="2">
+
+                                        <div class="fs12 js-hint-type">
+                                            <p class="mt5 c-orange">签约分类享有独家推荐权</p>
+                                            <p class="mt5">签约技术服务费：<b>¥ <span data-type="ts-fee">{{curCategory.service_fee &&curCategory.service_fee!= 0 ?  toFix0(curCategory.service_fee) : '0'}}</span></b> / 月 （正式入驻后可按月、季度、年缴纳）</p>
+                                            <p class="mt5">保证金：<b>¥ <span data-type="pledge-fee">{{curCategory.deposit && curCategory.deposit!= 0 ? toFix0(curCategory.deposit)  : '0'}}</span></b> （商户合同签订后五个工作日内一次性缴齐，若有多个销售分类则按最高保证金缴纳）</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="ncsc-form-item need-file" v-if="curCategory && curCategory.need_file" v-for="(file,f) in curCategory.need_file">
+                                    <div class="item-c1">
+                                            {{file.name}}
+                                    </div>
+                                    <div class="item-c2">
+                                        <p class="c-gray mb10">{{file.remark}}</p>
+                                        <div class="upload-file-item">
+                                            <div class="btn-upload-file" v-if="!file.intelligence">
+                                            <input type="file" name="intelligence_1148_0" id="intelligence_1148_0" class="file-upload" @change="logoLoad($event,curCategory,file,f)">
+                                                <p class="upload-txt">上传文件</p>
+                                            </div>
+                                            <a v-else :href="file.intelligence" target="_blank" class="upload-link" data-type="intelligence_1148_0">
+                                                    {{file.intelligence.replace(ImageIp+imagePathConfig.Register,'')}}
+                                                    <p class="btn-del-file" @click="deleteIntelligence($event,curCategory,file,f)">×</p>
+                                            </a>
+                                            <input type="hidden" name="intelligence_1148_0">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                    </div>
+
+
+
+                    <div id="warning"></div>
+                    <div class="bottom">
+                        <input type="button" id="register" value="确定" class="ncsc-btn ncsc-btn-orange fr h30" @click="changeToSignSubmit" :disabled="btnClick.changeToSignSubmitBtn">
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            </form>
+          </div>
+        </template>
+      </qm-dialog>
+
+      <qm-dialog :dialogVisible="showItemDialog" :width="'800px'" @close="showItemDialog = false">
+          <template slot="title">分类详情</template>
+          <template slot="content" >
+              <div class="eject_con">
+                  <div class="ncsc-table-box">
+                    <table class="ncsc-table-spec2 table-store-class-detail">
+                      <tbody>
+                        <tr>
+                          <th>分类</th>
+                          <td>{{curCategory.gc_parent_name}} &gt; {{curCategory.gc_name}}</td>
+                          <th>状态</th>
+                          <td>
+                              <div v-if="curCategory.apply_state == 0 || curCategory.apply_state == 2">
+                                  <div v-if="curCategory.apply_state == 0 ">待审核</div>
+                                  <div v-else>
+                                    <div v-if="curCategory.new_apply_state == 2">已过期重新审核拒绝
+                                        <el-tooltip placement="right" effect="light" popper-class="atooltip" v-if="curCategory.off_reason">
+                                            <div slot="content" class="toolTipCont">
+                                              <p v-if="curCategory.off_reason">
+                                                拒绝原因:{{curCategory.apply_class.off_reason}}
+                                              </p>
+                                            </div>
+                                            <p class="lightBlue">
+                                              <i class="fa fa-question-circle" aria-hidden="true"></i>说明
+                                            </p>
+                                          </el-tooltip>
+                                    </div>
+                                    <div v-else>
+                                      已拒绝
+                                      <el-tooltip placement="right" effect="light" popper-class="atooltip" v-if="curCategory.off_reason">
+                                          <div slot="content" class="toolTipCont">
+                                            <p>
+                                              拒绝原因：{{curCategory.off_reason}}
+                                            </p>
+                                          </div>
+                                          <p class="lightBlue">
+                                            <i class="fa fa-question-circle" aria-hidden="true"></i>说明
+                                          </p>
+                                        </el-tooltip>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div v-else>
+                                  <div v-if="curCategory.is_charged == 0">
+                                    <div v-if="curCategory.new_apply_state == 0">
+                                      待审核
+                                      <p v-if="curCategory.new_apply_state == 0">已下架重新申请中</p>
+                                          <p v-else-if="curCategory.new_apply_state == 2">重新申请已拒绝</p>
+                                      </div>
+                                    <div v-else>
+                                      已下架
+
+                                      <p v-if="curCategory.new_apply_state == 0">已下架重新申请中</p>
+                                      <p v-else-if="curCategory.new_apply_state == 2">重新申请已拒绝</p>
+                                      <el-tooltip placement="right" effect="light" popper-class="atooltip" v-if="curCategory.charged_reason||curCategory.apply_class">
+                                          <div slot="content" class="toolTipCont">
+                                            <p v-if="curCategory.charged_reason">
+                                              下架原因：{{curCategory.charged_reason}}
+                                              <p v-if="curCategory.new_apply_state == 2 && curCategory.apply_class.off_reason">下架重新申请,平台拒绝原因：{{curCategory.apply_class.off_reason}}</p>
+                                            </p>
+                                          </div>
+                                          <p class="lightBlue">
+                                            <i class="fa fa-question-circle" aria-hidden="true"></i>说明
+                                          </p>
+                                        </el-tooltip>
+                                        <!-- <div class="tip-doubt tip-doubt-word">
+                                          <p class="tip-tit">
+                                            <i class="fa fa-question-circle" aria-hidden="true"></i>说明
+                                          </p>
+                                          <div class="tip-doubt-con">
+                                            <p class="tip-txt" v-if="curCategory.charged_reason"><b>
+                                              下架原因：</b>{{curCategory.charged_reason}}
+                                              <p v-if="curCategory.new_apply_state == 2 && curCategory.apply_class.off_reason">下架重新申请,平台拒绝原因：{{curCategory.apply_class.off_reason}}</p>
+                                            </p>
+                                          </div>
+                                        </div> -->
+                                    </div>
+                                  </div>
+                                  <div v-else>
+                                    <div v-if="curCategory.class_style == 2">
+                                      <div v-if="curCategory.deadline">
+                                        <div v-if="Date.parse(curCategory.deadline.replace(/-/g,'/')) < Date.parse(new Date())">
+
+                                          <!-- <div v-if="curCategory.new_apply_state == 0">待审核
+                                            <p>已过期重新申请中1</p>
+                                          </div> -->
+                                          <div v-if="curCategory.new_apply_state == 0">已过期
+                                            </div>
+                                          <div v-else>
+                                            <div v-if="curCategory.new_apply_state == 2"> 已拒绝
+                                                <el-tooltip placement="right" effect="light" popper-class="atooltip" v-if="curCategory.apply_class && curCategory.apply_class.off_reason">
+                                                    <div slot="content" class="toolTipCont">
+                                                      <p v-if="curCategory.apply_class">
+                                                        已过期重新申请,平台拒绝原因:<br/>
+                                                        {{curCategory.apply_class.off_reason}}
+                                                      </p>
+                                                    </div>
+                                                    <p class="lightBlue">
+                                                      <i class="fa fa-question-circle" aria-hidden="true"></i>说明
+                                                    </p>
+                                                  </el-tooltip>
+                                            </div>
+                                            <div v-else>
+                                                <template v-if="((Date.parse(curCategory.deadline.replace(/-/g,'/'))+basicStore.classChargeDelayDays*1000) >= Date.parse(new Date()))&&(Date.parse(curCategory.deadline.replace(/-/g,'/'))+basicStore.classChargeDelayDays*1000)<Date.parse(basicStore.maxClassEndTime)">
+                                                    缴费缓冲期
+                                                </template>
+                                                <template v-else>已过期</template>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div v-else>
+                                            通过
+                                        </div>
+                                      </div>
+                                        <div v-else>
+                                          <div v-if="parseInt(basicStore.storeEndTime)*1000 > Date.parse(new Date())">试用期内</div>
+                                          <div v-else>
+                                            <div v-if="curCategory.new_apply_state == 0">待审核/已过期重新申请中</p>
+                                              <el-tooltip placement="right" effect="light" popper-class="atooltip" v-if="curCategory.apply_class && curCategory.apply_class.off_reason">
+                                                  <div slot="content" class="toolTipCont">
+                                                    <p v-if="curCategory.apply_class">
+                                                      已过期重新申请,平台拒绝原因:<br/>
+                                                      {{curCategory.apply_class.off_reason}}
+                                                    </p>
+                                                  </div>
+                                                  <p class="lightBlue">
+                                                    <i class="fa fa-question-circle" aria-hidden="true"></i>说明
+                                                  </p>
+                                                </el-tooltip>
+                                            </div>
+                                            <div v-else>
+                                              <div v-if="curCategory.new_apply_state == 2">已拒绝
+
+                                              </div>
+                                              <div v-else>
+                                                  <template v-if="((basicStore.storeEndTime+basicStore.classChargeDelayDays)*1000 >= Date.parse(new Date()))&&((basicStore.storeEndTime+basicStore.classChargeDelayDays)*1000 < Date.parse(basicStore.maxClassEndTime))">
+                                                      缴费缓冲期
+                                                  </template>
+                                                  <template v-else>已过期</template>
+                                                  </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    <div v-else>
+                                      <div v-if="curCategory.apply_class">
+                                        <div v-if="curCategory.new_apply_state==0">待审核
+                                          <p>转签约平台审核中</p>
+                                        </div>
+                                        <div v-else>
+                                          已拒绝
+                                          <el-tooltip placement="right" effect="light" popper-class="atooltip" v-if="curCategory.apply_class">
+                                              <div slot="content" class="toolTipCont">
+                                                <p v-if="curCategory.apply_class">
+                                                  普通分类转为签约分类,拒绝原因:{{curCategory.apply_class.off_reason}}
+                                                </p>
+                                              </div>
+                                              <p class="lightBlue">
+                                                <i class="fa fa-question-circle" aria-hidden="true"></i>说明
+                                              </p>
+                                            </el-tooltip>
+                                        </div>
+                                      </div>
+                                      <div v-else>通过</div>
+                                    </div>
+                                  </div>
+                                </div>
+                          </td>
+                        </tr>
+                        <template v-if="curCategory.need_file && curCategory.need_file.length > 0 && curCategory.file_name != null" v-for="(file,f) in curCategory.need_file">
+                          <tr v-if="f == (curCategory.need_file.length-1) && (f%2)==0">
+                            <th>{{file.name}}</th>
+                            <td class="js-tips-img" colspan="3">
+                              <a @click="showImg(ImageIp + imagePathConfig.Register + curCategory.file_name[file.name])">查看凭证</a>
+                            </td>
+                          </tr>
+                          <template v-else-if="(f%2)==0">
+                                <tr>
+                                    <template v-for="(file1,f1) in curCategory.need_file" v-if="f1 >= f && (f+2) > f1 && !(f == (curCategory.need_file.length-1) && (f%2)==0)">
+                                        <th>{{file1.name}}</th>
+                                        <td class="js-tips-img">
+                                          <a @click="showImg(ImageIp + imagePathConfig.Register + curCategory.file_name[file1.name])">查看凭证</a>
+                                        </td>
+                                    </template>
+                                  </tr>
+                          </template>
+                          <template v-else></template>
+                        </template>
+
+
+                        <tr>
+                          <th>申请时间</th>
+                          <td>{{curCategory.apply_time && curCategory.apply_time != 0 ? curCategory.apply_time : '-' | dateFormat}} </td>
+                          <th>到期时间</th>
+
+                          <td :class="curCategory.orangeFlag!=null&&curCategory.orangeFlag==1?'c_orange':''">{{curCategory.time}}</td>
+                        </tr>
+                        <tr v-if="curCategory.class_style == 2">
+                          <th>保证金</th>
+                          <td>￥{{curCategory.deposit && curCategory.deposit!= 0 ? curCategory.deposit : '0'}}</td>
+                          <th>技术服务费</th>
+                          <td>￥{{curCategory.service_fee &&curCategory.service_fee!= 0 ? curCategory.service_fee : '0'}}</td>
+                        </tr>
+                        <tr id="signScope" v-if="curCategory.class_style == 2&&curCategory.sign_scope">
+                          <th>签约范围</th>
+                          <td colspan="3" style="height: 200px; padding:0">
+                            <el-amap vid="amap" :zoom="zoom" :amap-manager="amapManager" :center="center"
+                              ref="map"
+                              class="amap-demo">
+                                <el-amap-polygon
+                                  v-for="(polygon, index) in polygons"
+                                  :key="'polygon'+index"
+                                  :vid="index" :ref="`polygon_${index}`"
+                                  :path="polygon.path"
+                                  :draggable="polygon.draggable"
+                                  :strokeColor="'#0000FF'"
+                                  :fillColor="'#2D901F'"
+                                  fillOpacity="0.4"
+                                  :events="polygon.events">
+                                </el-amap-polygon>
+                                <el-amap-marker
+                                    :position="marker.position"
+                                    :icon="marker.icon"
+                                    vid="marker">
+                                  </el-amap-marker>
+                              </el-amap>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div id="warning"></div>
+                  <div class="bottom">
+                      <input type="button" id="register" value="确定" class="ncsc-btn ncsc-btn-orange h30" @click="showItemDialog = false">
+                  </div>
+                </div>
+          </template>
+      </qm-dialog>
+
+
+      <el-dialog
+        :visible.sync="dialogImageVisible"
+        :lock-scroll="modalAppendToBody"
+        :close-on-click-modal = "closeOnClickModal"
+        :width="imgWidth + 20 + 'px'"
+        customClass="show-image"
+        v-dialogDrag>
+            <template v-if="hasImage">
+                <img :src="imgUrl" style="    max-width: 1000px;"/>
+                <div class="closeDiv">
+                    <div id="lightbox-container-image-data">
+                        <div id="lightbox-image-details">
+                            <span id="lightbox-image-details-caption" style="display: none;"></span>
+                            <span id="lightbox-image-details-currentNumber" style="display: none;"></span>
+                        </div>
+                        <div id="lightbox-secNav">
+                            <a id="lightbox-secNav-btnClose" @click="dialogImageVisible = false">
+                                <img src="//static.shenbd.com/lib/js/lightbox/img/lightbox-btn-close.gif">
+                            </a>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+        </el-dialog>
+
+        <el-dialog
+        :visible.sync="dialogVisibleFalse"
+        :lock-scroll="modalAppendToBody"
+        width="250px"
+        customClass="show-image">
+
+            <div class="loader">
+                    <img src="//static.shenbd.com/lib/js/lightbox/img/lightbox-ico-loading.gif">
+            </div>
+        </el-dialog>
+
+</div>

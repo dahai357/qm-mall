@@ -1,0 +1,17 @@
+<div>
+        <template>
+                <span class="choice-item form-select form-s">
+                    <select id="provinceSelect" name="province" class="province-select" @change="search($event,'province')">
+                    </select>
+                </span>
+                    <span class="choice-item form-select form-s" style="display:none">
+                    <select id="citySelect" name="city" class="city-select" @change="search($event,'city')">
+                    </select>
+                </span>
+                    <span class="choice-item form-select form-s" style="display:none">
+                    <select id="districtSelect" name="district" class="area-select" @change="search($event,'district')">
+                    </select>
+                </span>
+                <p></p>
+            </template>
+</div>

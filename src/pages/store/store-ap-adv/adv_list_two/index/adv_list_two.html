@@ -1,0 +1,365 @@
+<div class="qm-store-class-base">
+    <div class="c-gray">
+        <ul>
+            <li> 广告图系统默认审核通过，平台将进行内容监控，存在违法/违规内容平台将有权下架广告图</li>
+            <li> 上传两张以上就自动转换为多图模式。多图模式下,默认轮播时间为3秒</li>
+        </ul>
+    </div>
+    <div class="delivery-div">
+        <div :class="advType == 1?'delivery-span delivery-span-left delivery-span-choosed':'delivery-span delivery-span-left'" @click="changeType()">店铺中部广告位</div>
+        <div :class="advType == 2?'delivery-span delivery-span-right delivery-span-choosed':'delivery-span delivery-span-right'" @click="changeType()">商品分类广告位</div>
+    </div>
+    <div v-if="advType == 1">
+        <div class="search-form">
+            <label>广告类型：</label>
+            <select name="type"  class="mt20 mb20"  v-model="pageParams.type">
+                <option value="-1">全部</option>
+                <template v-for="(first,f) in typeNames">
+                    <option v-if ="first == pageParams.type" :value="f" :key="f" selected>{{first}}</option>
+                    <option v-else :value="f" :key="f" selected>{{first}}</option>
+                </template>
+            </select>
+            <label>广告状态：</label>
+            <select name="type"  class="mt20 mb20"  v-model="pageParams.status">
+                <option value="-1">全部</option>
+                <template v-for="(first,f) in statusNames">
+                    <option v-if ="first == pageParams.status" :value="f" :key="f" selected>{{first}}</option>
+                    <option v-else :value="f" :key="f" selected>{{first}}</option>
+                </template>
+            </select>
+            <input type="submit" class="ncsc-btn" value="搜索" @click="search()">
+        </div>
+        <qm-table :pageParams="pageParams">
+            <template slot="table">
+                <table class="ncsc-default-table">
+                    <thead>
+                    <tr>
+                        <th class="w160">广告图</th>
+                        <th class="w100">开始时间</th>
+                        <th class="w100">结束时间</th>
+                        <th>广告链接</th>
+                        <th class="w80">审核状态</th>
+                        <th>广告状态</th>
+                        <th class="w200">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="(item,i) in advList">
+                        <td class="js-tips-img">
+                            <div>
+                                <a>
+                                    <img :src="item.imageUrl" @click="showImageDetil(item.imageUrl)">
+                                    <!-- <img :src="ImageIp + imagePathConfig.advSrcImagePath + item.src"> -->
+                                </a>
+                            </div>
+                        </td>
+                        <td class="c-gray">{{item.start_time | dateFormat}}</td>
+                        <td class="c-gray">{{item.end_time | dateFormat}}</td>
+                        <td>
+                            <p class="mb5 c-gray">{{typeNames[item.type]}}</p>
+                            <template v-if="item.href&&item.type==2">
+                                <div class="tip-doubt tip-doubt-word tip-doubt-ad-link">
+                                    <p class="tip-tit">查看地址</p>
+                                    <div class="tip-doubt-con"><p class="tip-txt">{{item.href}}</p></div>
+                                </div>
+                            </template>
+                            <template v-else-if="item.hrefImg&&item.type == 3">
+                                <div class="js-tips-img">
+                                    <a @click="showImageDetil(item.hrefImg)">查看图片</a>
+                                </div>
+                            </template>
+                            <template v-else-if="item.href_goods_id&&item.type == 4">
+                                <div class="tip-doubt tip-doubt-word tip-doubt-ad-link">
+                                    <a class="tip-tit"  @click="typeJump(item,i)">查看商品</a>
+                                    <div class="tip-doubt-con"><p class="tip-txt">{{item.searchText}}</p></div>
+                                </div>
+                            </template>
+                            <template v-else-if="item.href_bl_id&&item.type == 5">
+                                <div class="tip-doubt tip-doubt-word tip-doubt-ad-link">
+                                    <a class="tip-tit" @click="typeJump(item,i)">查看组合销售活动</a>
+                                    <div class="tip-doubt-con"><p class="tip-txt">{{item.searchText}}</p></div>
+                                </div>
+                            </template>
+                            <template v-else-if="item.href_gc_id&&item.type == 6">
+                                <div class="tip-doubt tip-doubt-word tip-doubt-ad-link">
+                                    <p class="tip-tit">查看指定分类</p>
+                                    <div class="tip-doubt-con"><p class="tip-txt">{{item.searchText}}</p></div>
+                                </div>
+                            </template>
+                            <template v-else-if="item.href_coupon_id&&item.type == 7">
+                                <div class="tip-doubt tip-doubt-word tip-doubt-ad-link">
+                                    <a class="tip-tit" @click="typeJump(item,i)">查看优惠券</a>
+                                    <div class="tip-doubt-con"><p class="tip-txt">{{item.searchText}}</p></div>
+                                </div>
+                            </template>
+                        </td>
+                        <td class="c-gray">{{item.state == 0 ? '待审核' : item.state == 1 ? '审核通过' : '平台下架'}}</td>
+                        <td>{{item.stateName}}</td>
+                        <td class="handle">
+                            <p>
+                                <a class="ncsc-btn" v-if="item.state == 1" @click="toggleUse(item,i)">{{item.is_use == 1 ?'禁用':'启用'}}</a>
+                                <a class="ncsc-btn" @click="editAdvertice(item,i)">编辑</a>
+                                <a class="ncsc-btn" @click="deleteAdvertice(item,i)">删除</a>
+                            </p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </template>
+        </qm-table>
+
+        <qm-pagination :pageParams="pageParams" @changeIndex="changeIndex($event)"></qm-pagination>
+
+    </div>
+    <div v-else>
+        <div class="search-form">
+            <label>商品分类：</label>
+            <select name="type"  class="mt20 mb20"  v-model="pageParamsClass.gc_id">
+                <option value="-1">全部</option>
+                <template v-for="(first,f) in classNames">
+                    <option v-if ="f == pageParamsClass.gc_id" :value="f" :key="f" selected>{{first}}</option>
+                    <option v-else :value="f" :key="f" selected>{{first}}</option>
+                </template>
+            </select>
+            <label>广告类型：</label>
+            <select name="type"  class="mt20 mb20"  v-model="pageParamsClass.type">
+                <option value="-1">全部</option>
+                <template v-for="(first,f) in typeNames">
+                    <option v-if ="first == pageParamsClass.type" :value="f" :key="f" selected>{{first}}</option>
+                    <option v-else :value="f" :key="f" selected>{{first}}</option>
+                </template>
+            </select>
+            <label>广告状态：</label>
+            <select name="type"  class="mt20 mb20"  v-model="pageParamsClass.status">
+                <option value="-1">全部</option>
+                <template v-for="(first,f) in classStatusNames">
+                    <option v-if ="first == pageParamsClass.status" :value="f" :key="f" selected>{{first}}</option>
+                    <option v-else :value="f" :key="f" selected>{{first}}</option>
+                </template>
+            </select>
+            <input type="submit" class="ncsc-btn" value="搜索" @click="search()">
+        </div>
+        <qm-table :pageParams="pageParamsClass">
+            <template slot="table">
+                <table class="ncsc-default-table">
+                    <thead>
+                    <tr>
+                        <th class="w160">广告图</th>
+                        <th class="w100">商品分类</th>
+                        <th>广告链接</th>
+                        <th class="w80">审核状态</th>
+                        <th class="w80">广告状态</th>
+                        <th class="w200">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="(item,i) in classAdvList">
+                        <td class="js-tips-img js-tips-img-class">
+                            <div>
+                                <a>
+                                    <img :src="item.imageUrl" @click="showImageDetil(item.imageUrl)">
+                                    <!-- <img :src="ImageIp + imagePathConfig.advSrcImagePath + item.src"> -->
+                                </a>
+                            </div>
+                        </td>
+                        <td class="c-gray">{{classNames[item.gc_id]}}</td>
+                        <td>
+                            <p class="mb5 c-gray">{{typeNames[item.type]}}</p>
+                            <template v-if="item.href&&item.type==2">
+                                <div class="tip-doubt tip-doubt-word tip-doubt-ad-link">
+                                    <p class="tip-tit">查看地址</p>
+                                    <div class="tip-doubt-con"><p class="tip-txt">{{item.href}}</p></div>
+                                </div>
+                            </template>
+                            <template v-else-if="item.hrefImg&&item.type == 3">
+                                <div class="js-tips-img">
+                                    <a @click="showImageDetil(item.hrefImg)">查看图片</a>
+                                </div>
+                            </template>
+                            <template v-else-if="item.href_goods_id&&item.type == 4">
+                                <div class="tip-doubt tip-doubt-word tip-doubt-ad-link">
+                                    <a class="tip-tit"  @click="typeJump(item,i)">查看商品</a>
+                                    <div class="tip-doubt-con"><p class="tip-txt">{{item.searchText}}</p></div>
+                                </div>
+                            </template>
+                            <template v-else-if="item.href_bl_id&&item.type == 5">
+                                <div class="tip-doubt tip-doubt-word tip-doubt-ad-link">
+                                    <a class="tip-tit" @click="typeJump(item,i)">查看组合销售活动</a>
+                                    <div class="tip-doubt-con"><p class="tip-txt">{{item.searchText}}</p></div>
+                                </div>
+                            </template>
+                            <template v-else-if="item.href_gc_id&&item.type == 6">
+                                <div class="tip-doubt tip-doubt-word tip-doubt-ad-link">
+                                    <p class="tip-tit">查看指定分类</p>
+                                    <div class="tip-doubt-con"><p class="tip-txt">{{item.searchText}}</p></div>
+                                </div>
+                            </template>
+                            <template v-else-if="item.href_coupon_id&&item.type == 7">
+                                <div class="tip-doubt tip-doubt-word tip-doubt-ad-link">
+                                    <a class="tip-tit" @click="typeJump(item,i)">查看优惠券</a>
+                                    <div class="tip-doubt-con"><p class="tip-txt">{{item.searchText}}</p></div>
+                                </div>
+                            </template>
+                        </td>
+                        <td class="c-gray">{{item.state == 0 ? '待审核' : item.state == 1 ? '审核通过' : '平台下架'}}</td>
+                        <td>{{item.stateName}}</td>
+                        <td class="handle">
+                            <p>
+                                <a class="ncsc-btn" v-if="item.state == 1" @click="toggleUse(item,i)">{{item.is_use == 1 ?'禁用':'启用'}}</a>
+                                <a class="ncsc-btn" @click="editAdvertice(item,i)">编辑</a>
+                                <a class="ncsc-btn" @click="deleteAdvertice(item,i)">删除</a>
+                            </p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </template>
+        </qm-table>
+        <qm-pagination :pageParams="pageParamsClass" @changeIndex="changeIndex($event)"></qm-pagination>
+
+    </div>
+    <qm-dialog :dialogVisible="dialog1" :width="'500px'" @close="dialog1 = false">
+        <template slot="title">{{dialog1Title}}</template>
+        <template slot="content" >
+                <div class="eject_con">
+                        <form method="post" target="_parent" enctype="multipart/form-data" id="add_form">
+                          <input type="hidden" name="form_submit" value="ok">
+                          <input type="hidden" name="adv_id" value="">
+                            <dl>
+                                <dt><i class="required">*</i>开始时间</dt>
+                                <dd>
+                                    <input id="start_time" name="start_time" type="text" class="input-add-on w160"  readonly="readonly"  v-model="advertise.start_time"><em class="add-on"><i class="fa fa-calendar"></i></em><span></span>
+                                    <span class="form-error" v-if="error.startTimeError"><label for="end_time" class="error"><i class="fa fa-exclamation-circle"></i>广告开始时间不能为空</label></span>
+
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt><i class="required">*</i>结束时间</dt>
+                                <dd>
+                                    <input id="end_time" name="end_time" type="text" class="input-add-on w160" readonly="readonly" v-model="advertise.end_time" ><em class="add-on"><i class="fa fa-calendar"></i></em><span></span>
+                                    <span class="form-error" v-if="error.endTimeError"><label for="end_time" class="error"><i class="fa fa-exclamation-circle"></i>广告结束时间不能为空</label></span>
+                                    <span class="form-error" v-if="error.startTimeValueError"><label for="end_time" class="error"><i class="fa fa-exclamation-circle"></i>广告结束时间必须大于开始时间</label></span>
+                                </dd>
+                            </dl>
+                          <dl>
+                            <dt><i class="required">*</i>广告图片</dt>
+                            <dd>
+                                <div class="ncsc-upload-img-item ncsc-upload-img-250">
+                                      <div class="ncsc-upload-img-box" v-if="advertise.src">
+                                          <div class="ncsc-upload-avatar" id="imagesname">
+                                              <img :src="advertise.imageUrl">
+                                          </div>
+                                          <input type="hidden" id="stc_image" name="stc_image" v-model="advertise.src">
+                                          <div class="image-delete" @click="deleteImageUrl(1)">×</div>
+                                      </div>
+                                      <div class="ncsc-upload-btn" v-else>
+                                          <a href="javascript:void(0);">
+                                              <input type="file" class="input-file" data-id="imagesname" id="imagesfile" name="stc_image1" accept="image/gif, image/jpeg, image/png, image/bmp" @change="beforeLocalImgLoad($event,1)">
+                                              <p><i class="ico-upload"></i>图片上传</p>
+                                          </a>
+                                      </div>
+                                  </div>
+                                  <p class="hint"><span>建议图片尺寸686*246；</span></p>
+                                  <p class="form-error" v-if="error.imageError"><label for="stc_image" class="error"><i class="fa fa-exclamation-circle"></i>广告图片不能为空</label></p>
+                            </dd>
+                          </dl>
+                          <dl>
+                            <dt><i class="required">*</i>广告链接</dt>
+                            <dd>
+                                <div class="form-item">
+                                    <input type="radio" name="type" id="type_1" value="1" v-model="advertise.type">
+                                    <label for="type_1">纯图片展示，不设置链接</label>
+                                </div>
+                                <div class="form-item">
+                                    <input type="radio" name="type" value="2" id="type_2" v-model="advertise.type">
+                                    <label for="type_2">跳转到指定网页</label>
+                                    <div class="box" :style="{display:advertise.type==2?'block':'none'}">
+                                        <input type="text" class="text w250" autocomplete="off" name="href" v-model="advertise.href" placeholder="请输入网址" />
+                                        <p class="form-error" v-if="error.typeUrlError"><label for="stc_image" class="error"><i class="fa fa-exclamation-circle"></i>填写正确的广告链接，以 http:// 或 https:// 或 gotoshenbd:// 开头</label></p>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-item">
+                                    <input type="radio" name="type" value="3" id="type_3" v-model="advertise.type" />
+                                    <label for="type_3">跳转查看指定图片</label>
+                                    <div class="box" :style="{display:advertise.type==3?'block':'none'}">
+                                        <div class="ncsc-upload-img-item">
+                                            <div class="ncsc-upload-img-box" v-if="advertise.hrefImg!=''">
+                                                <div class="" id="imagesname2">
+                                                    <img :src="advertise.hrefImg">
+                                                </div>
+                                                <input type="hidden" id="stc_image2" name="stc_image2" v-model="advertise.hrefFile">
+                                                <div class="image-delete"  @click="deleteImageUrl(2)">&times;</div>
+                                            </div>
+                                            <div class="ncsc-upload-btn" v-else-if="advertise.hrefImg==''">
+                                                <a href="javascript:void(0);">
+                                                    <input type="file" class="input-file" data-id="imagesname2" id="imagesfile2"  name="imagesfile2"  accept="image/gif, image/jpeg, image/png, image/bmp" @change="localImgLoad($event,2)"/>
+                                                    <p><i class="ico-upload"></i>图片上传</p>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <p class="form-error" v-if="error.typeImgeError"><label for="stc_image" class="error"><i class="fa fa-exclamation-circle"></i>广告链接的图片不能为空</label></p>
+                                    </div>
+                                </div>
+                                
+                                <p class="form-error" v-if="error.typeError"><label for="stc_image" class="error"><i class="fa fa-exclamation-circle"></i>广告链接不能为空</label></p>
+                            </dd>
+                          </dl>
+                          <div id="warning">
+                                <!-- <label for="stc_image" class="error" v-if="errorMessage"><i class="fa fa-exclamation-circle"></i>{{errorMessage}}</label> -->
+                          </div>
+                          <div class="bottom">
+                              <label class="submit-border"><input type="button" class="ncsc-btn ncsc-btn-orange" value="提交" @click="submitAdvertise"></label>
+                          </div>
+                        </form>
+                        </form>
+                      </div>
+        </template>
+    </qm-dialog>
+
+
+    <el-dialog
+        :visible.sync="hasImageDialog"
+        :lock-scroll="modalAppendToBody"
+        :close-on-click-modal = "closeOnClickModal"
+        :width="imgWidth + 20 +'px'"
+        customClass="show-image"
+        v-dialogDrag>
+            <template v-if="hasImage">
+                <img :src="imageUrl" class="hasImageDiv" :style="{width:imgWidth +'px'}"/>
+                <div class="closeDiv">
+                    <div id="lightbox-container-image-data">
+                        <div id="lightbox-image-details">
+                            <span id="lightbox-image-details-caption" style="display: none;"></span>
+                            <span id="lightbox-image-details-currentNumber" style="display: none;"></span>
+                        </div>
+                        <div id="lightbox-secNav">
+                            <a id="lightbox-secNav-btnClose" @click="hasImageDialog = false">
+                                <img src="//static.shenbd.com/lib/js/lightbox/img/lightbox-btn-close.gif">
+                            </a>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            
+        </el-dialog>
+
+        <el-dialog
+        :visible.sync="unImageDialog"
+        :lock-scroll="modalAppendToBody"
+        width="250px"
+        customClass="show-image">
+            
+            <div class="loader">
+                    <img src="//static.shenbd.com/lib/js/lightbox/img/lightbox-ico-loading.gif">
+            </div>
+        </el-dialog>
+
+        <qm-tips :tipsVisible="dialogMessage" :showCancel="true" :width="'420px'" @cancel="dialogMessage=false" @close="dialogMessage = false"  @confirm="deleteAdverticeSure()">
+            <template slot="title">{{dialogTitle}}</template>
+            <template slot="content">{{dialogText}}</template>
+        </qm-tips>
+
+</div>
+

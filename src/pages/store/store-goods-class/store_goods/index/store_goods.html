@@ -1,0 +1,168 @@
+<div class="qm-store-class-base">
+        <div class="mb10"> 
+            <span class="c-gray mr10">可自行拖动分类排序，对应列表排序即为前端用户显示的顺序。</span>
+          </div>
+          <div class="ncsc-form-default">
+                <form id="add_form" method="post" action="index.php?c=store_goods_class&amp;a=add">
+                    <input type="hidden" name="stc_id" value="117">
+                    <input id="goods_commonids" name="goods_commonids" type="hidden" value=",106535,106448,106456,106492,106458,106459,106471,106494,">
+                    <div class="ncsc-form-goods">
+                        <dl>
+                            <dt><i class="required">*</i>分类名称：</dt>
+                            <dd>
+                                <input class="text w200" type="text" name="stc_name" id="stc_name" autocomplete="off" v-model.trim="stc_name" placeholder="请输入分类名称"/>
+                                <span class="error" v-if="(stc_name == null || stc_name == '') && error.stc_name_error"><i class="fa fa-exclamation-circle mr5"></i>分类名称不能为空</span>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>分类副标题：</dt>
+                            <dd>
+                                <textarea name="stc_sub_title" id="stc_sub_title" cols="30" rows="10" v-model.trim="stc_sub_title"></textarea>
+                                <span class="error" v-if="stc_sub_title != '' && stc_sub_title.length>20"><i class="fa fa-exclamation-circle mr5"></i>分类副标题不能超过20个字符</span>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt><i class="required">*</i>显示效果：</dt>
+                            <dd id="showTypeRadio">
+                                <label>
+                                    <input type="radio" name="show_type" value="0" v-model="show_type">
+                                    全部展示
+                                    <el-tooltip placement="right-start" effect="light" popper-class="atooltip" class="mt3">
+                                        <div slot="content" class="toolTipCont">
+                                            <img src="@/assets/seller/images/seller/example/banner-storegoods-allshow.jpg" alt="">
+                                        </div>
+
+                                        <p class="lightBlue">
+                                            <i class="fa fa-question-circle" aria-hidden="true"></i>示例
+                                        </p>
+                                    </el-tooltip>
+                                </label>
+                                <label class="ml20">
+                                    <input type="radio" name="show_type" value="1" v-model="show_type">
+                                    收起展示
+                                    <el-tooltip placement="right-start" effect="light" popper-class="atooltip" class="mt3">
+                                        <div slot="content" class="toolTipCont">
+                                            <img src="@/assets/seller/images/seller/example/banner-storegoods-partshow.jpg" alt="">
+                                        </div>
+
+                                        <p class="lightBlue">
+                                            <i class="fa fa-question-circle" aria-hidden="true"></i>示例
+                                        </p>
+                                    </el-tooltip>
+                                </label>
+                                <p><span class="error" v-if="(show_type == null || show_type <0) && error.show_type_error"><i class="fa fa-exclamation-circle mr5"></i>请选择显示效果</span></p>
+                                <p><span class="c-gray mr10" v-if="show_type == 0">全部展示的效果下，该分类最多可添加{{allShowMaxGoodsCount}}个商品</span></p>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt><i class="required">*</i>商品管理：</dt>
+                            <dd id="bundlingGoodsTable">
+                                <p>
+                                    <input id="bundling_goods" type="hidden" value="" name="bundling_goods">
+                                <p><span class="error" v-if = "((list == null || list.length == 0)||(show_type == 0 && list.length >allShowMaxGoodsCount)) && error.goods_error ">{{error.goods_error_tips}}</span></p>
+
+                                <p> <span class="c-gray mr10">可自行拖动分类排序，对应列表排序即为前端用户显示的顺序。</span></p>
+
+                                </p>
+                                    
+                                <qm-table :pageParams="pageParams1">
+                                    <template slot="table">
+                                            
+                                            <table class="ncsc-default-table">
+                                                    <thead>
+                                                    <tr>
+                                                        <th class="w450">商品名称</th>
+                                                        <th class="w130">售价</th>
+                                                        <th class="w130">操作</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody nctype="bundling_data" class="bd-line ui-sortable" title="">
+                                                    <tr class="ui-state-disabled" style="display:none;">
+                                                        <td colspan="20" class="norecord"><div class="no-promotion">分类还未选择添加商品</div></td>
+                                                    </tr>
+                                                                                                                
+                                                    
+                                                </tbody>
+                                            </table>
+
+                                            <template v-if="list">
+                                                <draggable v-model="list" v-bind="dragOptions" draggable=".item" ghost-class="ghost" @change="itemDraggable($event)" class="mb30">
+                                                        <tr :class="item.desc && item.desc != '无库存'?'gray':''" style="display: table-row;" v-for="(item,i) in list" :key="i" class="item">
+                                                                <td class="w450">
+                                                                    <div class="info-box"> 
+                                                                        <div class="pic">
+                                                                            <img :src="item.src" width="60" height="60">
+                                                                        </div>
+                                                                        <div class="detail">
+                                                                            <p>
+                                                                                <a @click="routerItem(item,i)">{{item.goods_name}}</a>
+                                                                            </p>
+                                                                            <p class="c-orange" v-if="item.desc && item.desc != '无库存'">{{item.desc}}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td class="goods-price w130" >{{item.goods_price}}</td>
+                                                                <td class="handle w130"><p><a  class="ncsc-btn" @click="removeGoods(item,i)">移除</a></p></td>
+                                                            </tr>
+                                                </draggable>
+                                            </template>
+    
+                                    </template>
+                            </qm-table>    
+
+                                <a id="bundling_add_goods" v-if="!addGood" class="ncsc-btn ncsc-btn-orange-rim" @click="addGood = !addGood">添加商品</a>
+                                <qm-add-goods v-if="addGood" 
+                                    :goodsList="list"
+                                    :source="'store_goods_class'"
+                                    :showAddAllPage="true"
+                                    @addPageGoods="addPageGoods($event)"
+                                     @addOneGoods="addOneGoods($event)" 
+                                     @close="addGood = !addGood"
+                                     @removeOneGoods="removeOneGoods($event)"
+                                ></qm-add-goods>
+                            </dd>
+                        </dl>
+
+                        <dl>
+                            <dt><i class="required">*</i>显示状态：</dt>
+                            <dd id="stcStateRadio">
+                                <label>
+                                    <input type="radio" name="stc_state" value="1" v-model="stc_state">
+                                    是</label>
+                                <label class="ml20">
+                                    <input type="radio" name="stc_state" value="0" v-model="stc_state">
+                                    否</label>
+                                <p><span class="error" v-if="(stc_state == null || stc_state <0) && error.stc_state_error"><i class="fa fa-exclamation-circle mr5"></i>请选择显示状态</span></p>
+                                <p><span class="c-gray mr10">用于控制当前自定义推荐分类是否对用户展示，是则展示，否则不展示</span></p>
+                            </dd>
+                        </dl>
+                            <div class="bottom">
+                                <label class="submit-border">
+                                    <input type="button" class="submit" value="保存" id="saveCouponBtn" @click="saveCouponBtn()">
+                                </label>
+                            </div>
+                    </div>        
+                </form>
+            </div>
+          
+
+            <!-- <qm-dialog :dialogVisible="successDialog" :width="'500px'" @close="successDialog = false">
+                    <template slot="title">提示信息</template>
+                    <template slot="content" >
+                        <div class="dialog-bd eject_con">
+                            <div class="dialog_message_contents comfirm" style="    text-align: center;                            "><i class="alert_info"></i>保存成功</div>
+                            <dl class="bottom rightBtn">
+                                    <dt></dt>
+                                    <dd>
+                                        2秒后页面跳转
+                                    </dd>
+                                </dl>
+                        </div>
+                    </template>
+                </qm-dialog> -->
+
+                <qm-tips :tipsVisible="dialog1" :showCancel="false" :width="'420px'" @close="dialog1 = false"  @confirm="dialog1 = false">
+                        <template slot="title">{{dialogTitle1}}</template>
+                        <template slot="content">{{dialogMessage1}}</template>
+                    </qm-tips>
+    </div>

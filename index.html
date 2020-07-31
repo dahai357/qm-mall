@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <title>我的身边店</title>
+    <link rel="icon" type="image/x-icon" href="static/img/favicon.ico">
+    <style>
+      body {
+          width: 100%;
+          color: #212121;
+          /* background-color: #F5F5F5; */
+          font: 14px/1.5 "Microsoft Yahei", "PingFang SC", "ST Heiti", SimHei, sans-serif, "Helvetica Neue", Tahoma, SimSun, "PingFang SC", "ST Heiti", sans-serif;
+      }
+    </style>
+    <link rel="stylesheet" href="./static/font-awesome/css/font-awesome.min.css">
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="./static/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入layui样式 -->
+    <link rel="stylesheet" href="./static/layui/css/layui.css">
+  </head>
+  <body>
+    <script src="./static/vue/dist/vue.min.js"></script>
+    <!-- <script src="./static/vue-router/dist/vue-router.min.js"></script> -->
+    <!-- <script src="./static/vue-amap/dist/index.js"></script> -->
+    <!-- 引入组件库 -->
+    <script src="./static/element-ui/lib/index.js"></script>
+
+    <div id="app"></div>
+
+    <!-- built files will be auto injected -->
+    <script src="./static/layui/layui.js"></script>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.6&key=233a6ff92353496b43284b71662c3740&plugin=AMap.DistrictSearch&plugin=AMap.PolyEditor&plugin=AMap.Autocomplete&plugin=AMap.PlaceSearch"></script>
+
+    <!-- <script src="./static/js/jquery.js"></script>
+    <script src="./static/js/jquery.printarea.js"></script> -->
+    <script src="./static/PrintArea2.4.0/demo/jquery-1.10.2.js" type="text/JavaScript" language="javascript"></script>
+    <script src="./static/PrintArea2.4.0/demo/jquery-ui-1.10.4.custom.js"></script>
+    <script src="./static/PrintArea2.4.0/demo/jquery.PrintArea.js" type="text/JavaScript" language="javascript"></script>
+
+    <!-- <link type="text/css" rel="stylesheet" href="./static/PrintArea2.4.0/demo/css/ui-lightness/jquery-ui-1.10.4.custom.css" /> -->
+    <!-- <link type="text/css" rel="stylesheet" href="./static/css/print.css" />  -->
+    <!-- <link type="text/css" rel="stylesheet" href="./static/PrintArea2.4.0/demo/PrintArea.css" />   -->
+
+    <script>
+      window.onresize = function(){
+        // var marginl = "0px";
+        // if(window.innerWidth <= 1200){
+        //   marginl = "0px";
+        // }else{
+        //   // marginl = "calc((100% - 1200px)/2 + (100vw - 100%)/2)";
+        //   marginl = "calc((100% - 1200px)/2)";
+        // }
+        // if($("#content")){
+        //   $("#content").css("marginLeft",marginl);
+        // }
+      }
+    </script>
+
+  </body>
+</html>

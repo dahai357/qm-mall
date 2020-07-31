@@ -1,0 +1,133 @@
+{
+    "?baseConfig":"基础配置，可以直接在json里修改而不用从新编译发布",
+    "baseConfig":{
+        "?consultingPhone":"财务人员咨询电话",
+        "consultingPhone":"13705953251",
+        "?helpPrintId":"自动打印订单引导id",
+        "helpPrintId":55,
+        "?downloadPath":"下载客户端地址",
+        "downloadPath":"https://img.shenbd.com/shenbdonline.zip",
+        "?downloadXpPath":"下载客户端地址xp",
+        "downloadXpPath":"https://img.shenbd.com/shenbdxponline.zip"
+    },
+    "?imageType":"图片类型",
+    "imageType":{
+        "?IMG_GOODS":"商品图片",
+        "IMG_GOODS":1,
+        "?IMG_STORE":"商店图片",
+        "IMG_STORE":2,
+        "?IMG_REGISTER":"注册图片",
+        "IMG_REGISTER":3,
+        "?IMG_CLASS_ADV":"商品分类广告图片",
+        "IMG_CLASS_ADV":4,
+        "?IMG_ADV":"广告位图片",
+        "IMG_ADV":5,
+        "?IMG_SRC_ADV":"广告位管理",
+        "IMG_SRC_ADV":6,
+        "?IMG_DEPOSIT":"保证金凭证",
+        "IMG_DEPOSIT":7
+        
+    },
+    "?imagePathConfig":"图片路径配置",
+    "imagePathConfig":{
+        "?tempImageUploadPath":"图片本地临时存放路径",
+        "tempImageUploadPath":"/data/images/",
+
+        "?memberAvatar":"会员头像存放路径",
+        "memberAvatar" : "mall/avatar/",
+        
+        "?serviceImage" : "客服log",
+        "serviceImage" : "log.png",
+        "?memberAvatarPrefix" : "会员头像前缀",
+        "memberAvatarPrefix" : "member_avatar_",
+
+        "?categoryPicPrefix" : "分类图标前缀",
+        "categoryPicPrefix" : "category-pic-",
+
+
+        "categoryHeadPicPrefix" : "category-headpic-",
+
+        "?topClassAdvImagePrefis" : "一级分类对应广告图前缀", 
+        "topClassAdvImagePrefis" : "category-hdpic-", 
+
+        "?reportShops" : "商家举报图片存放路径",
+        "reportShops" : "mall/report/",
+
+        "?feedback" : "意见反馈图片存放路径",
+        "feedback" : "mall/feedback/",
+
+        "?salesmanQr" :"销售员二维码存放路径",
+        "salesmanQr" :"mall/salesman_qr/",
+
+        "?goods" : "商品图片存放路径",
+        "goods" : "mall/store/goods/",
+
+        "?storeLabel" : "商家头像/banner/资质图片存放路径",
+        "storeLabel" : "mall/store/",
+
+        "?Register" : "注册相关图片存放路径",
+        "Register" : "mall/register/",
+
+        "?actPush" : "活动推送图片存放路径",
+        "actPush" : "mall/actpush/",
+
+        "advPath" : "mall/adv/",
+
+        "deposit" : "mall/deposit/",
+        "apkPath" : "apk/",
+
+        "?defaultPath" : "商品、商家头像等默认图片路径",
+        "defaultPath" : "mall/common/",
+
+        "storeClassAdvImagePrefix" : "mall/store/goods/classify/",
+
+        "defaultMemberAvatarName" : "default_member_avatar.jpg",
+
+        "defaultStoreLabelName" : "default_store_avatar.jpg",
+
+        "defaultStoreBannerName" : "default_store_banner.jpg",
+
+        "defaultCategoryImgName" : "category-headpic-default.jpg",
+
+        "?imageDomain" : "图片指向的域名",
+        "imageDomain" : "ossHost",
+
+        "systemAvatar" : "system/",
+
+        "?imagePgn" : "系统默认头像名",
+        "imagePgn" : "image/png",
+        
+        "?sysAvatarName" :"系统头像",
+        "sysAvatarName" :"sys.jpg",
+
+        "?orderAvatarName": "卖家订单头像",
+        "orderAvatarName": "order.jpg",
+  
+        "?orderAvatarNameBuy" : "买家订单头像",
+        "orderAvatarNameBuy" : "orderBuy.jpg",
+
+        "?expressAvatarName"  : "快递头像",
+        "expressAvatarName"  : "express.jpg",
+        "shareImage" : "share/",
+        
+        "?goodsEvaluation" : "商品评价图",
+        "goodsEvaluation" : "mall/evaluate/",
+
+        "?refund": "退款退货图片",
+        "refund": "mall/refund/",
+
+        "?expressPath":"物流图片地址",
+        "expressPath":"express/",
+
+        "?reportPath" : "商家举报对应图片路径",
+        "reportPath" : "mall/report/",
+
+        "?imImagePath" : "及时消息对应的图片链接",
+        "imImagePath" : "im/",
+        "?advSrcImagePath": "店铺广告位路径",
+        "advSrcImagePath": "mall/adv_src/",
+
+        "frontLogPath" :"mall/log/"
+    }
+    
+}

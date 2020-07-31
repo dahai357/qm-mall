@@ -1,0 +1,158 @@
+<div class="qm-store-class-base">
+    <div class="ncsc-form-default">
+            <div class="ncsc-form-goods">
+                <dl>
+                    <dt><i class="required">*</i>广告图位置：</dt>
+                    <dd id="showTypeRadio">
+                        <label>
+                            <input type="radio" name="show_type" value="1" v-model="advertise.advType" :disabled="advertise.adv_id>0 ||advertise.gc_image_id>0?'disabled':false" @change="changeAdvType()">
+                            店铺首页中部显示
+                        </label>
+                        <label class="ml20">
+                            <input type="radio" name="show_type" value="2" v-model="advertise.advType" :disabled="advertise.adv_id>0 ||advertise.gc_image_id>0?'disabled':false" @change="changeAdvType()">
+                            商品分类列表展示
+                        </label>
+                        <p class="c-gray" v-if="advertise.advType == 1">
+                            该广告位展示在店铺首页中部
+                            <el-tooltip placement="right-start" effect="light" popper-class="atooltip" class="mt3">
+                                <div slot="content" class="toolTipCont">
+                                    <img src="@/assets/seller/images/seller/example/banner-dpzbgg.jpg" alt="">
+                                </div>
+                                <p class="lightBlue">
+                                    <i class="fa fa-question-circle" aria-hidden="true"></i>示例
+                                </p>
+                            </el-tooltip>
+                        </p>
+                        <p class="c-gray" v-if="advertise.advType == 2">
+                            该广告图显示在店铺商品分类页上，指定商品分类展示，每个分类最多设置5张
+                            <el-tooltip placement="right-start" effect="light" popper-class="atooltip" >
+                                <div slot="content" class="toolTipCont">
+                                        <img src="@/assets/seller/images/seller/example/banner-dpflgg.jpg" alt="">
+                                    </div>
+                            <p class="lightBlue">
+                                <i class="fa fa-question-circle" aria-hidden="true"></i>示例
+                            </p>
+                            </el-tooltip>
+                        </p>
+                    </dd>
+                </dl>
+                <dl v-if="advertise.advType == 2">
+                    <dt><i class="required">*</i>选择商品分类：</dt>
+                    <dd>
+                        <select name="type" v-model="advertise.gc_id" @change="getClassAdvCount()">
+                            <option value="0" v-if="chooseClassFlag">请选择分类</option>
+                            <template v-for="(first,f) in classNames">
+                                <option v-if ="f == advertise.gc_id" :value="f" :key="f" selected>{{first}}</option>
+                                <option v-else :value="f" :key="f" selected>{{first}}</option>
+                            </template>
+                        </select>
+                        <p class="form-error" v-if="error.gcIdError"><label for="end_time" class="error"><i class="fa fa-exclamation-circle"></i>请选择分类</label></p>
+                        <p class="c-red" v-if="gcAdvCount > 0">该分类下已设置了{{gcAdvCount}}张有效广告图</p>
+                    </dd>
+                </dl>
+                <template v-if="advertise.advType == 1">
+                    <dl :style="{display: advertise.advType == 1?'table':'none'}">
+                        <dt><i class="required">*</i>开始时间</dt>
+                        <dd>
+                            <input id="start_time" name="start_time" type="text" class="input-add-on w160"  readonly="readonly"  v-model="advertise.start_time"><em class="add-on"><i class="fa fa-calendar"></i></em><span></span>
+                            <span class="form-error" v-if="error.startTimeError"><label for="end_time" class="error"><i class="fa fa-exclamation-circle"></i>广告开始时间不能为空</label></span>
+
+                        </dd>
+                    </dl>
+                    <dl :style="{display: advertise.advType == 1?'table':'none'}">
+                        <dt><i class="required">*</i>结束时间</dt>
+                        <dd>
+                            <input id="end_time" name="end_time" type="text" class="input-add-on w160" readonly="readonly" v-model="advertise.end_time" ><em class="add-on"><i class="fa fa-calendar"></i></em><span></span>
+                            <span class="form-error" v-if="error.endTimeError"><label for="end_time" class="error"><i class="fa fa-exclamation-circle"></i>广告结束时间不能为空</label></span>
+                            <span class="form-error" v-if="error.startTimeValueError"><label for="end_time" class="error"><i class="fa fa-exclamation-circle"></i>广告结束时间必须大于开始时间</label></span>
+                        </dd>
+                    </dl>
+                </template>
+
+                <dl>
+                    <dt><i class="required">*</i>广告图片</dt>
+                    <dd>
+                        <div class="ncsc-upload-img-item ncsc-upload-img-250">
+                            <div class="ncsc-upload-img-box" v-if="advertise.src">
+                                <div class="ncsc-upload-avatar" id="imagesname">
+                                    <img :src="advertise.imageUrl">
+                                </div>
+                                <input type="hidden" id="stc_image" name="stc_image" v-model="advertise.src">
+                                <div class="image-delete" @click="deleteImageUrl(1)">×</div>
+                            </div>
+                            <div class="ncsc-upload-btn" v-else>
+                                <a href="javascript:void(0);">
+                                    <input type="file" class="input-file" data-id="imagesname" id="imagesfile" name="stc_image1" accept="image/gif, image/jpeg, image/png, image/bmp" @change="beforeLocalImgLoad($event,1)">
+                                    <p><i class="ico-upload"></i>图片上传</p>
+                                </a>
+                            </div>
+                        </div>
+                        <p class="hint"><span>建议图片尺寸{{advertise.advType == 1?'686*246':'638*206'}}；</span></p>
+                        <p class="form-error" v-if="error.imageError"><label for="stc_image" class="error"><i class="fa fa-exclamation-circle"></i>广告图片不能为空</label></p>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt><i class="required">*</i>跳转内容：</dt>
+                    <dd>
+                        <template v-for="(item,i) in typeNames">
+                            <div class="form-item">
+                                <input type="radio" name="type" v-model="advertise.type" :value="i"  :id="'type_'+i" @click="changeType(i)"><label :for="'type_'+i">{{item}}</label>
+                            </div>
+                            <div class="ncsc-form-s"  v-if="i == 2" :style="{display:advertise.type==2?'block':'none'}">
+                                <input type="text" class="text w250" autocomplete="off" name="href" v-model="advertise.href" placeholder="请输入网址" />
+                                <p class="form-error" v-if="error.typeUrlError"><label for="stc_image" class="error"><i class="fa fa-exclamation-circle"></i>填写正确的广告链接，以 http:// 或 https:// 开头</label></p>
+                            </div>
+                            <div  class="ncsc-form-s"  v-if="i == 3" :style="{display:advertise.type==3?'block':'none'}">
+                                <div class="ncsc-upload-img-item">
+                                    <div class="ncsc-upload-img-box" v-if="advertise.hrefImg!=''">
+                                        <div class="" id="imagesname2">
+                                            <img :src="advertise.hrefImg">
+                                        </div>
+                                        <input type="hidden" id="stc_image2" name="stc_image2" v-model="advertise.hrefFile">
+                                        <div class="image-delete"  @click="deleteImageUrl(2)">&times;</div>
+                                    </div>
+                                    <div class="ncsc-upload-btn" v-else-if="advertise.hrefImg==''">
+                                        <a href="javascript:void(0);">
+                                            <input type="file" class="input-file" data-id="imagesname2" id="imagesfile2"  name="imagesfile2"  accept="image/gif, image/jpeg, image/png, image/bmp" @change="localImgLoad($event,2)"/>
+                                            <p><i class="ico-upload"></i>图片上传</p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <!--<p class="form-error" v-if="error.typeImgeError"><label for="stc_image" class="error"><i class="fa fa-exclamation-circle"></i>广告链接的图片不能为空</label></p>-->
+                            </div>
+                            <div class="ncsc-form-s" v-if="i == 4" :style="{display:advertise.type==4?'block':'none'}">
+                                <input class="category-tit w300 orange" :readonly="readonly" v-show="readonly"  v-model.trim="searchKeyword" type="text" />
+                                <a class="ncsc-btn ncsc-btn-orange-rim" @click="openAddGoodsDialog()"><template v-if="!readonly">选择</template><template v-else>更换</template>商品</a>
+                            </div>
+                            <div class="ncsc-form-s" v-if="i == 5" :style="{display:advertise.type==5?'block':'none'}">
+                                <input class="category-tit w300 orange" :readonly="readonly" v-show="readonly"  v-model.trim="searchKeyword" type="text" />
+                                <a class="ncsc-btn ncsc-btn-orange-rim" @click="openAddBundlingDialog()"><template v-if="!readonly">选择</template><template v-else>更换</template>活动</a>
+                            </div>
+                            <div class="ncsc-form-s" v-if="i == 6" :style="{display:advertise.type==6?'block':'none'}">
+                                <input class="category-tit w300 orange" :readonly="readonly" v-show="readonly"  v-model.trim="searchKeyword" type="text" />
+                                <a class="ncsc-btn ncsc-btn-orange-rim" @click="openAddClassDialog()"><template v-if="!readonly">选择</template><template v-else>更换</template>分类</a>
+                            </div>
+                            <div class="ncsc-form-s" v-if="i == 7" :style="{display:advertise.type==7?'block':'none'}">
+                                <input class="category-tit w300 orange" :readonly="readonly" v-show="readonly"  v-model.trim="searchKeyword" type="text" />
+                                <a class="ncsc-btn ncsc-btn-orange-rim" @click="openAddCoupon(true)"><template v-if="!readonly">选择</template><template v-else>更换</template>优惠券</a>
+                            </div>
+                        </template>
+                        <p class="form-error" v-if="error.typeImgeError"><label for="stc_image" class="error"><i class="fa fa-exclamation-circle"></i>{{errorMessage}}</label></p>
+                        <p class="form-error" v-if="error.typeError"><label for="stc_image" class="error"><i class="fa fa-exclamation-circle"></i>跳转内容类型不能为空</label></p>
+
+                    </dd>
+                </dl>
+                <div class="bottom">
+                    <label class="submit-border">
+                        <input type="button" class="submit" value="保存" id="saveCouponBtn" @click="submitAdvertise()">
+                    </label>
+                </div>
+            </div>
+    </div>
+
+    <qm-goods v-if="addGoodsDialog" @close="addGoodsDialog=false" @save="saveGoods($event)" :includeItems="selectedGoods"></qm-goods>
+    <qm-class-tree v-if="addClassDialog" @close="addClassDialog=false" @save="saveClass($event)" :includeItems="selectedClass"></qm-class-tree>
+    <qm-bundling v-if="addBundlingDialog" @close="addBundlingDialog=false" @save="saveBundling($event)" :includeItems="selectedBundling"></qm-bundling>
+    <qm-coupon v-if="addCouponDialog" @close="addCouponDialog=false" @save="saveCoupon($event)" :includeItems="selectedCoupon"></qm-coupon>
+</div>
+

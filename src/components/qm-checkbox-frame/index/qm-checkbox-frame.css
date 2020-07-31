@@ -1,0 +1,89 @@
+.checkbox-frame,.checkbox-frame-select{
+    width: 15px;
+    height: 15px;
+    margin: 0 3px 0 0;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+}
+.checkbox-frame-large,.checkbox-frame-select-large,.checkbox-frame-select-disabled,.checkbox-frame-disabled{
+    width: 20px;
+    height: 20px;
+    margin: 0px 3px 0 0;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+}
+
+.checkbox-frame::before{
+    width: 15px;
+    height: 15px;
+    content: '';
+    display: block;
+    border: 1px solid #757575;
+    box-sizing: border-box;
+    border-radius: 3px;
+}
+.checkbox-frame-large::before{
+    width: 20px;
+    height: 20px;
+    content: '';
+    display: block;
+    border: 1px solid #757575;
+    box-sizing: border-box;
+    border-radius: 3px;
+}
+.checkbox-frame-disabled::before{
+    width: 20px;
+    height: 20px;
+    content: '';
+    display: block;
+    border: 1px solid #eee;
+    box-sizing: border-box;
+    border-radius: 3px;
+}
+
+.checkbox-frame-select::before {
+    width: 15px;
+    height: 15px;
+    content: '';
+    display: block;
+    border: 1px solid #757575;
+    box-sizing: border-box;
+    border-radius: 3px;
+    border-color: #ffae21;
+}
+.checkbox-frame-select-large::before {
+    width: 20px;
+    height: 20px;
+    content: '';
+    display: block;
+    border: 1px solid #757575;
+    box-sizing: border-box;
+    border-radius: 3px;
+    border-color: #ffae21;
+}
+.checkbox-frame-select::after {
+    content: '';
+    position: absolute;
+    width: 26px;
+    height: 16px;
+    background: url(../../../assets/seller/images/seller/ncsc_bg_img.png) -180px -460px no-repeat;
+    left: -2px;
+    top: 0;
+    display: none;
+    width: 20px;
+    height: 13px;
+    background-position: -210px -460px;
+    display: block;
+}
+.checkbox-frame-select-large::after {
+    content: '';
+    position: absolute;
+    width: 26px;
+    height: 16px;
+    background: url(../../../assets/seller/images/seller/ncsc_bg_img.png) -180px -460px no-repeat;
+    left: -2px;
+    top: 0;
+    display: block;
+}

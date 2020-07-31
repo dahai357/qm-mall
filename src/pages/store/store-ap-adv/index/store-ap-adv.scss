@@ -1,0 +1,23 @@
+.menu-more {
+    float: right;
+    right: 0;
+    top: 0;
+    display: block;
+    z-index: 1;
+    bottom: 10px;
+    right: -5px;
+}
+
+.menu-more a {
+    margin: 0 5px;
+}
+.ncsc-btn{
+    min-width: 90px;
+    font-size: 14px;
+}
+
+.ncsc-btn:hover{
+    background-color: rgb(239, 133, 1);
+    color: #fff;
+}
+

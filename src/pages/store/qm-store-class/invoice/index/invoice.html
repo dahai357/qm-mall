@@ -1,0 +1,134 @@
+<div class="qm-store-class-base qm-store-class-invoice">
+        <p class="record-p c-orange mt5 mb30">每月只可申请一次开票，申请开票后财务人员会在{{basicStore.invoice_days}}个工作日审核并开具您的发票，若存在疑问，请微信联系客服
+            
+        </p>
+
+        <div class="summary-box mb20">
+            <ul class="list-summary">
+                <li>
+                    <div class="name">总缴纳费用<span class="fs14">(元)</span>
+                    </div>
+                    <p class="num">{{basicStore.totalPaidFee | toFix2}}</p>
+                </li>
+        
+                <li>
+                    <div class="name">已申请开票金额<span class="fs14">(元)</span>
+                    </div>
+                    <p class="num">{{basicStore.appliedPaidFee | toFix2}}</p>
+                </li>
+        
+                <li>
+                    <div class="name">剩余可开票金额<span class="fs14">(元)</span>
+                    </div>
+                    <p class="num c-red">{{basicStore.leftPaidFee | toFix2}}</p>
+                </li>
+            </ul>
+        </div>
+        <qm-table :pageParams="pageParams">
+            <template slot="table">
+                    <table class="ncsc-table ncsc-table-ex2" id="my_category" width="100%">
+                            <thead>
+                            <tr nc_type="table_header">
+                                <th class="w170">申请开票时间</th>
+                                <th>开票金额(元)</th>
+                                <th>票据类型</th>
+                                <th>开票状态</th>
+                                <th class="w170">财务开票时间</th>
+                                <th>操作 </th>
+                            </tr>
+                            </thead>
+                            <tbody id="treet1">    
+                                    <tr nc_type="table_item" v-for="(item,i) in list">
+                                        <td>{{item.gmt_create?item.gmt_create:''}}</td>
+                                        <td>{{item.amount}}</td>
+                                        <td>{{item.type == 1?'增值税普通发票':'增值税电子普通发票'}}</td>
+                        
+                                        <td>{{item.status == 0?'开票中':'已开票'}}</td>
+                                        <td>{{item.end_time?item.end_time:'-'}}
+                                            </td>
+                                        <td>
+                                            <a @click="openDialog(item,i)">查看申请信息</a>
+                                        </td>
+                                    </tr>
+                            </tbody>
+                        </table>
+            </template>
+        </qm-table>
+        
+            <qm-pagination :pageParams="pageParams" @changeIndex="changeIndex($event)"></qm-pagination>
+
+
+            <qm-dialog :dialogVisible="dialogVisible" :width="'700px'" @close="dialogVisible = false">
+                    <template slot="title">{{dialog1Title}}</template>
+                    <template slot="content" >
+                        <div class="eject_con">
+                            <p class="c-orange mb10">请认真核查提交的开票信息，一经财务确认开票后则无法修改</p>
+                            <dl>
+                                <dt>开票金额:</dt>
+                                <dd>
+                                    {{preItem.amount}}元
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt>开票类型:</dt>
+                                <dd>
+                                    {{preItem.type == 1?'增值税普通发票':'增值税电子普通发票'}}</dd>
+                            </dl>
+                            <dl>
+                                <dt>开票状态:</dt>
+                                <dd>
+                                    {{preItem.status == 0?'开票中':'已开票'}}            </dd>
+                            </dl>
+                            <dl>
+                                    <dt>开票信息:</dt>
+                                    <dd></dd>
+                                </dl>
+                                <div class="ml50">
+                                        <dl>
+                                            <dt>开票公司名称:</dt>
+                                            <dd>
+                                                {{preItem.company}}                </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>统一信用代码:</dt>
+                                            <dd>
+                                                {{preItem.company_code}}                   </dd>
+                                        </dl>
+                                    </div>
+                                    <template v-if="preItem.type == 1">
+                                            <dl>
+                                                    <dt>票据收货信息:</dt>
+                                                    <dd></dd>
+                                            </dl>
+                                            <div class="ml50">
+                                                <dl>
+                                                    <dt>收货地址:</dt>
+                                                    <dd>{{preItem.city?preItem.province + '   '+preItem.city+'   '+preItem.district+preItem.address :preItem.province + '   '+preItem.district+preItem.address}}                    </dd>
+                                                </dl>
+                                                <dl>
+                                                    <dt>收货人:</dt>
+                                                    <dd>
+                                                        {{preItem.receiver}}                    
+                                                    </dd>
+                                                </dl>
+                                                <dl>
+                                                    <dt>收货电话:</dt>
+                                                    <dd>
+                                                        {{preItem.receive_phone}}
+                                                    </dd>
+                                                </dl>
+                                            </div>
+                                    </template>
+                                    <template v-else>
+                                            <dl  class="ml50" >
+                                                    <dt>票据收件邮箱:</dt>
+                                                    <dd>
+                                                        {{preItem.receive_email}} 
+                                                    </dd>
+                                                </dl>
+                                    </template>
+                                   
+                        </div>
+                    </template>
+                </qm-dialog>
+</div>

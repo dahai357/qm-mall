@@ -1,0 +1,398 @@
+<div class="home-page">
+  <div class="top-container">
+    <div class="basic-info">
+      <div class="basic-left">
+        <div class="basic-left-div-one">
+          <div class="basic-left-sub-div">
+            <p class="basic-name" :title="sellerInfo.storeName">{{basicStore.storeName}}</p><button class="ncsc-btn-orange-rim fl basic-button marginT5" @click="goOpen(basicStore.openFlag)">
+              {{getStoreState(basicStore)}}
+            </button>
+            </div>
+          <div class="basic-left-sub-div">
+            <p class="seller-tit ">管理权限：  <span class="seller-detail">{{metaData.sellerGroupName}}</span></p>
+            <p class="seller-tit ">最后登录时间：  <span class="seller-detail">{{sellerInfo.lastLoginTime}}</span></p>
+
+          </div>
+        </div>
+        <div class="basic-left-div-two">
+          <!--<div class="basic-left-sub-div">
+            <p v-if="parseInt(basicStore.storeEndTime)*1000 > Date.parse(new Date())" class="seller-tit fl">合同试用期：</p>
+            <p v-else class="seller-tit fl">合同有效期：</p>
+            <div v-if="parseInt(basicStore.storeEndTime)*1000 > Date.parse(new Date())" class="seller-detail fl">{{basicStore.storeEndTime | dateFormat}}</div>
+            <div v-else class="seller-detail fl">{{basicStore.contractTime}}</div>
+            &lt;!&ndash; <?php if($output['store_info']['store_end_time']>TIMESTAMP){?>
+              <p class="seller-tit">合同试用期：</p>
+              <div class="seller-detail">
+                  <?php echo date('Y-m-d H:i:s',$output['store_info']['store_end_time']);?>
+              </div>
+          <?php }else{?>
+              <p class="seller-tit">合同有效期：</p>
+              <div class="seller-detail">
+                <?php echo date('Y-m-d H:i:s',$output['store_info']['contract_time']);?>
+              </div>
+          <?php }?> &ndash;&gt;
+
+          </div>-->
+        </div>
+      </div>
+      <div class="basic-right">
+
+        <div class="imgs">
+          <li id="imgHref" ref="imgHref" class="top-img fl">
+            <img :src="basicStore.qrcodeUrl"  @mouseover="showCode($refs.imgHref,1)" @mouseout="showCode($refs.imgHref,0)">
+            <!-- <img :src="sellerInfo.storeLabel" style="width:20px;height:20px;position:absolute;top:35px;left:35px"> -->
+            <a class="down-link" @click="downCode(basicStore.qrcodeUrl,0)">下载</a>
+            <div class="code">
+              <img :src="basicStore.qrcodeUrl" class="imgWCCode" width="160" height="160" />
+            </div>
+          </li>
+          <li id="imgWC" ref="imgWC" class="top-img fl">
+            <img :src="basicStore.store_wx_code" @mouseover="showCode($refs.imgWC,1)" @mouseout="showCode($refs.imgWC,0)">
+            <a class="down-link" @click="downCode(basicStore.store_wx_code,1)">下载</a>
+            <div class="code">
+              <img :src="basicStore.store_wx_code" class="imgWCCode" width="160" height="160" />
+            </div>
+          </li>
+        </div>
+        <div class="explain">
+          <span> 顾客识别您的店铺专属码将直接进入您的店铺首页，并默认关注您的店铺。且下次打开App/小程序也是默认直接进入您的店铺首页。因此可将此app或小程序视作您的专属线上商城。利用广宣品（联系客服）、店铺专属码发朋友圈或绑定公众号（联系客服）等渠道可进行高效锁粉。</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="home-content" v-if="moduleShowFlag==1">
+
+    <div class="content-title"><h3>费用管理<span>*友情提示：保证金和技术服务费缴纳方式不一样，请注意区分</span></h3></div>
+    <div class="content">
+      <p class="fs14">保证金： 应缴
+        <span class="c-orange">¥{{storeInfo.total_deposit | nativef2y}}</span>
+        （已缴 ¥{{storeInfo.cashed_deposit | nativef2y}}<span v-if="deposit_flag">，</span><a v-if="deposit_flag" @click="doRouter('/store/qm_store_class/deposit_list')" class="existMore">存在待审核保证金</a>)
+        <!--   -->
+        <button class="ncsc-btn-orange-rim basic-button"  v-if="!deposit_flag && isTotalMoreThan" style="height:24px"  @click="payDialogOpen" >缴纳保证金</button>
+        <button class="ncsc-btn-orange-rim basic-button" v-if="!deposit_flag && isCashedMoreThan" @click="returnCash" style="height:24px">退回保证金</button>
+        <a class="ncsc-btn-orange-unfilled" @click="doRouter('/store/qm_store_class/deposit_list')">缴费明细</a>
+      </p>
+      <p class="c-orange mt5 mb30">
+        <!-- ∗ 友情提示：请先缴纳保证金，方可享有独家推荐权 -->
+      </p>
+
+      <p class="fs14 mb10">技术服务费（按月缴纳）：
+        <a @click="doRouter('/store/qm_store_class/index')" class="ncsc-btn-orange-unfilled">更多经营分类管理</a>
+      </p>
+
+      <qm-store-table :is_portal="is_portal"></qm-store-table>
+
+
+    </div>
+  </div>
+
+    <div class="home-footer">
+      <div class="home-footer-div h218">
+        <div class="content-title"><h3>数据统计
+            <el-tooltip placement="right" effect="light" popper-class="atooltip">
+            <div slot="content" class="toolTipCont" style="line-height: 26px;font-size: 13px;">
+                <p>
+                    今日订单：今日新增订单数
+                </p>
+                <p>
+                    今日线上交易额：今日线上支付的订单总额（包含服务费）
+                </p>
+                <p>
+                    今日成交额：今日新增订单的总额（包含线上交易金额、线下交易金额及货到付款交易金额）
+                </p>
+                <p>
+                    新增会员：今日新增的会员
+                </p>
+                <p>
+                    总订单：截止目前为止总订单数
+                </p>
+                <p>
+                    线上交易总额：截止目前为止，线上支付交易订单的总金额（包含服务费）
+                </p>
+                <p>
+                    总成交额：截止目前为止，所有订单的订单总金额
+                </p>
+                <p>
+                    总会员：截止目前为止的总会员数
+                </p>
+            </div>
+            <p class="lightBlue">
+                <i class="fa fa-question-circle" aria-hidden="true"></i>
+            </p>
+        </el-tooltip></h3></div>
+        <!-- <div class="count">
+          <qm-count :countObj="{num:statistics.todayOrderCount,name:'今日订单'}"></qm-count>
+          <qm-count :countObj="{num:statistics.todayOrderTotalOnline,name:'今日线上交易额',unit:'元',minWidth:102}"></qm-count>
+          <qm-count :countObj="{num:statistics.todayOrderTotal,name:'今日成交额',unit:'元',minWidth:78}"></qm-count>
+          <qm-count :countObj="{num:statistics.todayFavCount,name:'新增会员'}"></qm-count>
+          <qm-count :countObj="{num:statistics.orderCount,name:'总订单'}"></qm-count>
+          <qm-count :countObj="{num:statistics.orderTotalOnline,name:'线上交易总额',unit:'元',minWidth:102}"></qm-count>
+          <qm-count :countObj="{num:statistics.orderTotal,name:'总成交额',unit:'元',minWidth:78}"></qm-count>
+          <qm-count :countObj="{num:statistics.favCount,name:'总会员'}"></qm-count>
+        </div> -->
+        <div class="content">
+            <ul class="list-sales">
+                <li>
+                    <div class="item">
+                        <p class="num">{{statistics.todayOrderCount}}</p>
+                        <p class="name">今日订单</p>
+                    </div>
+                    <div class="item">
+                        <p class="num">{{statistics.orderCount}}</p>
+                        <p class="name">&ensp;总订单&ensp;</p>
+                    </div>
+
+               </li>
+                <li>
+                    <div class="item">
+                        <p class="num">{{statistics.todayOrderTotalOnline}}<span class="fs14">元</span></p>
+                        <p class="name">今日线上交易额</p>
+                    </div>
+                    <div class="item">
+                        <p class="num">{{statistics.orderTotalOnline | moneyFormat}}
+                          <span class="fs14" v-if="statistics.orderTotalOnline>=100000000">亿元</span>
+                          <span class="fs14" v-if="statistics.orderTotalOnline< 100000000 && statistics.orderTotalOnline >= 1000000">万元</span>
+                          <span class="fs14" v-if="statistics.orderTotalOnline< 1000000">元</span>
+                        </p>
+                        <p class="name">&ensp;线上交易总额&ensp;</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="item">
+                        <p class="num">{{statistics.todayOrderTotal}}<span class="fs14">元</span></p>
+                        <p class="name">今日成交额</p>
+                    </div>
+                    <div class="item">
+                        <p class="num">{{statistics.orderTotal | moneyFormat}}
+                          <span class="fs14" v-if="statistics.orderTotal>=100000000">亿元</span>
+                          <span class="fs14" v-if="statistics.orderTotal< 100000000 && statistics.orderTotal >= 1000000">万元</span>
+                          <span class="fs14" v-if="statistics.orderTotal< 1000000">元</span>
+                        </p>
+                        <p class="name">&ensp;总成交额&ensp;</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="item">
+                        <p class="num">{{statistics.todayFavCount}}</p>
+                        <p class="name">新增会员</p>
+                    </div>
+                    <div class="item">
+                        <p class="num">{{statistics.favCount}}</p>
+                        <p class="name">&ensp;总会员&ensp;</p>
+                    </div>
+                </li>
+            </ul>
+          </div>
+
+      </div>
+      <div class="home-footer-div h218">
+        <qm-tabs :tabs="helps" :blod="true" @routerData="routerData($event)">
+          <div slot="shop">
+            <div class="shop-table">
+              <div class="table-item" v-for="(article,a) in articleList" :key="'article'+a" >
+                <div class="time fr">{{article.article_time}}</div>
+                <div class="detail">
+                    <div class="tit">
+                        <router-link :to="{path: '/article/detail/' + article.article_id}">
+                          <a>{{article.article_title}}</a>
+                        </router-link>
+
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+          <div slot="help">
+            <div class="shop-table">
+              <div class="table-item" v-for="(help,h) in helpCenter" :key="'help'+h" >
+                <div class="time fr">{{help.article_time}}</div>
+                <div class="detail">
+                    <div class="tit">
+                         <!-- <router-link target="_blank" :to="{path: '/help_center/detail/'+help.article_id}"> -->
+                          <a @click="openHelp('/help_center/detail/'+help.article_id)">{{help.article_title}}</a>
+                        <!-- </router-link> -->
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </qm-tabs>
+        <router-link v-if="helpRouter == 'shop'" class="btn-more fr" :to="{path: '/article/index'}"><a style="">更多»</a></router-link>
+        <!-- <router-link class="btn-more fr" v-else> -->
+          <a @click="openHelp('/help_center/index')" v-else class="btn-more fr" style="">更多»</a>
+        <!-- </router-link> -->
+
+
+      </div>
+      <div class="home-footer-div h130">
+        <div class="content-title"><h3>商品提示</h3></div>
+        <div class="shop-tip">
+
+          <router-link to="/goods/store_goods_online/index">
+                          <qm-button-tip class="mr30" :tipObj="{num:tips.online,name:'出售中',active:false}"></qm-button-tip>
+                        </router-link>
+          <router-link to="/goods/store_goods_offline/index">
+                          <qm-button-tip class="mr30" :tipObj="{num:tips.offline,name:'仓库中',active:false}"></qm-button-tip>
+                        </router-link>
+
+          <router-link to="/goods/store_goods_offline/lockup">
+                          <qm-button-tip class="mr30" :tipObj="{num:tips.lockup,name:'违规下架',active:false}"></qm-button-tip>
+                        </router-link>
+
+        </div>
+      </div>
+      <div class="home-footer-div h130">
+        <div class="content-title"><h3>交易提示
+            <el-tooltip placement="right" effect="light" popper-class="atooltip">
+                <div slot="content" class="toolTipCont" style="line-height: 26px;font-size: 13px;">
+                    <p>
+                        待付款：客户提交订单后，仍未付款的订单，显示对应未付款的订单数
+                    </p>
+                    <p>
+                        待配送：订单已接单，且目前未发货状态，显示对应未发货的订单数
+                    </p>
+                    <p>
+                        售后退款：订单已完成后，客户申请退款的订单,显示对应还未处理完成的退款数量
+                    </p>
+                    <p>
+                        售后退货：订单已完成后，客户申请退货的订单,显示对应还未处理完成的退货数量
+                    </p>
+                    <p>
+                        取消待确认：客户取消订单，商家未进行确认，显示对应未处理的订单数
+                    </p>
+                </div>
+                <p class="lightBlue">
+                    <i class="fa fa-question-circle" aria-hidden="true"></i>
+                </p>
+            </el-tooltip>
+        </h3></div>
+        <div class="trade-tip">
+
+              <router-link to="">
+
+                </router-link>
+          <a href="javascript:;" @click="gotoOrder('/order/store_order/index/index/0/0/0/1')"><qm-button-tip class="mr20" :tipObj="{num:tips.payment,name:'待付款'}"></qm-button-tip></a>
+            <router-link to="/order/store_order/index/state_deal">
+                          <qm-button-tip class="mr20" :tipObj="{num:tips.delivery,name:'待配送'}"></qm-button-tip>
+                        </router-link>
+            <router-link to="/order/store_refund/refund">
+                          <qm-button-tip class="mr20" :tipObj="{num:tips.refund_lock,name:'售后退款'}"></qm-button-tip>
+                        </router-link>
+            <router-link to="/order/store_refund/return">
+                          <qm-button-tip class="mr20" :tipObj="{num:tips.return_lock,name:'售后退货'}"></qm-button-tip>
+                        </router-link>
+            <router-link to="/order/store_order/index/state_cancel_wait_confirm">
+                          <qm-button-tip  :tipObj="{num:tips.wait_cancel,name:'取消待确认'}"></qm-button-tip>
+                        </router-link>
+
+        </div>
+      </div>
+    </div>
+
+    <el-dialog v-if="!isShowedDeadline" :visible.sync="dialogDeadLine" :close-on-click-modal = "closeOnClickModal" custom-class="ncsc-dialog-in" top="25vh" :lock-scroll="modalAppendToBody" :show-close="false"  >
+      <div class="dialog-hd">
+        <div class="dialog-close js-dialog-close" @click="closeDeadline"></div>
+        <div class="dialog-tit">温馨提示</div>
+      </div>
+
+      <div class="dialog-bd">
+        <p class="fs22">您好！</p>
+        <template v-if="storeEndTime>0">
+            <p class="time">您的店铺试用期将于<span class="num">{{storeEndTime}}</span>天后到期</p>
+            <p class="txt" style="max-width: 80%;">为了您继续享有独家推荐权，请及时缴纳保证金及相应的签约分类技术服务费。</p>
+        </template>
+        <template v-else-if="deadLine>0">
+            <p class="time">您的签约分类将于<span class="num">{{deadLine}}</span>天后到期</p>
+            <p class="txt">请及时续费，以免过期，过期后需重新申请。</p>
+        </template>
+        <a href="javascript:;" class="btn-sure js-dialog-close" @click="closeDeadline">确定</a>
+    </div>
+
+    </el-dialog>
+
+
+    <qm-dialog :dialogVisible="returnDialog" :width="'500px'" @close="returnDialog = false">
+        <template slot="title">退回保证金1</template>
+        <template slot="content" >
+                <div class="eject_con">
+                    <input type="hidden" name="form_submit" value="ok">
+                    <p class="c-orange mb10">保证金将原路退回到最近一次操作的对公账号。</p>
+                    <dl class="word">
+                      <dt>当前实缴：</dt>
+                      <dd>¥ {{storeInfo.cashed_deposit}}</dd>
+                    </dl>
+                    <dl class="word">
+                      <dt>可退保证金：</dt>
+                      <dd>¥ {{getReturnMoney}}</dd>
+                    </dl>
+                    <div id="warning"></div>
+                    <div class="bottom">
+                        <input type="button" id="submitBtn" value="确定" class="ncsc-btn ncsc-btn-orange" @click="sureReturn">
+                    </div>
+                  </div>
+        </template>
+    </qm-dialog>
+
+    <qm-dialog :dialogVisible="payDialog" :width="'600px'" @close="payDialog = false">
+        <template slot="title">缴纳保证金</template>
+        <template slot="content" >
+            <div class="eject_con">
+                <input type="hidden" name="form_submit" value="ok" />
+                  <p style="color: red;"> <strong> *友情提示：保证金和技术服务费缴纳方式不一样，清注意区分</strong></p>
+                <p>请将保证金通过对公账号,打入以下账号,并提供转账凭证：</p>
+                <div class="message-box mt15">
+                  <ul class="list-msg">
+                    <li>
+                      <div class="tit">银行账号：</div>
+                      <div class="detail">{{curPayInfo.platform_account}}</div>
+                    </li>
+                      <li>
+                          <div class="tit">收款人&emsp;：</div>
+                          <div class="detail">{{curPayInfo.platform_account_user}}</div>
+                      </li>
+                    <li>
+                      <div class="tit">银&emsp;&emsp;行：</div>
+                      <div class="detail">{{curPayInfo.platform_account_name}}</div>
+                    </li>
+                    <li>
+                      <div class="tit">转账金额：</div>
+                      <div class="detail c-orange">{{curPayInfo.leftAmount}}</div>
+                    </li>
+                    <li>
+                      <div class="detail c-orange">转账时请备注 "{{basicStore.storeName}}保证金"</div>
+                    </li>
+                  </ul>
+                </div>
+                <div class="ncsc-form-table">
+                  <div class="ncsc-form-item">
+                    <div class="item-c1">上传凭证</div>
+                    <div class="item-c2">
+                        <div class="upload-file-item">
+                            <div class="btn-upload-file" v-if="!curPayInfo.path">
+                                <input type="file" name="deposit_store_image_file" id="deposit_store_image_file" class="file-upload" accept="image/gif, image/jpeg, image/png, image/bmp" @change="localImgLoad($event)">
+                                <p class="upload-txt">上传文件</p>
+                            </div>
+                            <a  class="upload-link" data-type="deposit_store_image" v-else>
+                              {{curPayInfo.path}}
+                              <p class="btn-del-file" id="delFile" @click="curPayInfo.path = ''">×</p>
+                            </a>
+                            <input type="hidden" name="deposit_store_image" value="">
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="warning"></div>
+                <div class="bottom">
+                    <input type="button" id="submitBtn" value="确定" class="ncsc-btn ncsc-btn-orange" @click="depositSaveSure">
+                </div>
+              </div>
+        </template>
+    </qm-dialog>
+
+    <qm-tips :tipsVisible="dialog1" :showCancel="false" :width="'420px'" @close="dialog1 = false"  @confirm="dialog1 = false">
+        <template slot="title">{{dialogTitle1}}</template>
+        <template slot="content">{{dialogMessage1}}</template>
+    </qm-tips>
+
+  </div>

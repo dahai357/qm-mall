@@ -1,0 +1,22 @@
+<div class="store">
+    <qm-tabs :tabs="tabs" :blod="false" class="store-tabs" :marginRight="20" @routerData="routerData($event)"> 
+    </qm-tabs>
+
+    <button class="ncsc-btn-orange-rim enter-guide" @mouseenter="guideHover = !guideHover" @mouseleave="guideHover = !guideHover" @click="showGuide = true;showPage = 1">进入新手引导<i v-if="guideHover" class="ico-newbie-guide-hover"></i><i v-else class="ico-newbie-guide"></i></button>
+
+    <div class="clear"></div>
+    <router-view :key="$route.fullPath"/>
+
+
+    <el-dialog
+        :visible.sync="showGuide"
+        width="980px"
+        hieght="700px"
+        :show-close="showClose"
+        :lock-scroll="modalAppendToBody"
+        :close-on-click-modal = "closeOnClickModal"
+        customClass="new-guide"
+        v-dialogDrag>
+        <qm-guide-tip @hideNewGuide="hideNewGuide($event)" v-if="showGuide"></qm-guide-tip>
+    </el-dialog>
+  </div>

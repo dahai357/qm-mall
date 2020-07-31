@@ -1,0 +1,58 @@
+<div class="account-add">
+    <div>
+        <form class="ncsc-form-default">
+          <dl>
+            <dt>
+              <i class="required">*</i>店员姓名:
+            </dt>
+            <dd>
+              <input type="text" maxlength="8" class="w250 boxtext" v-model.trim='sellerMark'/>
+              <label class="error" :hidden='sellerMarkShow'><i class="fa fa-exclamation-circle"></i>请填写店员姓名</label>
+            </dd>
+          </dl>
+            <dl>
+                <dt>
+                    <i class="required">*</i>app登录手机号码：
+                </dt>
+                <dd>
+                    <div class="mobile-code">
+                        <input type="text" class="w250 boxtext" id="phone" autocomplete="off" v-model='Addphone' @keyup.enter='AccountSubmit' />
+                        <label class="submit-border get-code">
+                            <input type="button" class="btn" @click="getChangeCode()" :value="getNewCodeSecond()"  />
+                        </label>
+                        <label class="error" :hidden='TelShow'><i class="fa fa-exclamation-circle"></i>app登陆手机号码不能为空</label>
+                        <input type="hidden" id="second" value="1" />
+                    </div>
+                    <p class="hint">如果需要添加的手机号码尚未注册"我的身边店"APP账号,请先注册</p>
+                </dd>
+            </dl>
+            <dl>
+                <dt>
+                    <i class="required">*</i>验证码:
+                </dt>
+                <dd>
+                    <input type="text" class="w250 boxtext" v-model='telCode' @keyup.enter='AccountSubmit'  />
+                    <label class="error" :hidden='CodeShow'><i class="fa fa-exclamation-circle"></i>验证码不能为空</label>
+                </dd>
+            </dl>
+            <dl>
+                <dt>
+                    <i class="required">*</i>账号组:
+                </dt>
+                <dd>
+                    <select class="accountSelect"  @change="changeSelected($event)">
+                        <option v-for="item in GroupList" :value="item.group_id">{{item.group_name}}</option>
+                    </select>
+                </dd>
+            </dl>
+            <div class="bottom">
+                <label class="submit-border">
+                    <input id="submit_button" type="button" value="提交" class="submit" @click='AccountSubmit' />
+                </label>
+            </div>
+        </form>
+      
+
+       
+    </div>
+</div>
